@@ -56,7 +56,7 @@ class Game:
             self.projectile_sprites.draw(self.screen)
             
             
-            
+            print("s")
             
             
             
