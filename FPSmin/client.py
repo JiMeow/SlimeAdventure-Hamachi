@@ -56,8 +56,8 @@ class Game:
             self.projectile_sprites.draw(self.screen)
             
             
-            
-            
+            print("s")
+            print("test")
             
             
             debug(f"fps: {self.clock.get_fps()}",0,0)
