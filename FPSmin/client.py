@@ -57,7 +57,7 @@ class Game:
             
             
             print("s")
-            
+            print("test")
             
             
             debug(f"fps: {self.clock.get_fps()}",0,0)
