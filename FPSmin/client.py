@@ -33,9 +33,13 @@ class Game:
         self.thread = Thread(target=self.get_server_data)
 
     def get_server_data(self):
+        if not self.thread.is_alive():
+            self.thread = Thread(target=self._get_server_data)
+            self.thread.start()
+    def _get_server_data(self):
         self.server_data = self.network.send(self.client_data)
     
-    def check_other_players(self): # check if other players are matched with server data
+    def validate_other_players(self): # validate other players to matched with server data
         for k,v in tuple(self.other_players.items()):
             if k not in self.server_data["player"]:
                 v.kill()
@@ -46,7 +50,7 @@ class Game:
         self.client_data["event"] = {"bullets":[]}
         
     def update_stc(self):
-        self.check_other_players()
+        self.validate_other_players()
         for player_id,player in self.server_data["player"].items():
             if player_id == self.id:
                 continue
@@ -72,13 +76,10 @@ class Game:
                     self.network.disconnect()
                     pygame.quit()
             
-            if not self.thread.is_alive():
-                self.thread = Thread(target=self.get_server_data)
-                self.thread.start()
+            self.get_server_data()
             
             self.update_stc()
             self.set_client_data()
-            # print(f"[Recieve] {server_data}")
             
             self.screen.fill(background_color)
             self.player_sprites.update(dt)
