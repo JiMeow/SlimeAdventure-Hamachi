@@ -4,12 +4,17 @@ from projectile import Projectile
 from settings import *
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, color, control=False):
+    def __init__(self, x, y, color, name, control=False):
         super().__init__(player_sprites)
         self.image = pygame.Surface((100, 100))
         self.image.fill(color)
+        text = font.render(str(name), True, "White")
+        text_rect = text.get_rect(center = (50, 50))
+        pygame.draw.rect(self.image, "Black", text_rect)
+        self.image.blit(text,text_rect)
         self.rect = self.image.get_rect(center=(x, y))
         
+        self.name = name
         self.speed = 10
         self.control = control
         self.move_direction = pygame.math.Vector2()
