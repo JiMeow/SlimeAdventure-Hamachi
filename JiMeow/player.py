@@ -10,7 +10,7 @@ class Player():
         self.height = height
         self.color = color
         self.rect = (x, y, width, height)
-        self.vel = 2
+        self.vel = 1
         self.speed = [0, 0]
         self.name = name
 
