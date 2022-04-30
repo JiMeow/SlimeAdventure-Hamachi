@@ -20,7 +20,7 @@ class Game:
         self.id = self.network.id
         self.other_players = {}
 
-        self.player = Player(self.network.pos[0], self.network.pos[1], "green", control=True)
+        self.player = Player(self.network.pos[0], self.network.pos[1], "green", name="player "+self.id, control=True)
         self.player_sprites = player_sprites
         self.projectile_sprites = projectile_sprites
         
@@ -40,22 +40,26 @@ class Game:
                 v.kill()
                 del self.other_players[k]
     
-    def update(self):
+    def update_stc(self):
         self.check_other_players()
-        for k,v in self.server_data["player"].items():
-            if k == self.id:
+        for player_id,player in self.server_data["player"].items():
+            if player_id == self.id:
                 continue
-            if k in self.other_players:
-                self.other_players[k].rect.x = v["pos"][0]
-                self.other_players[k].rect.y = v["pos"][1]
-                if v["event"]:
-                    bullets = v["event"]["bullets"]
+            if player_id in self.other_players:
+                self.other_players[player_id].rect.x = player["pos"][0]
+                self.other_players[player_id].rect.y = player["pos"][1]
+                if player["event"]:
+                    bullets = player["event"]["bullets"]
                     for bullet in bullets:
                         face_direction = pygame.math.Vector2(bullet["direction"][0], bullet["direction"][1])
                         Projectile(bullet["pos"][0], bullet["pos"][1], face_direction)
             else:
-                self.other_players[k] = Player(v["pos"][0], v["pos"][1], "red")
-        
+                self.other_players[player_id] = Player(player["pos"][0], player["pos"][1], "red", name="player "+player_id)
+    
+    def reset_client_data(self):
+        self.client_data["pos"] = [self.player.rect.x,self.player.rect.y]
+        self.client_data["event"] = {"bullets":[]}
+    
     def run(self):
         while self.running:
             self.clock.tick(fps)
@@ -71,12 +75,11 @@ class Game:
                 self.thread = Thread(target=self.get_server_data)
                 self.thread.start()
             
-            self.update()
-            self.client_data["pos"] = [self.player.rect.x,self.player.rect.y]
-            self.client_data["event"] = {"bullets":[]}
+            self.update_stc()
+            self.reset_client_data()
             # print(f"[Recieve] {server_data}")
             
-            self.screen.fill((100,100,200))
+            self.screen.fill(background_color)
             self.player_sprites.update(dt)
             self.projectile_sprites.update(dt)
             self.player_sprites.draw(self.screen)
