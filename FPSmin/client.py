@@ -32,6 +32,9 @@ from projectile import Projectile
 # element iteration like fire + water
 # health damage stun slow fire ice falling knockback    
 
+# server validation data
+
+
 class Layer:
     def __init__(self,**kwargs):
         self.screen = pygame.display.get_surface()
@@ -89,7 +92,9 @@ class Game:
     
     def interpolation(self):
         pass
-            
+        
+    def exterpolation(self):
+        pass
     
     def update_stc(self):
         self.validate_other_players()
