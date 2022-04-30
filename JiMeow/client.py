@@ -2,8 +2,15 @@ import pygame
 from threading import *
 from network import Network
 import time
+import os
+
 
 username = input("Username: ")
+while len(username) > 6:
+    os.system('cls')
+    print("length of username must lest than 6")
+    username = input("Username: ")
+
 width = 500
 height = 500
 win = pygame.display.set_mode((width, height))
