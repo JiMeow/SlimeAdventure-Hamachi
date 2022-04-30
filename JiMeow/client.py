@@ -3,6 +3,7 @@ from threading import *
 from network import Network
 import time
 
+username = input("Username: ")
 width = 500
 height = 500
 win = pygame.display.set_mode((width, height))
@@ -20,14 +21,14 @@ def debug(info, x, y):
     screen.blit(text, rect)
 
 
-def redrawWindow(win, p, allp):
-    win.fill((255, 255, 255))
+def redrawWindow(win, p, allp, dt):
+    win.fill((0, 0, 0))
     for i in allp:
         if i.id != p.id:
             i.draw(win)
             i.drawname(win)
         else:
-            p.update()
+            p.update(dt)
             p.draw(win)
             p.drawname(win)
 
@@ -49,7 +50,6 @@ def main():
     run = True
     n = Network()
     p = n.getP()
-    username = input("Username: ")
     p.name = username
     clock = pygame.time.Clock()
     frame = 0
@@ -73,13 +73,13 @@ def main():
                 run = False
                 pygame.quit()
 
-        p.move(dt)
+        p.move()
 
         if not thread.is_alive():
             allp = list(tempallp)
         else:
             predictMove(p, allp, dt)
-        redrawWindow(win, p, allp)
+        redrawWindow(win, p, allp, dt)
         debug(f"{clock.get_fps():.2f}", 0, 0)
         pygame.display.update()
 
