@@ -38,18 +38,20 @@ class Player(pygame.sprite.Sprite):
         except:
             pass
         if pygame.mouse.get_pressed()[0]:
-            data["event"]["pos"] = [self.rect.centerx, self.rect.centery]
-            data["event"]["direction"] = [self.face_direction.x, self.face_direction.y]
-            Projectile(self.rect.centerx, self.rect.centery, self.face_direction)
+            if self.face_direction.magnitude() != 0:
+                client_data["event"]["pos"] = [self.rect.centerx, self.rect.centery]
+                client_data["event"]["direction"] = [self.face_direction.x, self.face_direction.y]
+                Projectile(self.rect.centerx, self.rect.centery, self.face_direction)
         
-    def move(self):
+    def move(self,dt):
         if self.move_direction.magnitude() != 0:
             self.move_direction = self.move_direction.normalize()
-        self.rect.x += self.move_direction.x * self.speed
-        self.rect.y += self.move_direction.y * self.speed
         
-    def update(self):
+        self.rect.x += (self.move_direction.x * self.speed * dt * 60)//1000
+        self.rect.y += (self.move_direction.y * self.speed * dt * 60)//1000
+        
+    def update(self,dt):
         if self.control:
             self.input()
             self.mouse()
-            self.move()
+            self.move(dt)

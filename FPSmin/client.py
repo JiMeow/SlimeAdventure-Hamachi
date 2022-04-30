@@ -26,12 +26,15 @@ class Game:
         self.player_sprites = player_sprites
         self.projectile_sprites = projectile_sprites
         
-        self.client_data = {"pos":[self.player.rect.centerx,self.player.rect.centery], "event":{}}
+        self.client_data = client_data
+        self.client_data["pos"] = [self.player.rect.centerx,self.player.rect.centery]
+        self.client_data["event"] = {}
+        
         
     def run(self):
         while self.running:
             self.clock.tick(60)
-            
+            dt = self.clock.get_time()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
@@ -42,7 +45,7 @@ class Game:
             res = self.network.send(self.client_data)
             self.client_data["pos"] = [self.player.rect.x,self.player.rect.y]
             self.client_data["event"] = {}
-            print(f"[Recieve] {res}")
+            # print(f"[Recieve] {res}")
             for k,v in res["player"].items():
                 if k == self.id:
                     continue
@@ -54,7 +57,7 @@ class Game:
                         Projectile(v["event"]["pos"][0], v["event"]["pos"][1], face_direction)
                 else:
                     self.players[k] = Player(v["pos"][0], v["pos"][1], "red")
-            self.player_sprites.update()
+            self.player_sprites.update(dt)
             self.projectile_sprites.update()
             self.player_sprites.draw(self.screen)
             self.projectile_sprites.draw(self.screen)
