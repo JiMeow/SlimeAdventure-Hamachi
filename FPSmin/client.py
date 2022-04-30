@@ -30,6 +30,21 @@ class Game:
         self.client_data["pos"] = [self.player.rect.centerx,self.player.rect.centery]
         self.client_data["event"] = {}
         
+        self.thread = Thread(target=self.network.send, args=(self.client_data,))
+        
+    def edit(self):
+        server_data = self.network.send(self.client_data)
+        for k,v in server_data["player"].items():
+            if k == self.id:
+                continue
+            if k in self.players:
+                self.players[k].rect.x = v["pos"][0]
+                self.players[k].rect.y = v["pos"][1]
+                if v["event"]:
+                    face_direction = pygame.math.Vector2(v["event"]["direction"][0], v["event"]["direction"][1])
+                    Projectile(v["event"]["pos"][0], v["event"]["pos"][1], face_direction)
+            else:
+                self.players[k] = Player(v["pos"][0], v["pos"][1], "red")
         
     def run(self):
         while self.running:
@@ -41,37 +56,22 @@ class Game:
                     self.network.disconnect()
                     pygame.quit()
             
-            self.screen.fill((100,100,200))
-            res = self.network.send(self.client_data)
             self.client_data["pos"] = [self.player.rect.x,self.player.rect.y]
             self.client_data["event"] = {}
-            # print(f"[Recieve] {res}")
-            for k,v in res["player"].items():
-                if k == self.id:
-                    continue
-                if k in self.players:
-                    self.players[k].rect.x = v["pos"][0]
-                    self.players[k].rect.y = v["pos"][1]
-                    if v["event"]:
-                        face_direction = pygame.math.Vector2(v["event"]["direction"][0], v["event"]["direction"][1])
-                        Projectile(v["event"]["pos"][0], v["event"]["pos"][1], face_direction)
-                else:
-                    self.players[k] = Player(v["pos"][0], v["pos"][1], "red")
+            # print(f"[Recieve] {server_data}")
+            
+            self.screen.fill((100,100,200))
             self.player_sprites.update(dt)
             self.projectile_sprites.update(dt)
             self.player_sprites.draw(self.screen)
             self.projectile_sprites.draw(self.screen)
             
-            
-            
-            
-            
-            
-            debug(f"fps: {self.clock.get_fps()}",0,0)
+            debug(f"fps: {self.clock.get_fps():.2f}",0,0)
             debug(f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}",0,10)
             debug(f"pos: {self.player.rect.x},{self.player.rect.y}",0,20)
-            debug(f"face_direction: {self.player.face_direction.x},{self.player.face_direction.y}",0,30)
-            debug(f"projectiles: {len(self.projectile_sprites)}",0,40)
+            debug(f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}",0,30)
+            debug(f"projectiles: {len(self.projectile_sprites.sprites())}",0,40)
+            
             pygame.display.update()
         
 game = Game()
