@@ -5,7 +5,6 @@ import pickle
 ip = "25.31.231.0"
 port = 3000
 server_data = {"player":{}}
-server_player_ID = 1
 start_pos = [100,100]
 
 # initial socket
@@ -14,6 +13,13 @@ soc.bind((ip, port))
 soc.listen(10)
 print("Start!")
 
+def get_player_ID(): # get player ID
+    i = 1
+    while True:
+        if str(i) not in server_data["player"]:
+            return str(i)
+        i += 1
+
 def recv_data(con): # recieve data from client
     return pickle.loads(con.recv(128000))
 def send_data(con,send): # send data to client
@@ -21,14 +27,12 @@ def send_data(con,send): # send data to client
 
 def threaded_client(con): # threaded client function to handle each client connection
     
-    global server_player_ID
     # initial player data in server then send to client
-    player_ID = str(server_player_ID)
+    player_ID = get_player_ID()
     server_data["player"][player_ID] = {"pos":start_pos, "id":player_ID, "event":{}}
     client_data = server_data["player"][player_ID]
-    print(f"[Sending] p{player_ID}: {client_data}")
+    print(f"[Sending][initial] p{player_ID}: {client_data}")
     send_data(con, client_data)
-    server_player_ID += 1
     
     while True:
         try:
@@ -46,7 +50,6 @@ def threaded_client(con): # threaded client function to handle each client conne
     
     # delete player data in server when lost connection
     del server_data["player"][player_ID]
-    server_player_ID -= 1
     
     con.close()
 
