@@ -7,6 +7,26 @@ from threading import Thread
 from network import Network
 from settings import *
 
+# to do
+# interpolation
+# exterpolation
+# right click to walk
+# walk point image
+# map
+# camera lock
+# camera follow by mouse
+
+# select elements qwer asdf 8 elements
+# skill
+# ui Ex : hp, mp, exp, level, skill point, skill list
+
+# element : water, heal, shield, ice, thunder, death, stone, fire  
+# skill : fast walk, instance heal, reaper, metor shower
+
+# left click shoot
+# middle click use to yourself
+# right click walk
+
 class Layer:
     def __init__(self,**kwargs):
         self.screen = pygame.display.get_surface()
