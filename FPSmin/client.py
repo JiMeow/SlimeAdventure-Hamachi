@@ -15,6 +15,8 @@ from projectile import Projectile
 # map
 # camera lock
 # camera follow by mouse
+# connection timeout [thread and time.sleep]
+# select server
 
 # select elements qwer asdf 8 elements
 # skill
@@ -26,6 +28,9 @@ from projectile import Projectile
 # left click shoot
 # middle click use to yourself
 # right click walk
+
+# element iteration like fire + water
+# health damage stun slow fire ice falling knockback    
 
 class Layer:
     def __init__(self,**kwargs):
@@ -56,6 +61,7 @@ class Game:
         # setup data and thread
         self.set_client_data(init=True)
         
+        self.old_server_data = None
         self.server_data = {"player":{}}
         self.other_players = {}
         
@@ -66,6 +72,7 @@ class Game:
             self.thread = Thread(target=self._get_server_data)
             self.thread.start()
     def _get_server_data(self):
+        self.old_server_data = self.server_data
         self.server_data = self.network.send(self.client_data)
     
     def set_client_data(self, init=False):
@@ -82,6 +89,7 @@ class Game:
     
     def interpolation(self):
         pass
+            
     
     def update_stc(self):
         self.validate_other_players()
