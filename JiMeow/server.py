@@ -2,12 +2,7 @@ import socket
 from threading import *
 import pickle
 from player import Player
-
-
-server = "25.34.159.172"  # JiMeow
-# server = "25.35.236.244" # GolfGrab
-# server = "25.31.231.0" # Minzung
-port = 5555
+from setting import *
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -21,8 +16,8 @@ s.listen(20)
 print("Waiting for a connection, Server Started")
 
 
-players = [Player(1, 0, 0, 50, 50, (255, 0, 0), "Player1"), Player(2, 100, 100, 50, 50, (0, 255, 0), "Player2"),
-           Player(3, 200, 200, 50, 50, (0, 0, 255), "Player3"), Player(4, 300, 300, 50, 50, (255, 0, 255), "Player4")]
+players = [Player(1, 30, floor, 50, 50, (255, 0, 0), "Player1"), Player(2, 40, floor, 50, 50, (0, 255, 0), "Player2"),
+           Player(3, 50, floor, 50, 50, (0, 0, 255), "Player3"), Player(4, 60, floor, 50, 50, (255, 0, 255), "Player4")]
 
 
 def threaded_client(conn, player):

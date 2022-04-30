@@ -1,5 +1,5 @@
-from tkinter import CENTER
 import pygame
+from setting import *
 
 
 class Player():
@@ -11,9 +11,10 @@ class Player():
         self.height = height
         self.color = color
         self.rect = pygame.Rect(x, y, width, height)
-        self.vel = 1
+        self.vel = 2
         self.speed = [0, 0]
         self.name = name
+        self.jumpcount = 0
 
     def draw(self, win):
         pygame.draw.rect(win, self.color, self.rect)
@@ -27,25 +28,30 @@ class Player():
 
     def move(self):
         keys = pygame.key.get_pressed()
-        keydirection = pygame.Vector2(0, 0)
-
+        cnt = 0
         if keys[pygame.K_LEFT]:
-            keydirection.x -= 1
+            self.speed[0] = -1
+        else:
+            cnt += 1
         if keys[pygame.K_RIGHT]:
-            keydirection.x += 1
-        if keys[pygame.K_UP]:
-            keydirection.y -= 1
-        if keys[pygame.K_DOWN]:
-            keydirection.y += 1
+            self.speed[0] = 1
+        else:
+            cnt += 1
+        if cnt == 2:
+            self.speed[0] = 0
+        self.speed[0] = self.speed[0] * self.vel
 
-        if keydirection.length() == 0:
-            self.speed = [0, 0]
-            return
-        keydirection.normalize_ip()
-        self.speed = keydirection * self.vel
-        self.update()
+    def jump(self, gravity, isJump):
+        if isJump:
+            if self.jumpcount < 2:
+                self.jumpcount += 1
+                self.speed[1] = -6
+        self.speed[1] = min(self.speed[1] + 0.1, gravity)
 
     def update(self, dt=1/60):
         self.x += self.speed[0] * 60 * dt
         self.y += self.speed[1] * 60 * dt
+        if self.y >= floor:
+            self.jumpcount = 0
+            self.y = floor
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
