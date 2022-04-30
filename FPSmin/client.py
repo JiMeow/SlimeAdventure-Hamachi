@@ -40,7 +40,7 @@ class Game:
                 v.kill()
                 del self.other_players[k]
     
-    def update(self):
+    def update_stc(self):
         self.check_other_players()
         for k,v in self.server_data["player"].items():
             if k == self.id:
@@ -55,7 +55,11 @@ class Game:
                         Projectile(bullet["pos"][0], bullet["pos"][1], face_direction)
             else:
                 self.other_players[k] = Player(v["pos"][0], v["pos"][1], "red")
-        
+    
+    def reset_client_data(self):
+        self.client_data["pos"] = [self.player.rect.x,self.player.rect.y]
+        self.client_data["event"] = {"bullets":[]}
+    
     def run(self):
         while self.running:
             self.clock.tick(fps)
@@ -71,9 +75,8 @@ class Game:
                 self.thread = Thread(target=self.get_server_data)
                 self.thread.start()
             
-            self.update()
-            self.client_data["pos"] = [self.player.rect.x,self.player.rect.y]
-            self.client_data["event"] = {"bullets":[]}
+            self.update_stc()
+            self.reset_client_data()
             # print(f"[Recieve] {server_data}")
             
             self.screen.fill((100,100,200))
