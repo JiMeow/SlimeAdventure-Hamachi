@@ -17,8 +17,8 @@ class Projectile(pygame.sprite.Sprite):
     def move(self,dt):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
-        self.rect.x += self.direction.x * self.speed * dt
-        self.rect.y += self.direction.y * self.speed * dt
+        self.rect.x += int(self.direction.x * self.speed * dt)
+        self.rect.y += int(self.direction.y * self.speed * dt)
         
     def life(self):
         if self.health <= 0:

@@ -31,7 +31,7 @@ class Game:
         self.other_players = {}
         
         self.thread = Thread(target=self.get_server_data)
-    
+
     def get_server_data(self):
         self.server_data = self.network.send(self.client_data)
     
@@ -64,7 +64,7 @@ class Game:
     def run(self):
         while self.running:
             self.clock.tick(fps)
-            dt = (self.clock.get_time() * fps)// 1000
+            dt = (self.clock.get_time() * fps) / 1000
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -85,15 +85,19 @@ class Game:
             self.projectile_sprites.update(dt)
             self.player_sprites.draw(self.screen)
             self.projectile_sprites.draw(self.screen)
-            
-            debug(f"fps: {self.clock.get_fps():.2f}",0,0)
-            debug(f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}",0,10)
-            debug(f"pos: {self.player.rect.x},{self.player.rect.y}",0,20)
-            debug(f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}",0,30)
-            debug(f"players: {len(self.player_sprites.sprites())}",0,40)
-            debug(f"projectiles: {len(self.projectile_sprites.sprites())}",0,50)
+
+            self.display_debug()
             
             pygame.display.update()
+            
+    def display_debug(self):
+        self.debug_count = [0]
+        debug(f"fps: {self.clock.get_fps():.2f}", self.debug_count)
+        debug(f"pos: {self.player.rect.x},{self.player.rect.y}", self.debug_count)
+        debug(f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}", self.debug_count)
+        debug(f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}", self.debug_count)
+        debug(f"players: {len(self.player_sprites.sprites())}", self.debug_count)
+        debug(f"projectiles: {len(self.projectile_sprites.sprites())}", self.debug_count)
         
 game = Game()
 game.run()
