@@ -1,3 +1,4 @@
+from tkinter import CENTER
 import pygame
 
 
@@ -9,7 +10,7 @@ class Player():
         self.width = width
         self.height = height
         self.color = color
-        self.rect = (x, y, width, height)
+        self.rect = pygame.Rect(x, y, width, height)
         self.vel = 1
         self.speed = [0, 0]
         self.name = name
@@ -20,7 +21,8 @@ class Player():
     def drawname(self, win):
         font = pygame.font.Font(None, 20)
         text = font.render(str(self.name), True, "White")
-        rect = text.get_rect(topleft=(self.x, self.y))
+        rect = text.get_rect()
+        rect.center = self.rect.center
         win.blit(text, rect)
 
     def move(self):
@@ -46,4 +48,4 @@ class Player():
     def update(self, dt=1/60):
         self.x += self.speed[0] * 60 * dt
         self.y += self.speed[1] * 60 * dt
-        self.rect = (self.x, self.y, self.width, self.height)
+        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

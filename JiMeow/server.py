@@ -22,7 +22,7 @@ print("Waiting for a connection, Server Started")
 
 
 players = [Player(1, 0, 0, 50, 50, (255, 0, 0), "Player1"), Player(2, 100, 100, 50, 50, (0, 255, 0), "Player2"),
-           Player(3, 200, 200, 50, 50, (0, 0, 255), "Player3"), Player(4, 300, 300, 50, 50, (255, 255, 0), "Player4")]
+           Player(3, 200, 200, 50, 50, (0, 0, 255), "Player3"), Player(4, 300, 300, 50, 50, (255, 0, 255), "Player4")]
 
 
 def threaded_client(conn, player):
