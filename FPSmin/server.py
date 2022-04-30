@@ -1,58 +1,57 @@
 import socket
-from _thread import *
+from _thread import start_new_thread
 import pickle
-
+# setup server data and environment
 ip = "25.31.231.0"
 port = 3000
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((ip, port))
-s.listen(10)
-print("Start!")
-
-data = {"player":{}}
-
+server_data = {"player":{}}
 server_player_ID = 1
 start_pos = [100,100]
 
-def recv_data(conn):
-    return pickle.loads(conn.recv(60000))
-def send_data(conn,send):
-    conn.send(pickle.dumps(send))
+# initial socket
+soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+soc.bind((ip, port))
+soc.listen(10)
+print("Start!")
 
-def threaded_client(conn):
+def recv_data(con): # recieve data from client
+    return pickle.loads(con.recv(60000))
+def send_data(con,send): # send data to client
+    con.send(pickle.dumps(send))
+
+def threaded_client(con): # threaded client function to handle each client connection
+    
     global server_player_ID
-    
+    # initial player data in server then send to client
     player_ID = str(server_player_ID)
-    
-    data["player"][player_ID] = {}
-    data["player"][player_ID]["pos"] = start_pos
-    data["player"][player_ID]["id"] = player_ID
-    data["player"][player_ID]["event"] = {}
-    res = data["player"][player_ID]
-    print(f"[Sending] p{player_ID}: {res}")
-    send_data(conn, res)
+    server_data["player"][player_ID] = {"pos":start_pos, "id":player_ID, "event":{}}
+    client_data = server_data["player"][player_ID]
+    print(f"[Sending] p{player_ID}: {client_data}")
+    send_data(con, client_data)
     server_player_ID += 1
     
     while True:
         try:
-            recv = recv_data(conn)
-            print(f"[Recieve] p{player_ID}: {recv}")
-            data["player"][player_ID]["pos"] = recv["pos"]
-            data["player"][player_ID]["event"] = recv["event"]
-            print(f"[Sending] p{player_ID}: {data}")
-            send_data(conn, data)
+            # recieve data from client then update data to server_data
+            client_data = recv_data(con)
+            print(f"[Recieve] p{player_ID}: {client_data}")
+            server_data["player"][player_ID]["pos"] = client_data["pos"]
+            server_data["player"][player_ID]["event"] = client_data["event"]
+            print(f"[Sending] p{player_ID}: {server_data}")
+            send_data(con, server_data)
             
-        except:
-            print(f"{player_ID} Lost connection")
+        except Exception as e:
+            print(f"{player_ID} Lost connection [{e}]")
             break
-        
-    del data["player"][player_ID]
+    
+    # delete player data in server when lost connection
+    del server_data["player"][player_ID]
     server_player_ID -= 1
     
-    conn.close()
+    con.close()
 
 while True:
-    conn, addr = s.accept()
-    print("Connected to: ", addr)
-    start_new_thread(threaded_client, (conn,))
+    # wait for client connection then start new thread
+    con, adr = soc.accept()
+    print("Connected to: ", adr)
+    start_new_thread(threaded_client, (con,))

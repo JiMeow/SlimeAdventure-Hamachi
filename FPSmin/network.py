@@ -1,20 +1,14 @@
 import socket
-import json
 import pickle
-
 class Network:
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server = "25.31.231.0"
         self.port = 3000
         self.addr = (self.server, self.port)
-        self.tmp = self.connect()
-        print(self.tmp)
-        self.id = str(self.tmp["id"])
-        self.pos = self.tmp["pos"]
-
-    def getPos(self):
-        return self.pos
+        self.data = self.connect()
+        self.id = str(self.data["id"])
+        self.pos = self.data["pos"]
 
     def disconnect(self):
         self.client.close()
