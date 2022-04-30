@@ -58,7 +58,7 @@ class Game:
                 else:
                     self.players[k] = Player(v["pos"][0], v["pos"][1], "red")
             self.player_sprites.update(dt)
-            self.projectile_sprites.update()
+            self.projectile_sprites.update(dt)
             self.player_sprites.draw(self.screen)
             self.projectile_sprites.draw(self.screen)
             
