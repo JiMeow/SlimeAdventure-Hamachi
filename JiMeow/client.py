@@ -1,6 +1,7 @@
 import pygame
 from threading import *
 from network import Network
+import time
 
 width = 500
 height = 500
@@ -38,6 +39,12 @@ def getDataP(network, p, tempallp=[]):
     return tempallp
 
 
+def predictMove(p, allp, dt):
+    for i in allp:
+        if i.id != p.id:
+            i.update(dt)
+
+
 def main():
     run = True
     n = Network()
@@ -49,10 +56,12 @@ def main():
     allp = getDataP(n, p)
     tempallp = list(allp)
     thread = Thread(target=getDataP, args=(n, p, tempallp))
+    beforetime = time.time()
 
     while run:
-
         clock.tick(60)
+        dt = time.time() - beforetime
+        beforetime = time.time()
 
         if not thread.is_alive():
             allp = list(tempallp)
@@ -63,11 +72,13 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
-        p.move()
+
+        p.move(dt)
 
         if not thread.is_alive():
             allp = list(tempallp)
-
+        else:
+            predictMove(p, allp, dt)
         redrawWindow(win, p, allp)
         debug(f"{clock.get_fps():.2f}", 0, 0)
         pygame.display.update()
