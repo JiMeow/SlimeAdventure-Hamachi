@@ -1,11 +1,11 @@
 import pygame
+from threading import Thread
 from debug import debug
 from glovar import *
+from settings import *
+from network import Network
 from player import Player
 from projectile import Projectile
-from threading import Thread
-from network import Network
-from settings import *
 
 # to do
 # interpolation
@@ -54,15 +54,13 @@ class Game:
         self.player = Player(self.network.pos[0], self.network.pos[1], "green", name="player "+self.id, control=True)
         
         # setup data and thread
-        self.client_data = client_data
-        self.client_data["pos"] = [self.player.rect.centerx,self.player.rect.centery]
-        self.client_data["event"] = {}
+        self.set_client_data(init=True)
         
         self.server_data = {"player":{}}
         self.other_players = {}
         
         self.thread = Thread(target=self.get_server_data)
-
+    
     def get_server_data(self):
         if not self.thread.is_alive():
             self.thread = Thread(target=self._get_server_data)
@@ -70,8 +68,10 @@ class Game:
     def _get_server_data(self):
         self.server_data = self.network.send(self.client_data)
     
-    def set_client_data(self):
-        self.client_data["pos"] = [self.player.rect.x,self.player.rect.y]
+    def set_client_data(self, init=False):
+        if init:
+            self.client_data = client_data
+        self.client_data["pos"] = [self.player.rect.centerx,self.player.rect.centerx]
         self.client_data["event"] = {"bullets":[]}
         
     def validate_other_players(self): # validate other players to matched with server data
@@ -79,7 +79,10 @@ class Game:
             if k not in self.server_data["player"]:
                 v.kill()
                 del self.other_players[k]
-                
+    
+    def interpolation(self):
+        pass
+    
     def update_stc(self):
         self.validate_other_players()
         for player_id,player in self.server_data["player"].items():
