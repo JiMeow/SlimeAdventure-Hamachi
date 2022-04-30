@@ -18,28 +18,33 @@ class Game:
         
         self.network = Network()
         self.id = self.network.id
-        self.other_players = {}
-
         self.player = Player(self.network.pos[0], self.network.pos[1], "green", name="player "+self.id, control=True)
         self.player_sprites = player_sprites
         self.projectile_sprites = projectile_sprites
         
+        # setup data and thread
         self.client_data = client_data
         self.client_data["pos"] = [self.player.rect.centerx,self.player.rect.centery]
         self.client_data["event"] = {}
         
-        self.thread = Thread(target=self.get_server_data)
         self.server_data = {"player":{}}
+        self.other_players = {}
+        
+        self.thread = Thread(target=self.get_server_data)
     
     def get_server_data(self):
         self.server_data = self.network.send(self.client_data)
     
-    def check_other_players(self):
+    def check_other_players(self): # check if other players are matched with server data
         for k,v in tuple(self.other_players.items()):
             if k not in self.server_data["player"]:
                 v.kill()
                 del self.other_players[k]
-    
+                
+    def set_client_data(self):
+        self.client_data["pos"] = [self.player.rect.x,self.player.rect.y]
+        self.client_data["event"] = {"bullets":[]}
+        
     def update_stc(self):
         self.check_other_players()
         for player_id,player in self.server_data["player"].items():
@@ -56,14 +61,10 @@ class Game:
             else:
                 self.other_players[player_id] = Player(player["pos"][0], player["pos"][1], "red", name="player "+player_id)
     
-    def reset_client_data(self):
-        self.client_data["pos"] = [self.player.rect.x,self.player.rect.y]
-        self.client_data["event"] = {"bullets":[]}
-    
     def run(self):
         while self.running:
             self.clock.tick(fps)
-            dt = self.clock.get_time()
+            dt = (self.clock.get_time() * fps)// 1000
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -76,7 +77,7 @@ class Game:
                 self.thread.start()
             
             self.update_stc()
-            self.reset_client_data()
+            self.set_client_data()
             # print(f"[Recieve] {server_data}")
             
             self.screen.fill(background_color)

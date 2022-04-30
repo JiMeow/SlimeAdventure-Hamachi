@@ -53,8 +53,8 @@ class Player(pygame.sprite.Sprite):
         if self.move_direction.magnitude() != 0:
             self.move_direction = self.move_direction.normalize()
         
-        self.rect.x += (self.move_direction.x * self.speed * dt * fps)//1000
-        self.rect.y += (self.move_direction.y * self.speed * dt * fps)//1000
+        self.rect.x += self.move_direction.x * self.speed * dt
+        self.rect.y += self.move_direction.y * self.speed * dt
         
     def update(self,dt):
         if self.control:
