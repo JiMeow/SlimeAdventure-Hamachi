@@ -1,6 +1,7 @@
 import pygame
 from glovar import *
 from projectile import Projectile
+from settings import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, color, control=False):
@@ -12,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = 10
         self.control = control
         self.move_direction = pygame.math.Vector2()
-        self.face_direction = pygame.math.Vector2(0, 1)
+        self.face_direction = pygame.math.Vector2()
         
     def input(self):
         keys = pygame.key.get_pressed()
@@ -39,16 +40,16 @@ class Player(pygame.sprite.Sprite):
             pass
         if pygame.mouse.get_pressed()[0]:
             if self.face_direction.magnitude() != 0:
-                client_data["event"]["pos"] = [self.rect.centerx, self.rect.centery]
-                client_data["event"]["direction"] = [self.face_direction.x, self.face_direction.y]
+                bullet = {"pos": [self.rect.centerx, self.rect.centery], "direction": [self.face_direction.x, self.face_direction.y]}
+                client_data["event"]["bullets"].append(bullet)
                 Projectile(self.rect.centerx, self.rect.centery, self.face_direction)
         
     def move(self,dt):
         if self.move_direction.magnitude() != 0:
             self.move_direction = self.move_direction.normalize()
         
-        self.rect.x += (self.move_direction.x * self.speed * dt * 60)//1000
-        self.rect.y += (self.move_direction.y * self.speed * dt * 60)//1000
+        self.rect.x += (self.move_direction.x * self.speed * dt * fps)//1000
+        self.rect.y += (self.move_direction.y * self.speed * dt * fps)//1000
         
     def update(self,dt):
         if self.control:

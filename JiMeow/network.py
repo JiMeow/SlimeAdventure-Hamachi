@@ -1,7 +1,7 @@
 import socket
 import pickle
 
-server = "25.34.159.172"
+server = "25.35.236.244"
 port = 5555
 
 

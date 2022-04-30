@@ -15,7 +15,7 @@ soc.listen(10)
 print("Start!")
 
 def recv_data(con): # recieve data from client
-    return pickle.loads(con.recv(60000))
+    return pickle.loads(con.recv(128000))
 def send_data(con,send): # send data to client
     con.send(pickle.dumps(send))
 
