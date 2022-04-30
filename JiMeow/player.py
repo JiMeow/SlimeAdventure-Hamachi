@@ -10,7 +10,7 @@ class Player():
         self.height = height
         self.color = color
         self.rect = (x, y, width, height)
-        self.vel = 3
+        self.vel = 2
         self.speed = [0, 0]
         self.name = name
 
@@ -23,7 +23,7 @@ class Player():
         rect = text.get_rect(topleft=(self.x, self.y))
         win.blit(text, rect)
 
-    def move(self, dt=1):
+    def move(self):
         keys = pygame.key.get_pressed()
         keydirection = pygame.Vector2(0, 0)
 
@@ -40,10 +40,10 @@ class Player():
             self.speed = [0, 0]
             return
         keydirection.normalize_ip()
-        self.speed = keydirection * self.vel * dt * 60
+        self.speed = keydirection * self.vel
         self.update()
 
-    def update(self, dt=1):
-        self.x += self.speed[0]*dt
-        self.y += self.speed[1]*dt
+    def update(self, dt=1/60):
+        self.x += self.speed[0] * 60 * dt
+        self.y += self.speed[1] * 60 * dt
         self.rect = (self.x, self.y, self.width, self.height)
