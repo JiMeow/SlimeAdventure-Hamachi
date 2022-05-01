@@ -6,19 +6,28 @@ from settings import *
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, color, name, control=False):
         super().__init__(player_sprites)
-        self.image = pygame.Surface((100, 100))
-        self.image.fill(color)
-        text = font.render(str(name), True, "White")
-        text_rect = text.get_rect(center = (50, 50))
-        pygame.draw.rect(self.image, "Black", text_rect)
-        self.image.blit(text,text_rect)
-        self.rect = self.image.get_rect(center=(x, y))
-        
+        self.init_image(color, name, x, y)
+
         self.name = name
         self.speed = 10
         self.control = control
         self.move_direction = pygame.math.Vector2()
         self.face_direction = pygame.math.Vector2()
+        
+        
+        
+    def init_image(self, color, name, x, y):
+        self.original_image = pygame.image.load(f"FPSmin/assets/{color}.png").convert()
+        self.original_image.set_colorkey((0,0,0))
+        self.original_image = pygame.transform.scale(self.original_image, (100, 100))
+        text = font.render(str(name), True, "White")
+        text_rect = text.get_rect(center = (50, 50))
+        pygame.draw.rect(self.original_image, "Black", text_rect)
+        self.original_image.blit(text,text_rect)
+        self.rect = self.original_image.get_rect(center=(x, y))
+        self.image = self.original_image
+        
+        self.angle = 0
         
     def input(self):
         keys = pygame.key.get_pressed()
@@ -49,12 +58,21 @@ class Player(pygame.sprite.Sprite):
                 client_data["event"]["bullets"].append(bullet)
                 Projectile(self.rect.centerx, self.rect.centery, self.face_direction)
         
+    def interpolation(self):
+        pass
+        
+    def exterpolation(self):
+        pass
+        
     def move(self,dt):
         if self.move_direction.magnitude() != 0:
             self.move_direction = self.move_direction.normalize()
         
         self.rect.x += int(self.move_direction.x * self.speed * dt)
         self.rect.y += int(self.move_direction.y * self.speed * dt)
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
+        self.rect = self.image.get_rect(center=self.rect.center)
+        self.angle += 6
         
     def update(self,dt):
         if self.control:
