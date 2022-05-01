@@ -38,7 +38,6 @@ def redrawWindow(layout, p, allp, dt):
     layout.addPlayer(p)
     layout.addAllPlayer(allp)
     layout.addDt(dt)
-    # layout.draw()
     layout.drawPlayerFrame()
     debug(f'{clock.get_fps():.2f}', 0, 0)
 
@@ -50,9 +49,10 @@ def getDataP(network, p, tempallp=[]):
     return tempallp
 
 
-def predictMove(p, allp, dt):
+def exterpolation(p, allp, dt, missingFrame):
     for i in allp:
         if i.id != p.id:
+            i.jump(screen.gravity, False)
             i.update(dt)
 
 
@@ -67,6 +67,7 @@ def main():
     thread = Thread(target=getDataP, args=(n, p, tempallp))
     beforetime = time.time()
     layout = Layout(win)
+    missingFrame = 0
 
     while run:
         isPlayerJump = False
@@ -86,13 +87,15 @@ def main():
                     isPlayerJump = True
 
         p.move()
-        p.jump(screen.g, isPlayerJump)
+        p.jump(screen.gravity, isPlayerJump)
         p.update(dt)
 
         if not thread.is_alive():
+            missingFrame = 0
             allp = list(tempallp)
         else:
-            predictMove(p, allp, dt)
+            missingFrame += 1
+            exterpolation(p, allp, dt, missingFrame)
 
         redrawWindow(layout, p, allp, dt)
         frame += 1

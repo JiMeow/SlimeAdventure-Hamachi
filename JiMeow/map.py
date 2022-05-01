@@ -7,7 +7,7 @@ class Map():
         self.win = win
         self.img = pygame.transform.scale(
             pygame.image.load(img), (width, height))
-        self.g = 10
+        self.gravity = 0.15
 
     def draw(self):
         self.win.blit(self.img, (0, 0))

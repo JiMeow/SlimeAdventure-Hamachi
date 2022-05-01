@@ -23,21 +23,6 @@ class Layout():
     def addDt(self, dt):
         self.dt = dt
 
-    def draw(self):
-        self.screen.draw()
-        for i in self._eval:
-            eval(i)
-        for i in self.allp:
-            if i.id != self.player.id:
-                i.draw(self.win)
-                i.drawname(self.win)
-        for i in self.allp:
-            if i.id == self.player.id:
-                self.player.update(self.dt)
-                self.player.draw(self.win)
-                self.player.drawname(self.win)
-        pygame.display.update()
-
     def drawPlayerFrame(self):
         self.screen.draw()
         stage = self.player.x//width
