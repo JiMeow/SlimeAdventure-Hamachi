@@ -92,7 +92,7 @@ class Game:
     def set_client_data(self, init=False):
         if init:
             self.client_data = client_data
-        self.client_data["pos"] = [self.player.rect.centerx,self.player.rect.centerx]
+        self.client_data["pos"] = [self.player.rect.centerx,self.player.rect.centery]
         self.client_data["event"] = {"bullets":[]}
         
     def validate_other_players(self): # validate other players to matched with server data
@@ -107,8 +107,8 @@ class Game:
             if player_id == self.id:
                 continue
             if player_id in self.other_players:
-                self.other_players[player_id].rect.x = player["pos"][0]
-                self.other_players[player_id].rect.y = player["pos"][1]
+                self.other_players[player_id].rect.centerx = player["pos"][0]
+                self.other_players[player_id].rect.centery = player["pos"][1]
                 if player["event"]:
                     bullets = player["event"]["bullets"]
                     for bullet in bullets:
