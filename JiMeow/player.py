@@ -56,6 +56,7 @@ class Player():
     def update(self, dt=1/60, collision=None):
         self.x += self.speed[0] * 60 * dt
         self.y += self.speed[1] * 60 * dt
+        collision.addPlayerXY(self.x, self.y)
         if collision.playerCollideFloor():
             self.speed[1] = 0
             self.jumpcount = 0
@@ -63,5 +64,5 @@ class Player():
         if collision.playerCollideFlyingFloor():
             self.speed[1] = 0
             self.jumpcount = 0
-            self.y = 540
+            self.y = 490
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

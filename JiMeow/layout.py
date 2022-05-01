@@ -37,6 +37,7 @@ class Layout():
                 i.drawname(self.win, stage)
         for i in self.allp:
             if i.id == self.player.id:
+                self.collision.addPlayer(i)
                 self.player.update(self.dt, self.collision)
                 self.player.draw(self.win, stage)
                 self.player.drawname(self.win, stage)

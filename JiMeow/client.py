@@ -55,6 +55,7 @@ def exterpolation(p, allp, dt, collision):
     for i in allp:
         if i.id != p.id:
             i.jump(False, screen.gravity, dt)
+            collision.addPlayer(i)
             i.update(dt, collision)
 
 
