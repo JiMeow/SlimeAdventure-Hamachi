@@ -65,5 +65,5 @@ class Player():
             if self.speed[1] > 0:
                 self.speed[1] = 0
                 self.jumpcount = 0
-                self.y = 490
+                self.y = 491
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
