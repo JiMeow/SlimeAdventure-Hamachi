@@ -8,10 +8,11 @@ class Projectile(pygame.sprite.Sprite):
         self.speed = 20
         self.direction = direction
         
-        self.health = 5 * 60
-        self.image = pygame.Surface((10, 10))
-        self.image.fill("black")
-        self.image = pygame.transform.rotate(self.image, self.direction.angle_to(pygame.math.Vector2(0, 1)))
+        self.health = fps * 5
+        self.image = pygame.image.load(f"FPSmin/assets/black.png").convert()
+        self.image.set_colorkey((1,1,1))
+        self.image = pygame.transform.scale(self.image, (10, 10))
+        self.image = pygame.transform.rotate(self.image, self.direction.angle_to(pygame.math.Vector2(1, 0)))
         self.rect = self.image.get_rect(center=(x, y))
     
     def move(self,dt):
