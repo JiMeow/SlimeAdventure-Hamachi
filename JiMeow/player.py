@@ -62,7 +62,8 @@ class Player():
             self.jumpcount = 0
             self.y = floor
         if collision.playerCollideFlyingFloor():
-            self.speed[1] = 0
-            self.jumpcount = 0
-            self.y = 490
+            if self.speed[1] > 0:
+                self.speed[1] = 0
+                self.jumpcount = 0
+                self.y = 490
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
