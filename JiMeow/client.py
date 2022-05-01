@@ -1,5 +1,6 @@
 import pygame
 from threading import *
+from collision import Collision
 from layout import Layout
 from network import Network
 from setting import *
@@ -33,7 +34,8 @@ def debug(info, x, y):
     screen.blit(text, rect)
 
 
-def redrawWindow(layout, p, allp, dt):
+def redrawWindow(layout, p, allp, dt, collision):
+    layout.addCollision(collision)
     layout.addScreen(screen)
     layout.addPlayer(p)
     layout.addAllPlayer(allp)
@@ -49,11 +51,17 @@ def getDataP(network, p, tempallp=[]):
     return tempallp
 
 
-def exterpolation(p, allp, dt):
+def exterpolation(p, allp, dt, collision):
     for i in allp:
         if i.id != p.id:
             i.jump(False, screen.gravity, dt)
-            i.update(dt)
+            i.update(dt, collision)
+
+
+def setNewCollision(p, allp, collision):
+    collision.addPlayer(p)
+    collision.addAllPlayer(allp)
+    collision.addMap(screen)
 
 
 def main():
@@ -67,14 +75,13 @@ def main():
     thread = Thread(target=getDataP, args=(n, p, tempallp))
     beforetime = time.time()
     layout = Layout(win)
-    missingFrame = 0
+    collision = Collision(p, allp, screen)
 
     while run:
         isPlayerJump = False
         dt = time.time() - beforetime
         beforetime = time.time()
         if not thread.is_alive():
-            missingFrame = 0
             allp = list(tempallp)
             thread = Thread(target=getDataP, args=(n, p, tempallp))
             thread.start()
@@ -90,16 +97,16 @@ def main():
 
         p.move()
         p.jump(isPlayerJump, screen.gravity, dt)
-        p.update(dt)
+        setNewCollision(p, allp, collision)
+        p.update(dt, collision)
 
         if not thread.is_alive():
-            missingFrame = 0
             allp = list(tempallp)
         else:
-            missingFrame += 1
-            exterpolation(p, allp, dt)
+            exterpolation(p, allp, dt, collision)
 
-        redrawWindow(layout, p, allp, dt)
+        setNewCollision(p, allp, collision)
+        redrawWindow(layout, p, allp, dt, collision)
         frame += 1
 
 
