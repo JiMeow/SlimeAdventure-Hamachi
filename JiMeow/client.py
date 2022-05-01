@@ -1,5 +1,6 @@
 import pygame
 from threading import *
+from layout import Layout
 from network import Network
 from setting import *
 from map import Map
@@ -21,10 +22,10 @@ clock = pygame.time.Clock()
 clock.tick(60)
 
 screen = Map(win, "JiMeow/photo/forest.png")
-font = pygame.font.Font(None, 20)
 
 
 def debug(info, x, y):
+    font = pygame.font.Font(None, 20)
     screen = pygame.display.get_surface()
     text = font.render(str(info), True, "White")
     rect = text.get_rect(topleft=(x, y))
@@ -32,19 +33,13 @@ def debug(info, x, y):
     screen.blit(text, rect)
 
 
-def redrawWindow(win, p, allp, dt):
-    screen.draw()
-    debug(f"{clock.get_fps():.2f}", 0, 0)
-    # debug(f"{allp[0].x},{allp[0].y}", 0, 20)
-    for i in allp:
-        if i.id != p.id:
-            i.draw(win)
-            i.drawname(win)
-    for i in allp:
-        if i.id == p.id:
-            p.update(dt)
-            p.draw(win)
-            p.drawname(win)
+def redrawWindow(layout, p, allp, dt):
+    layout.addScreen(screen)
+    layout.addPlayer(p)
+    layout.addAllPlayer(allp)
+    layout.addDt(dt)
+    layout.draw()
+    debug(f'{clock.get_fps():.2f}', 0, 0)
 
 
 def getDataP(network, p, tempallp=[]):
@@ -70,6 +65,7 @@ def main():
     tempallp = list(allp)
     thread = Thread(target=getDataP, args=(n, p, tempallp))
     beforetime = time.time()
+    layout = Layout(win)
 
     while run:
         isPlayerJump = False
@@ -97,9 +93,7 @@ def main():
         else:
             predictMove(p, allp, dt)
 
-        redrawWindow(win, p, allp, dt)
-        pygame.display.update()
-
+        redrawWindow(layout, p, allp, dt)
         frame += 1
 
 
