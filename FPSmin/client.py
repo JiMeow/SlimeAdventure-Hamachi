@@ -19,9 +19,7 @@ from projectile import Projectile
 # select server
 
 # select elements qwer asdf 8 elements
-# skill
 # ui Ex : hp, mp, exp, level, skill point, skill list
-
 # element : water, heal, shield, ice, thunder, death, stone, fire  
 # skill : fast walk, revive, reaper, metor shower
 
