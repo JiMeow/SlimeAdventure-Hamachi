@@ -82,9 +82,12 @@ class Player(pygame.sprite.Sprite):
     def move(self,dt):
         if self.move_direction.magnitude() != 0:
             self.move_direction.normalize_ip()
-        
-        self.rect.x += int(self.move_direction.x * self.speed * dt)
-        self.rect.y += int(self.move_direction.y * self.speed * dt)
+        if pygame.math.Vector2(self.target_pos[0] - self.rect.centerx, self.target_pos[1] - self.rect.centery).magnitude() < (self.move_direction * self.speed * dt).magnitude():
+            self.rect.centerx = self.target_pos[0]
+            self.rect.centery = self.target_pos[1]
+        else:
+            self.rect.x += int(self.move_direction.x * self.speed * dt)
+            self.rect.y += int(self.move_direction.y * self.speed * dt)
 
     def draw_cursor(self):
         if self.move_direction.magnitude() != 0:
