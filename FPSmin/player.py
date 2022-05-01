@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
 
         self.name = name
         self.speed = 10
-        self.rotate_speed = 30
+        # self.rotate_speed = 30
         self.control = control
         self.move_direction = pygame.math.Vector2()
         self.face_direction = pygame.math.Vector2()
@@ -34,6 +34,9 @@ class Player(pygame.sprite.Sprite):
         self.angle = 0
         
     def input(self):
+        self.keyboard()
+        self.mouse()
+    def keyboard(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             self.move_direction.y = -1
@@ -48,7 +51,6 @@ class Player(pygame.sprite.Sprite):
             self.move_direction.x = 1
         else:
             self.move_direction.x = 0
-    
     def mouse(self):
         mouse = pygame.mouse.get_pos()
         self.face_direction = pygame.math.Vector2(mouse[0] - self.rect.centerx, mouse[1] - self.rect.centery)
@@ -76,14 +78,13 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += int(self.move_direction.y * self.speed * dt)
 
     
-    def rotate(self):
-        self.image = pygame.transform.rotate(self.original_image, self.angle)
-        self.rect = self.image.get_rect(center=self.rect.center)
-        self.angle += self.rotate_speed
+    # def rotate(self):
+    #     self.image = pygame.transform.rotate(self.original_image, self.angle)
+    #     self.rect = self.image.get_rect(center=self.rect.center)
+    #     self.angle += self.rotate_speed
     
     def update(self,dt):
         if self.control:
             self.input()
-            self.mouse()
             self.move(dt)
-        self.rotate()
+        # self.rotate()
