@@ -23,7 +23,7 @@ from projectile import Projectile
 # ui Ex : hp, mp, exp, level, skill point, skill list
 
 # element : water, heal, shield, ice, thunder, death, stone, fire  
-# skill : fast walk, instance heal, reaper, metor shower
+# skill : fast walk, revive, reaper, metor shower
 
 # left click shoot
 # middle click use to yourself
@@ -69,11 +69,18 @@ class Game:
         self.other_players = {}
         
         self.thread = Thread(target=self.get_server_data)
-    
+
+        self.frame = 0
+        
     def get_server_data(self):
+        
         if not self.thread.is_alive():
             self.thread = Thread(target=self._get_server_data)
             self.thread.start()
+        #     print(self.frame)
+        #     self.frame = 0
+        # self.frame += 1
+        
     def _get_server_data(self):
         self.old_server_data = self.server_data
         self.server_data = self.network.send(self.client_data)
