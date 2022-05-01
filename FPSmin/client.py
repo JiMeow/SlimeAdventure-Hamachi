@@ -31,6 +31,7 @@ from projectile import Projectile
 
 # element iteration like fire + water
 # health damage stun slow fire ice falling knockback    
+# when cast should lock speed to rotate face direction
 
 # server validation data
 
@@ -51,8 +52,8 @@ class Layer:
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption("Client")
+        self.screen = pygame.display.set_mode((width, height))
         self.clock = pygame.time.Clock()
         self.layer = Layer()
         self.running = True
@@ -71,16 +72,19 @@ class Game:
         self.thread = Thread(target=self.get_server_data)
 
         self.frame = 0
+        self.get_server_data_dt = 0
         
     def get_server_data(self):
         
         if not self.thread.is_alive():
             self.thread = Thread(target=self._get_server_data)
             self.thread.start()
-        #     print(self.frame)
-        #     self.frame = 0
-        # self.frame += 1
-        
+            self.interpolation_dt = self.get_server_data_dt
+            self.get_server_data_dt = 0
+            print(self.frame)
+            self.frame = 0
+        self.get_server_data_dt += self.dt
+        self.frame += 1
     def _get_server_data(self):
         self.old_server_data = self.server_data
         self.server_data = self.network.send(self.client_data)
@@ -96,12 +100,6 @@ class Game:
             if k not in self.server_data["player"]:
                 v.kill()
                 del self.other_players[k]
-    
-    def interpolation(self):
-        pass
-        
-    def exterpolation(self):
-        pass
     
     def update_stc(self):
         self.validate_other_players()
@@ -129,7 +127,7 @@ class Game:
     def run(self):
         while self.running:
             self.clock.tick(fps)
-            dt = (self.clock.get_time() * fps) / 1000
+            self.dt = (self.clock.get_time() * fps) / 1000
             
             self.event_handler()
             
@@ -137,7 +135,7 @@ class Game:
             self.update_stc()
             self.set_client_data()
             
-            self.layer.render(dt)
+            self.layer.render(self.dt)
 
             self.display_debug()
             
