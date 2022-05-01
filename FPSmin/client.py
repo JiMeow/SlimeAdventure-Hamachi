@@ -7,10 +7,13 @@ from network import Network
 from player import Player
 from projectile import Projectile
 
+# done
+# right click to walk
+
+
 # to do
 # interpolation
 # exterpolation
-# right click to walk
 # walk point image
 # map
 # camera lock
@@ -148,5 +151,26 @@ class Game:
         debug(f"players: {len(self.layer.player_sprites.sprites())}", self.debug_count)
         debug(f"projectiles: {len(self.layer.projectile_sprites.sprites())}", self.debug_count)
         
+class SpriteCameraGroup(pygame.sprite.Group):
+    def __init__(self):
+        super().__init__()
+        self.screen = pygame.display.get_surface()
+        self.width = self.screen.get_width()
+        self.height = self.screen.get_height()
+        self.offset = pygame.math.Vector2()
+        
+    def custom_draw(self,player):
+        self.screen.fill("Green")
+        
+        self.offset.x = self.width//2 - player.rect.centerx - player.rect.width//2
+        self.offset.y = self.height//2 - player.rect.centery - player.rect.height//2
+        
+        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
+            if sprite == player:
+                continue
+            offset_pos = sprite.rect.center + self.offset
+            self.screen.blit(sprite.image, offset_pos)
+        offset_pos = player.rect.center + self.offset
+        self.screen.blit(player.image, offset_pos)
 game = Game()
 game.run()
