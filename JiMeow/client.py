@@ -83,20 +83,7 @@ def main():
         dt = time.time() - beforetime
         beforetime = time.time()
         if not thread.is_alive():
-
-            calallp = list(allp)
-            for i in range(len(tempallp)):
-                calallp[i].x = (calallp[i].x+tempallp[i].x)/2
-                calallp[i].y = (calallp[i].y+tempallp[i].y)/2
-                calallp[i].rect = pygame.Rect(
-                    calallp[i].x, calallp[i].y, calallp[i].width, calallp[i].height)
-
             allp = list(tempallp)
-            for i in range(len(allp)):
-                allp[i].x = calallp[i].x
-                allp[i].y = calallp[i].y
-                allp[i].rect = calallp[i].rect
-
             thread = Thread(target=getDataP, args=(n, p, tempallp))
             thread.start()
 
@@ -115,18 +102,7 @@ def main():
         p.update(dt, collision)
 
         if not thread.is_alive():
-            calallp = list(allp)
-            for i in range(len(tempallp)):
-                calallp[i].x = (calallp[i].x+tempallp[i].x)/2
-                calallp[i].y = (calallp[i].y+tempallp[i].y)/2
-                calallp[i].rect = pygame.Rect(
-                    calallp[i].x, calallp[i].y, calallp[i].width, calallp[i].height)
-
             allp = list(tempallp)
-            for i in range(len(allp)):
-                allp[i].x = calallp[i].x
-                allp[i].y = calallp[i].y
-                allp[i].rect = calallp[i].rect
         else:
             exterpolation(p, allp, dt, collision)
 
