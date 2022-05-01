@@ -44,12 +44,13 @@ class Player():
             self.speed[0] = 0
         self.speed[0] = self.speed[0] * self.vel
 
-    def jump(self, gravity, isJump):
+    def jump(self, isJump, gravity, dt):
+        # print(dt*60)
         if isJump:
             if self.jumpcount < 2:
                 self.jumpcount += 1
                 self.speed[1] = -6
-        self.speed[1] = min(self.speed[1] + gravity, 15)
+        self.speed[1] = min(self.speed[1] + gravity*60*dt, 15)
 
     def update(self, dt=1/60):
         self.x += self.speed[0] * 60 * dt

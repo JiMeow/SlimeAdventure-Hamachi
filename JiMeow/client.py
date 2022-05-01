@@ -49,10 +49,10 @@ def getDataP(network, p, tempallp=[]):
     return tempallp
 
 
-def exterpolation(p, allp, dt, missingFrame):
+def exterpolation(p, allp, dt):
     for i in allp:
         if i.id != p.id:
-            i.jump(screen.gravity, False)
+            i.jump(False, screen.gravity, dt)
             i.update(dt)
 
 
@@ -74,6 +74,7 @@ def main():
         dt = time.time() - beforetime
         beforetime = time.time()
         if not thread.is_alive():
+            missingFrame = 0
             allp = list(tempallp)
             thread = Thread(target=getDataP, args=(n, p, tempallp))
             thread.start()
@@ -82,12 +83,13 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
+                n.disconnect()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     isPlayerJump = True
 
         p.move()
-        p.jump(screen.gravity, isPlayerJump)
+        p.jump(isPlayerJump, screen.gravity, dt)
         p.update(dt)
 
         if not thread.is_alive():
@@ -95,7 +97,7 @@ def main():
             allp = list(tempallp)
         else:
             missingFrame += 1
-            exterpolation(p, allp, dt, missingFrame)
+            exterpolation(p, allp, dt)
 
         redrawWindow(layout, p, allp, dt)
         frame += 1

@@ -16,8 +16,10 @@ s.listen(20)
 print("Waiting for a connection, Server Started")
 
 
-players = [Player(1, 30, floor, 50, 50, (255, 0, 0), "Player1"), Player(2, 40, floor, 50, 50, (0, 255, 0), "Player2"),
-           Player(3, 50, floor, 50, 50, (0, 0, 255), "Player3"), Player(4, 60, floor, 50, 50, (255, 0, 255), "Player4")]
+# players = [Player(1, 30, floor, 50, 50, (255, 0, 0), "Player1"), Player(2, 40, floor, 50, 50, (0, 255, 0), "Player2"),
+#            Player(3, 50, floor, 50, 50, (0, 0, 255), "Player3"), Player(4, 60, floor, 50, 50, (255, 0, 255), "Player4")]
+players = [Player(1, 30, -50, 50, 50, (255, 0, 0), "Player1"), Player(2, 40, -50, 50, 50, (0, 255, 0), "Player2"),
+           Player(3, 50, -50, 50, 50, (0, 0, 255), "Player3"), Player(4, 60, -50, 50, 50, (255, 0, 255), "Player4")]
 
 
 def threaded_client(conn, player):
@@ -41,6 +43,7 @@ def threaded_client(conn, player):
     print(f"{player} Lost connection")
     global currentPlayer
     currentPlayer[player] = 0
+    players[player].x = -50
     conn.close()
 
 
