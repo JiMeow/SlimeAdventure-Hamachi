@@ -9,6 +9,7 @@ from projectile import Projectile
 
 # done
 # right click to walk
+# connection timeout socket.settimeout
 
 
 # to do
@@ -18,7 +19,6 @@ from projectile import Projectile
 # map
 # camera lock
 # camera follow by mouse
-# connection timeout [thread and time.sleep]
 # select server
 
 # select elements qwer asdf 8 elements
@@ -67,12 +67,12 @@ class Game:
         self.set_client_data(init=True)
         
         self.old_server_data = None
-        self.server_data = {"player":{}}
+        self.server_data = {"player": {}}
         self.other_players = {}
         
         self.thread = Thread(target=self.get_server_data)
 
-        self.frame = 0
+        self.missing_frame = 0
         self.get_server_data_dt = 0
         
     def get_server_data(self):
@@ -82,10 +82,11 @@ class Game:
             self.thread.start()
             self.interpolation_dt = self.get_server_data_dt
             self.get_server_data_dt = 0
-            print(self.frame)
-            self.frame = 0
+            # print(self.missing_frame)
+            self.missing_frame = 0
         self.get_server_data_dt += self.dt
-        self.frame += 1
+        self.missing_frame += 1
+        
     def _get_server_data(self):
         self.old_server_data = self.server_data
         self.server_data = self.network.send(self.client_data)
@@ -94,7 +95,8 @@ class Game:
         if init:
             self.client_data = client_data
         self.client_data["pos"] = [self.player.rect.centerx,self.player.rect.centery]
-        self.client_data["event"] = {"bullets":[]}
+        self.client_data["id"] = self.id
+        self.client_data["event"] = {"bullets":[],"target_pos":[]}
         
     def validate_other_players(self): # validate other players to matched with server data
         for k,v in tuple(self.other_players.items()):
@@ -108,13 +110,13 @@ class Game:
             if player_id == self.id:
                 continue
             if player_id in self.other_players:
-                self.other_players[player_id].rect.centerx = player["pos"][0]
-                self.other_players[player_id].rect.centery = player["pos"][1]
-                if player["event"]:
+                if player["event"]["bullets"]:
                     bullets = player["event"]["bullets"]
                     for bullet in bullets:
                         face_direction = pygame.math.Vector2(bullet["direction"][0], bullet["direction"][1])
                         Projectile(bullet["pos"][0], bullet["pos"][1], face_direction)
+                if player["event"]["target_pos"]:
+                    self.other_players[player_id].target_pos = player["event"]["target_pos"]
             else:
                 self.other_players[player_id] = Player(player["pos"][0], player["pos"][1], "red", name="player "+player_id)
     
@@ -136,6 +138,7 @@ class Game:
             self.update_stc()
             self.set_client_data()
             
+            print(self.other_players)
             self.layer.render(self.dt)
 
             self.display_debug()

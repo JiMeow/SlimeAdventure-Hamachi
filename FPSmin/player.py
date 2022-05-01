@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = 3
         # self.rotate_speed = 30
         self.control = control
-        self.target_pos = (x, y)
+        self.target_pos = [x, y]
         self.move_direction = pygame.math.Vector2()
         self.face_direction = pygame.math.Vector2()
         
@@ -63,23 +63,24 @@ class Player(pygame.sprite.Sprite):
         mouse = pygame.mouse.get_pos()
         self.face_direction = pygame.math.Vector2(mouse[0] - self.rect.centerx, mouse[1] - self.rect.centery)
         if self.face_direction.magnitude() != 0:
-            self.face_direction = self.face_direction.normalize()
+            self.face_direction.normalize_ip()
         if pygame.mouse.get_pressed()[0]:
             if self.face_direction.magnitude() != 0:
                 bullet = {"pos": [self.rect.centerx, self.rect.centery], "direction": [self.face_direction.x, self.face_direction.y]}
                 client_data["event"]["bullets"].append(bullet)
                 Projectile(self.rect.centerx, self.rect.centery, self.face_direction)
         if pygame.mouse.get_pressed()[2]:
-            self.target_pos = mouse
-        self.move_direction = pygame.math.Vector2(self.target_pos[0] - self.rect.centerx, self.target_pos[1] - self.rect.centery)
+            self.target_pos = list(mouse)
+            client_data["event"]["target_pos"] = list(mouse)
         
-    def interpolation(self):
-        pass
+    # def interpolation(self):
+    #     pass
         
-    def exterpolation(self):
-        pass
+    # def exterpolation(self):
+    #     pass
         
     def move(self,dt):
+        self.move_direction = pygame.math.Vector2(self.target_pos[0] - self.rect.centerx, self.target_pos[1] - self.rect.centery)
         if self.move_direction.magnitude() != 0:
             self.move_direction.normalize_ip()
         if pygame.math.Vector2(self.target_pos[0] - self.rect.centerx, self.target_pos[1] - self.rect.centery).magnitude() < (self.move_direction * self.speed * dt).magnitude():
@@ -102,6 +103,6 @@ class Player(pygame.sprite.Sprite):
     def update(self,dt):
         if self.control:
             self.input()
-            self.move(dt)
             self.draw_cursor()
+        self.move(dt)
         # self.rotate()
