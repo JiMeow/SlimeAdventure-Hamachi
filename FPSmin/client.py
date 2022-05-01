@@ -9,6 +9,7 @@ from projectile import Projectile
 
 # done
 # right click to walk
+# connection timeout socket.settimeout
 
 
 # to do
@@ -18,7 +19,6 @@ from projectile import Projectile
 # map
 # camera lock
 # camera follow by mouse
-# connection timeout [thread and time.sleep]
 # select server
 
 # select elements qwer asdf 8 elements
