@@ -38,7 +38,8 @@ def redrawWindow(layout, p, allp, dt):
     layout.addPlayer(p)
     layout.addAllPlayer(allp)
     layout.addDt(dt)
-    layout.draw()
+    # layout.draw()
+    layout.drawPlayerFrame()
     debug(f'{clock.get_fps():.2f}', 0, 0)
 
 

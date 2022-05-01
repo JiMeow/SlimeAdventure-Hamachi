@@ -16,14 +16,17 @@ class Player():
         self.name = name
         self.jumpcount = 0
 
-    def draw(self, win):
-        pygame.draw.rect(win, self.color, self.rect)
+    def draw(self, win, stage=0):
+        pygame.draw.rect(win, self.color, pygame.Rect(
+            self.rect.x-width*stage, self.rect.y, self.rect.width, self.rect.height))
+        # pygame.draw.rect(win, self.color, self.rect)
 
-    def drawname(self, win):
+    def drawname(self, win, stage=0):
         font = pygame.font.Font(None, 20)
         text = font.render(str(self.name), True, "White")
         rect = text.get_rect()
         rect.center = self.rect.center
+        rect.x -= width*stage
         win.blit(text, rect)
 
     def move(self):

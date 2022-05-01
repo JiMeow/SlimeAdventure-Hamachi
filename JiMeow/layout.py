@@ -1,4 +1,5 @@
 import pygame
+from setting import *
 
 
 class Layout():
@@ -35,4 +36,20 @@ class Layout():
                 self.player.update(self.dt)
                 self.player.draw(self.win)
                 self.player.drawname(self.win)
+        pygame.display.update()
+
+    def drawPlayerFrame(self):
+        self.screen.draw()
+        stage = self.player.x//width
+        for i in self._eval:
+            eval(i)
+        for i in self.allp:
+            if i.id != self.player.id:
+                i.draw(self.win, stage)
+                i.drawname(self.win, stage)
+        for i in self.allp:
+            if i.id == self.player.id:
+                self.player.update(self.dt)
+                self.player.draw(self.win, stage)
+                self.player.drawname(self.win, stage)
         pygame.display.update()
