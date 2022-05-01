@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
 
         self.name = name
         self.speed = 10
+        self.rotate_speed = 30
         self.control = control
         self.move_direction = pygame.math.Vector2()
         self.face_direction = pygame.math.Vector2()
@@ -17,15 +18,18 @@ class Player(pygame.sprite.Sprite):
         
         
     def init_image(self, color, name, x, y):
+        # setup original image
         self.original_image = pygame.image.load(f"FPSmin/assets/{color}.png").convert()
-        self.original_image.set_colorkey((0,0,0))
         self.original_image = pygame.transform.scale(self.original_image, (100, 100))
+        self.original_image.set_colorkey((0,0,0))
+        # setup text
         text = font.render(str(name), True, "White")
         text_rect = text.get_rect(center = (50, 50))
         pygame.draw.rect(self.original_image, "Black", text_rect)
         self.original_image.blit(text,text_rect)
-        self.rect = self.original_image.get_rect(center=(x, y))
+        
         self.image = self.original_image
+        self.rect = self.image.get_rect(center=(x, y))
         
         self.angle = 0
         
@@ -70,12 +74,16 @@ class Player(pygame.sprite.Sprite):
         
         self.rect.x += int(self.move_direction.x * self.speed * dt)
         self.rect.y += int(self.move_direction.y * self.speed * dt)
+
+    
+    def rotate(self):
         self.image = pygame.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
-        self.angle += 6
-        
+        self.angle += self.rotate_speed
+    
     def update(self,dt):
         if self.control:
             self.input()
             self.mouse()
             self.move(dt)
+        self.rotate()
