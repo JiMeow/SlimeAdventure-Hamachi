@@ -53,18 +53,20 @@ class Layer:
         self.player_sprites = player_sprites
         self.projectile_sprites = projectile_sprites
         self.all_sprites = [self.player_sprites, self.projectile_sprites]
-        # box setup
+        # box setup [nessary]
         self.camera_boarders = {"left": 200, "right": 200, "top": 200, "bottom": 200}
         l = self.camera_boarders["left"]
         t = self.camera_boarders["top"]
         w = self.width - self.camera_boarders["right"] - self.camera_boarders["left"]
         h = self.height - self.camera_boarders["bottom"] - self.camera_boarders["top"]
         self.camera_rect = pygame.Rect(l,t,w,h)
-        
+        # zoom setup [optional]
         self.keyboard_speed = 5
         self.mouse_speed = 0.4
         self.zoom_scale = 1
-        self.internal_surface_size = (2500,2500)
+        self.min_zoom_scale = 0.5
+        self.max_zoom_scale = 2
+        self.internal_surface_size = (self.width * 1/self.min_zoom_scale, self.height * 1/self.min_zoom_scale)
         self.internal_surface = pygame.Surface(self.internal_surface_size, pygame.SRCALPHA)
         self.internal_rect = self.internal_surface.get_rect(center = (self.width//2,self.height//2))
         self.internal_surface_size_vector = pygame.math.Vector2(self.internal_surface_size)
@@ -170,39 +172,49 @@ class Layer:
             self.zoom_scale += 0.1
         if keys[pygame.K_e]:
             self.zoom_scale -= 0.1
-        if self.zoom_scale < 0:
-            self.zoom_scale = 0
-    
-    def camera_render(self,player):
+        if self.zoom_scale < self.min_zoom_scale:
+            self.zoom_scale = self.min_zoom_scale
+        if self.zoom_scale > self.max_zoom_scale:
+            self.zoom_scale = self.max_zoom_scale
+            
+
+    def pre_zoom(self):
+        self.zoom_keyboard_control()
+        self.offset -= self.internal_offset
+        self.internal_surface.fill(background_color)
+        self.surface = self.internal_surface
         
-        # self.center_target_camera(player)
-        self.box_target_camera(player)
+    def post_zoom(self):
+        scaled_surface = pygame.transform.scale(self.internal_surface,self.internal_surface_size_vector*self.zoom_scale)
+        scaled_rect = scaled_surface.get_rect(center = (self.width//2,self.height//2))
+        self.screen.blit(scaled_surface, scaled_rect)
+        
+    def camera_render(self,player):
+        self.surface = self.screen
+        self.center_target_camera(player)
+        # self.box_target_camera(player)
         # self.keyboard_control()
         # self.mouse_control()
-        # self.zoom_keyboard_control()
-        
-        self.internal_surface.fill(background_color)
+        self.pre_zoom()
         
         #test object
-        offset_pos = self.background_rect.topleft - self.offset + self.internal_offset
-        self.internal_surface.blit(self.background_image, offset_pos)
+        offset_pos = self.background_rect.topleft - self.offset
+        self.surface.blit(self.background_image, offset_pos)
         #all sprites
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
             if sprite == player:
                 continue
-            offset_pos = sprite.rect.topleft - self.offset + self.internal_offset
-            self.internal_surface.blit(sprite.image, offset_pos)
-        pygame.draw.rect(self.internal_surface, "yellow", self.camera_rect, 5)    
+            offset_pos = sprite.rect.topleft - self.offset
+            self.surface.blit(sprite.image, offset_pos)
+        # draw camera block
+        # pygame.draw.rect(self.surface, "yellow", self.camera_rect, 5)
         #cursor
-        player.draw_cursor(self.internal_surface, self.offset + self.internal_offset)
+        player.draw_cursor(self.surface, self.offset)
         #player
-        offset_pos = player.rect.topleft - self.offset + self.internal_offset
-        self.internal_surface.blit(player.image, offset_pos)
+        offset_pos = player.rect.topleft - self.offset
+        self.surface.blit(player.image, offset_pos)
         
-        scaled_surface = pygame.transform.scale(self.internal_surface,self.internal_surface_size_vector*self.zoom_scale)
-        scaled_rect = scaled_surface.get_rect(center = (self.width//2,self.height//2))
-        
-        self.screen.blit(scaled_surface, scaled_rect)
+        self.post_zoom()
                 
 class Game:
     def __init__(self):
