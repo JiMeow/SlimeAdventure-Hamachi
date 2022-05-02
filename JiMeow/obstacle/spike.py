@@ -7,7 +7,7 @@ class Spike():
     def __init__(self, win, x, y, stage):
         self.win = win
         self.img = pygame.transform.scale(
-            pygame.image.load("JiMeow/photo/spike1.png"), (70, 50))
+            pygame.image.load("JiMeow/photo/spike.png"), (70, 50))
         self.width = 70
         self.height = 50
         self.x = x + width * stage

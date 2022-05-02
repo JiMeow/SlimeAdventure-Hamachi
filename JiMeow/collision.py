@@ -43,3 +43,9 @@ class Collision():
             if self.player.rect.colliderect(i.rect):
                 return True, (30, -100)
         return False, None
+
+    def playerCollideHedgehog(self):
+        for i in self.map.hedgehog:
+            if self.player.rect.colliderect(i.rect):
+                return True, (30, -100)
+        return False, None

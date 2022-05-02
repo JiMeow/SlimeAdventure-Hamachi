@@ -1,7 +1,9 @@
 import pygame
+import time
 from setting import *
 from obstacle.spike import Spike
 from obstacle.flyfloor import FlyingFloor
+from obstacle.hedgehog import Hedgehog
 
 
 class Map():
@@ -13,15 +15,17 @@ class Map():
         self.obstacle = []
         self.spike = []
         self.flyfloor = []
+        self.hedgehog = []
         self.stage = list(range(2))
 
     def reset(self):
         self.obstacle = []
         self.spike = []
         self.flyfloor = []
+        self.hedgehog = []
 
     def setobstacle(self):
-        self.obstacle = self.spike + self.flyfloor
+        self.obstacle = self.spike + self.flyfloor + self.hedgehog
 
     def addflyfloor(self, x, y, stage):
         self.flyfloor.append(FlyingFloor(
@@ -30,6 +34,10 @@ class Map():
     def addspike(self, x, y, stage):
         self.spike.append(Spike(
             self.win, x, y, stage))
+
+    def addhedgehog(self, x, y, stage, distance):
+        self.hedgehog.append(Hedgehog(
+            self.win, x, y, stage, int(time.time()*100), distance))
 
     def draw(self, stage):
         self.win.blit(self.img, (0, 0))
@@ -42,6 +50,8 @@ class Map():
             self.addflyfloor(500+45*i, floor-100, 0)
         for i in range(10):
             self.addflyfloor(950+45*i, floor-200, 0)
+        self.addhedgehog(400, floor, 0, 200)
+        self.addhedgehog(470, floor, 0, 200)
         self.setobstacle()
         for i in self.obstacle:
             i.draw(0)
