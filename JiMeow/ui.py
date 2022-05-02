@@ -33,7 +33,9 @@ class Login():
             self.warning.place(x=150, y=105)
             return None
         self.username.append(self.entry_name.get())
+        self.entry_name.delete(0, END)
         self.root.quit()
+        self.hide()
 
     def hide(self):
         self.root.update()
@@ -43,4 +45,4 @@ class Login():
     def show(self):
         self.root.update()
         self.root.deiconify()
-        self.root.update()
+        self.draw()

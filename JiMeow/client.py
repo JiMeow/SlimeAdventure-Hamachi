@@ -101,10 +101,12 @@ def main():
                 run = False
                 pygame.quit()
                 n.disconnect()
+                break
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == pygame.K_w:
                     isPlayerJump = True
-
+        if not run:
+            break
         p.move()
         p.jump(isPlayerJump, screen.gravity, dt)
         setNewCollision(p, allp, collision)
@@ -122,3 +124,4 @@ def main():
 
 
 main()
+ui.show()
