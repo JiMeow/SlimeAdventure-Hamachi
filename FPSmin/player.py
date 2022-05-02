@@ -1,13 +1,14 @@
 import pygame
-from glovar import *
 from projectile import Projectile
 from settings import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, color, name, control=False):
-        super().__init__(player_sprites)
+    def __init__(self, x, y, color, name, control=False, **kwargs):
+        super().__init__(kwargs["player_sprites"])
         self.screen = pygame.display.get_surface()
+        self.client_data = kwargs["client_data"]
+        self.projectile_sprites = kwargs["projectile_sprites"]
         self.init_player_image(color, name, x, y)
         self.init_cursor_image()
         self.name = name
@@ -68,11 +69,11 @@ class Player(pygame.sprite.Sprite):
         if pygame.mouse.get_pressed()[0]:
             if self.face_direction.magnitude() != 0:
                 bullet = {"pos": [self.rect.centerx, self.rect.centery], "direction": [self.face_direction.x, self.face_direction.y]}
-                client_data["event"]["bullets"].append(bullet)
-                Projectile(self.rect.centerx, self.rect.centery,self.face_direction)
+                self.client_data["event"]["bullets"].append(bullet)
+                Projectile(self.rect.centerx, self.rect.centery,self.face_direction, projectile_sprites=self.projectile_sprites)
         if pygame.mouse.get_pressed()[2]:
             self.target_pos = [mouse[0] - width//2 + self.rect.centerx, mouse[1] - height//2 + self.rect.centery]
-            client_data["event"]["target_pos"] = self.target_pos[:]
+            self.client_data["event"]["target_pos"] = self.target_pos[:]
             
     def move(self, dt):
         self.move_direction = pygame.math.Vector2(self.target_pos[0] - self.rect.centerx, self.target_pos[1] - self.rect.centery)

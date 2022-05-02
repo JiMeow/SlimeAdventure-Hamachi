@@ -1,10 +1,10 @@
 import pygame
-from glovar import *
 from settings import *
 
+
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction):
-        super().__init__(projectile_sprites)
+    def __init__(self, x, y, direction, **kwargs):
+        super().__init__(kwargs["projectile_sprites"])
         self.speed = 20
         # self.rotate_speed = 30
         self.direction = direction
