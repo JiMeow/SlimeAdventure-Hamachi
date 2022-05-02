@@ -34,7 +34,6 @@ class Collision():
 
     def playerCollideFlyingFloor(self):
         for i in self.map.flyfloor:
-            # print(self.player.rect, i.rect)
             if pygame.Rect(self.player.x, self.player.y+self.player.height-1, self.player.width, 1).colliderect(i.rect):
                 return True, (self.player.x, i.y-self.player.height+1)
         return False, None

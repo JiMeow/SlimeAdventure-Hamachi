@@ -5,16 +5,14 @@ from collision import Collision
 from layout import Layout
 from network import Network
 from map import Map
+from ui import Login
 import time
 import os
 
-
-username = input("Username: ")
-while len(username) > 6:
-    os.system('cls')
-    print("length of username must lest than 6")
-    username = input("Username: ")
-
+username = []
+ui = Login(username)
+ui.draw()
+username = username[0]
 
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Client")
