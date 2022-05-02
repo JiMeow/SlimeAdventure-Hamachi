@@ -23,6 +23,9 @@ class Layout():
     def addDt(self, dt):
         self.dt = dt
 
+    def addCollision(self, collision):
+        self.collision = collision
+
     def drawPlayerFrame(self):
         self.screen.draw()
         stage = self.player.x//width
@@ -34,7 +37,8 @@ class Layout():
                 i.drawname(self.win, stage)
         for i in self.allp:
             if i.id == self.player.id:
-                self.player.update(self.dt)
+                self.collision.addPlayer(i)
+                self.player.update(self.dt, self.collision)
                 self.player.draw(self.win, stage)
                 self.player.drawname(self.win, stage)
         pygame.display.update()

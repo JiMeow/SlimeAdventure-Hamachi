@@ -1,5 +1,6 @@
 import pygame
 from setting import *
+from collision import Collision
 
 
 class Player():
@@ -52,11 +53,17 @@ class Player():
                 self.speed[1] = -6
         self.speed[1] = min(self.speed[1] + gravity*60*dt, 15)
 
-    def update(self, dt=1/60):
+    def update(self, dt=1/60, collision=None):
         self.x += self.speed[0] * 60 * dt
         self.y += self.speed[1] * 60 * dt
-        if self.y >= floor:
+        collision.addPlayerXY(self.x, self.y)
+        if collision.playerCollideFloor():
             self.speed[1] = 0
             self.jumpcount = 0
             self.y = floor
+        if collision.playerCollideFlyingFloor():
+            if self.speed[1] > 0:
+                self.speed[1] = 0
+                self.jumpcount = 0
+                self.y = 491
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
