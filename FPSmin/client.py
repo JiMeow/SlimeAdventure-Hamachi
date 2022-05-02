@@ -45,13 +45,26 @@ class Layer:
         self.height = self.screen.get_height()
         self.offset = pygame.math.Vector2()
         
+        self.background_image = pygame.Surface((400,100))
+        self.background_image.fill("red")
+        self.background_rect = self.background_image.get_rect(topleft=(0,0))
+        
         self.player_sprites = player_sprites
         self.projectile_sprites = projectile_sprites
         self.all_sprites = [self.player_sprites, self.projectile_sprites]
     
     def render(self,player,dt):
         self.update(dt)
-        self.camera_draw(player)
+        self.screen.fill(background_color)
+        
+        self.camera_render(player)
+        # self.default_render(player)
+    
+    def default_render(self,player):
+        self.screen.blit(self.background_image, self.background_rect)
+        player.draw_cursor(self.screen, self.offset)
+        for sprite in self.sprites():
+            self.screen.blit(sprite.image, sprite.rect)
     
     def update(self,dt):
         self.player_sprites.update(dt)
@@ -63,50 +76,27 @@ class Layer:
             sprites += group.sprites()
         return sprites
     
-    def camera_draw(self,player):
-        self.screen.fill(background_color)
+    def camera_render(self,player):
         
-        self.offset.x = self.width//2 - player.rect.centerx - player.rect.width//2
-        self.offset.y = self.height//2 - player.rect.centery - player.rect.height//2
+        self.offset.x = player.rect.centerx - self.width//2
+        self.offset.y = player.rect.centery - self.height//2
+        
+        #test object
+        offset_pos = self.background_rect.topleft - self.offset
+        self.screen.blit(self.background_image, offset_pos)
+        
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
             if sprite == player:
                 continue
-            offset_pos = sprite.rect.center + self.offset
+            offset_pos = sprite.rect.topleft - self.offset
             self.screen.blit(sprite.image, offset_pos)
-        
-        player.draw_cursor(self.offset)
-        
-        offset_pos = player.rect.center + self.offset
-        self.screen.blit(player.image, offset_pos)
-        
 
-    # def draw_cursor(self, offset=pygame.math.Vector2(0, 0)):
-    #     if self.move_direction.magnitude() != 0:
-    #         self.cursor_rect = self.cursor_image.get_rect(center = self.target_pos + offset)
-    #         self.screen.blit(self.cursor_image, self.cursor_rect)
+        player.draw_cursor(self.screen, self.offset)
         
-        
-class SpriteCameraGroup(pygame.sprite.Group):
-    def __init__(self):
-        super().__init__()
-        self.screen = pygame.display.get_surface()
-        self.width = self.screen.get_width()
-        self.height = self.screen.get_height()
-        self.offset = pygame.math.Vector2()
-        
-    def custom_draw(self,player):
-        self.screen.fill("Green")
-        
-        self.offset.x = self.width//2 - player.rect.centerx - player.rect.width//2
-        self.offset.y = self.height//2 - player.rect.centery - player.rect.height//2
-        
-        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
-            if sprite == player:
-                continue
-            offset_pos = sprite.rect.center + self.offset
-            self.screen.blit(sprite.image, offset_pos)
-        offset_pos = player.rect.center + self.offset
+        #player
+        offset_pos = player.rect.topleft - self.offset
         self.screen.blit(player.image, offset_pos)
+        
 class Game:
     def __init__(self):
         pygame.init()
@@ -195,7 +185,6 @@ class Game:
             self.update_stc()
             self.set_client_data()
             
-            print(self.other_players)
             self.layer.render(self.player, self.dt)
 
             self.display_debug()
@@ -205,9 +194,10 @@ class Game:
     def display_debug(self):
         self.debug_count = [0]
         debug(f"fps: {self.clock.get_fps():.2f}", self.debug_count)
-        debug(f"pos: {self.player.rect.x},{self.player.rect.y}", self.debug_count)
+        debug(f"pos: {self.player.rect.centerx},{self.player.rect.centery}", self.debug_count)
         debug(f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}", self.debug_count)
         debug(f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}", self.debug_count)
+        debug(f"target_pos: {self.player.target_pos[0]},{self.player.target_pos[1]}", self.debug_count)
         debug(f"players: {len(self.layer.player_sprites.sprites())}", self.debug_count)
         debug(f"projectiles: {len(self.layer.projectile_sprites.sprites())}", self.debug_count)
         
