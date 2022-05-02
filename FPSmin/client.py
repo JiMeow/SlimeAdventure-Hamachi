@@ -61,6 +61,9 @@ class Layer:
         h = self.height - self.camera_boarders["bottom"] - self.camera_boarders["top"]
         self.camera_rect = pygame.Rect(l,t,w,h)
         
+        self.keyboard_speed = 5
+        self.mouse_speed = 0.4
+        
     def render(self,player,dt):
         self.update(dt)
         
@@ -84,10 +87,81 @@ class Layer:
             sprites += group.sprites()
         return sprites
     
+    def center_target_camera(self, target):
+        self.offset.x = target.rect.centerx - self.width//2
+        self.offset.y = target.rect.centery - self.height//2
+    
+    def box_target_camera(self,target):
+        if target.rect.left < self.camera_rect.left:
+            self.camera_rect.left = target.rect.left
+        if target.rect.right > self.camera_rect.right:
+            self.camera_rect.right = target.rect.right
+        if target.rect.top < self.camera_rect.top:
+            self.camera_rect.top = target.rect.top
+        if target.rect.bottom > self.camera_rect.bottom:
+            self.camera_rect.bottom = target.rect.bottom
+            
+        self.offset.x = self.camera_rect.left - self.camera_boarders["left"]
+        self.offset.y = self.camera_rect.top - self.camera_boarders["top"]
+    
+    def keyboard_control(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a]:
+            self.offset.x -= self.keyboard_speed
+        if keys[pygame.K_d]:
+            self.offset.x += self.keyboard_speed
+        if keys[pygame.K_w]:
+            self.offset.y -= self.keyboard_speed
+        if keys[pygame.K_s]:
+            self.offset.y += self.keyboard_speed
+    
+    def mouse_control(self):
+        mouse = pygame.math.Vector2(pygame.mouse.get_pos())
+        mouse_offset_vector = pygame.math.Vector2()
+        
+        left_border = self.camera_boarders["left"]
+        top_border = self.camera_boarders["top"]
+        right_border = self.width - self.camera_boarders["right"]
+        bottom_border = self.height - self.camera_boarders["bottom"]
+        
+        if top_border < mouse.y < bottom_border:
+            if mouse.x < left_border:
+                mouse_offset_vector.x = mouse.x - left_border
+                pygame.mouse.set_pos(left_border, mouse.y)
+            if mouse.x > right_border:
+                mouse_offset_vector.x = mouse.x - right_border
+                pygame.mouse.set_pos(right_border, mouse.y)
+        elif mouse.y < top_border:
+            if mouse.x < left_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(left_border, top_border)
+                pygame.mouse.set_pos(left_border, top_border)
+            if mouse.x > right_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(right_border, top_border)
+                pygame.mouse.set_pos(right_border, top_border)
+        elif mouse.y > bottom_border:
+            if mouse.x < left_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(left_border, bottom_border)
+                pygame.mouse.set_pos(left_border, bottom_border)
+            if mouse.x > right_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(right_border, bottom_border)
+                pygame.mouse.set_pos(right_border, bottom_border)
+            
+        if left_border < mouse.x < right_border:
+            if mouse.y < top_border:
+                mouse_offset_vector.y = mouse.y - top_border
+                pygame.mouse.set_pos(mouse.x, top_border)
+            if mouse.y > bottom_border:
+                mouse_offset_vector.y = mouse.y - bottom_border
+                pygame.mouse.set_pos(mouse.x, bottom_border)
+        
+        self.offset += mouse_offset_vector * self.mouse_speed
+    
     def camera_render(self,player):
         
-        self.offset.x = player.rect.centerx - self.width//2
-        self.offset.y = player.rect.centery - self.height//2
+        # self.center_target_camera(player)
+        # self.box_target_camera(player)
+        # self.keyboard_control()
+        self.mouse_control()
         
         #test object
         offset_pos = self.background_rect.topleft - self.offset
@@ -98,7 +172,7 @@ class Layer:
                 continue
             offset_pos = sprite.rect.topleft - self.offset
             self.screen.blit(sprite.image, offset_pos)
-        pygame.draw.rect(self.screen, "yellow", self.camera_rect, 5)
+        pygame.draw.rect(self.screen, "yellow", self.camera_rect, 5)    
         #cursor
         player.draw_cursor(self.screen, self.offset)
         #player
@@ -108,6 +182,7 @@ class Layer:
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.event.set_grab(True)
         pygame.display.set_caption("Client")
         self.screen = pygame.display.set_mode((width, height))
         self.clock = pygame.time.Clock()
