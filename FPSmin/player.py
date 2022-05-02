@@ -90,9 +90,9 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += int(self.move_direction.x * self.speed * dt)
             self.rect.y += int(self.move_direction.y * self.speed * dt)
 
-    def draw_cursor(self):
+    def draw_cursor(self, offset=pygame.math.Vector2(0, 0)):
         if self.move_direction.magnitude() != 0:
-            self.cursor_rect = self.cursor_image.get_rect(center = self.target_pos)
+            self.cursor_rect = self.cursor_image.get_rect(center = self.target_pos + offset)
             self.screen.blit(self.cursor_image, self.cursor_rect)
             
     # def rotate(self):
@@ -103,6 +103,6 @@ class Player(pygame.sprite.Sprite):
     def update(self,dt):
         if self.control:
             self.input()
-            self.draw_cursor()
+            # self.draw_cursor()
         self.move(dt)
         # self.rotate()

@@ -44,6 +44,6 @@ class Projectile(pygame.sprite.Sprite):
         
     def update(self,dt):
         self.move(dt)
-        self.bounce()
+        # self.bounce()
         # self.rotate()
         self.life()

@@ -11,10 +11,11 @@ from projectile import Projectile
 # right click to walk
 # connection timeout socket.settimeout
 
-
-# to do
+# done?
 # interpolation
 # exterpolation
+
+# to do
 # walk point image
 # map
 # camera lock
@@ -40,16 +41,72 @@ from projectile import Projectile
 class Layer:
     def __init__(self,**kwargs):
         self.screen = pygame.display.get_surface()
+        self.width = self.screen.get_width()
+        self.height = self.screen.get_height()
+        self.offset = pygame.math.Vector2()
+        
         self.player_sprites = player_sprites
         self.projectile_sprites = projectile_sprites
-        
-    def render(self,dt):
-        self.screen.fill(background_color)
+        self.all_sprites = [self.player_sprites, self.projectile_sprites]
+    
+    def render(self,player,dt):
+        self.update(dt)
+        self.camera_draw(player)
+    
+    def update(self,dt):
         self.player_sprites.update(dt)
         self.projectile_sprites.update(dt)
-        self.player_sprites.draw(self.screen)
-        self.projectile_sprites.draw(self.screen)
+
+    def sprites(self):
+        sprites = []
+        for group in self.all_sprites:
+            sprites += group.sprites()
+        return sprites
+    
+    def camera_draw(self,player):
+        self.screen.fill(background_color)
         
+        self.offset.x = self.width//2 - player.rect.centerx - player.rect.width//2
+        self.offset.y = self.height//2 - player.rect.centery - player.rect.height//2
+        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
+            if sprite == player:
+                continue
+            offset_pos = sprite.rect.center + self.offset
+            self.screen.blit(sprite.image, offset_pos)
+        
+        player.draw_cursor(self.offset)
+        
+        offset_pos = player.rect.center + self.offset
+        self.screen.blit(player.image, offset_pos)
+        
+
+    # def draw_cursor(self, offset=pygame.math.Vector2(0, 0)):
+    #     if self.move_direction.magnitude() != 0:
+    #         self.cursor_rect = self.cursor_image.get_rect(center = self.target_pos + offset)
+    #         self.screen.blit(self.cursor_image, self.cursor_rect)
+        
+        
+class SpriteCameraGroup(pygame.sprite.Group):
+    def __init__(self):
+        super().__init__()
+        self.screen = pygame.display.get_surface()
+        self.width = self.screen.get_width()
+        self.height = self.screen.get_height()
+        self.offset = pygame.math.Vector2()
+        
+    def custom_draw(self,player):
+        self.screen.fill("Green")
+        
+        self.offset.x = self.width//2 - player.rect.centerx - player.rect.width//2
+        self.offset.y = self.height//2 - player.rect.centery - player.rect.height//2
+        
+        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
+            if sprite == player:
+                continue
+            offset_pos = sprite.rect.center + self.offset
+            self.screen.blit(sprite.image, offset_pos)
+        offset_pos = player.rect.center + self.offset
+        self.screen.blit(player.image, offset_pos)
 class Game:
     def __init__(self):
         pygame.init()
@@ -139,7 +196,7 @@ class Game:
             self.set_client_data()
             
             print(self.other_players)
-            self.layer.render(self.dt)
+            self.layer.render(self.player, self.dt)
 
             self.display_debug()
             
@@ -154,26 +211,7 @@ class Game:
         debug(f"players: {len(self.layer.player_sprites.sprites())}", self.debug_count)
         debug(f"projectiles: {len(self.layer.projectile_sprites.sprites())}", self.debug_count)
         
-class SpriteCameraGroup(pygame.sprite.Group):
-    def __init__(self):
-        super().__init__()
-        self.screen = pygame.display.get_surface()
-        self.width = self.screen.get_width()
-        self.height = self.screen.get_height()
-        self.offset = pygame.math.Vector2()
-        
-    def custom_draw(self,player):
-        self.screen.fill("Green")
-        
-        self.offset.x = self.width//2 - player.rect.centerx - player.rect.width//2
-        self.offset.y = self.height//2 - player.rect.centery - player.rect.height//2
-        
-        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
-            if sprite == player:
-                continue
-            offset_pos = sprite.rect.center + self.offset
-            self.screen.blit(sprite.image, offset_pos)
-        offset_pos = player.rect.center + self.offset
-        self.screen.blit(player.image, offset_pos)
+
+
 game = Game()
 game.run()
