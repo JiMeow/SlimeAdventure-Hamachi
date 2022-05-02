@@ -40,8 +40,8 @@ def threaded_client(con):  # threaded client function to handle each client conn
         "event": {
             "bullets": [],
             "target_pos": []
-            }
         }
+    }
     client_data = server_data["player"][player_ID]
     print(f"[Sending][initial] p{player_ID}: {client_data}")
     send_data(con, client_data)

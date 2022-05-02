@@ -96,7 +96,7 @@ class Game:
     def _get_server_data(self):
         self.old_server_data = self.server_data
         self.server_data = self.network.send(self.client_data)
-    
+
     def set_client_data(self):
         self.client_data["pos"] = [
             self.player.rect.centerx,
@@ -171,21 +171,30 @@ class Game:
 
     def display_debug(self):
         self.debug_count = [0]
-        debug(f"fps: {self.clock.get_fps():.2f}", self.debug_count)
         debug(
-            f"pos: {self.player.rect.centerx},{self.player.rect.centery}", self.debug_count)
+            f"fps: {self.clock.get_fps():.2f}", self.debug_count
+        )
         debug(
-            f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}", self.debug_count)
+            f"pos: {self.player.rect.centerx},{self.player.rect.centery}", self.debug_count
+        )
         debug(
-            f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}", self.debug_count)
+            f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}", self.debug_count
+        )
         debug(
-            f"face_angle: {self.player.face_direction.angle_to(pygame.math.Vector2(1, 0)):.2f}", self.debug_count)
+            f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}", self.debug_count
+        )
         debug(
-            f"target_pos: {self.player.target_pos[0]},{self.player.target_pos[1]}", self.debug_count)
+            f"face_angle: {self.player.face_direction.angle_to(pygame.math.Vector2(1, 0)):.2f}", self.debug_count
+        )
         debug(
-            f"players: {len(self.layer.player_sprites.sprites())}", self.debug_count)
+            f"target_pos: {self.player.target_pos[0]},{self.player.target_pos[1]}", self.debug_count
+        )
         debug(
-            f"projectiles: {len(self.layer.projectile_sprites.sprites())}", self.debug_count)
+            f"players: {len(self.layer.player_sprites.sprites())}", self.debug_count
+        )
+        debug(
+            f"projectiles: {len(self.layer.projectile_sprites.sprites())}", self.debug_count
+        )
 
 
 game = Game()
