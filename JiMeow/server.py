@@ -14,14 +14,11 @@ except socket.error as e:
 s.listen(20)
 print("Waiting for a connection, Server Started")
 
-# players = [Player(1, 30, floor, 50, 50, (255, 0, 0), "Player1"), Player(2, 40, floor, 50, 50, (0, 255, 0), "Player2"),
-#            Player(3, 50, floor, 50, 50, (0, 0, 255), "Player3"), Player(4, 60, floor, 50, 50, (255, 0, 255), "Player4")]
 players = [Player(1, 30, -100, 50, 50, (255, 0, 0), "Player1"), Player(2, 30, -100, 50, 50, (0, 255, 0), "Player2"),
            Player(3, 30, -100, 50, 50, (0, 0, 255), "Player3"), Player(4, 30, -100, 50, 50, (255, 0, 255), "Player4")]
 
 
 def threaded_client(conn, player):
-    # print("I Try")
     global currentPlayer
     conn.send(pickle.dumps(players[player]))
     reply = ""
@@ -59,7 +56,6 @@ while True:
             currentPlayer[i] = 1
             idx = i
             break
-    # print("WTF")
     thread = Thread(target=threaded_client, args=(conn, idx))
     print(idx, "Connected to:", addr)
     thread.start()

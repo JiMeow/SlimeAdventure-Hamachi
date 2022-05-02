@@ -1,9 +1,9 @@
 import pygame
 from threading import *
+from setting import *
 from collision import Collision
 from layout import Layout
 from network import Network
-from setting import *
 from map import Map
 import time
 import os
@@ -68,10 +68,15 @@ def setNewCollision(p, allp, collision):
     collision.addMap(screen)
 
 
+def test(p, stage):
+    p.x += width*stage
+
+
 def main():
     run = True
     n = Network()
     p = n.getP()
+    test(p, 1)
     p.name = username
     frame = 0
 

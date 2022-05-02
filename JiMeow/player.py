@@ -1,6 +1,5 @@
 import pygame
 from setting import *
-from collision import Collision
 
 
 class Player():
@@ -70,6 +69,8 @@ class Player():
         self.x += self.speed[0] * 60 * dt
         self.y += self.speed[1] * 60 * dt
         collision.addPlayerXY(self.x, self.y)
+
+        # on slab
         mask, pos = collision.playerCollideFloor()
         if mask:
             self.speed[1] = 0
@@ -79,7 +80,8 @@ class Player():
         else:
             self.on["Ground"] = False
 
-        if self.y > self.dropTo:  # drop to floor from slab
+        # drop to floor from slab
+        if self.y > self.dropTo:
             self.dropTo = 0
             mask, pos = collision.playerCollideFlyingFloor()
             if mask:
@@ -92,4 +94,11 @@ class Player():
                     self.on["Slab"] = False
             else:
                 self.on["Slab"] = False
+
+        # hit spike
+        mask, pos = collision.playerCollideSpike()
+        if mask:
+            print("Collide")
+            self.x, self.y = pos
+
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
