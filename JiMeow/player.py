@@ -46,9 +46,9 @@ class Player():
         else:
             cnt += 1
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            if self.onSlab:
+            if self.on["Slab"]:
                 self.dropTo = self.y+15
-                self.onSlab = False
+                self.on["Slab"] = False
         if cnt == 2:
             self.speed[0] = 0
         self.speed[0] = self.speed[0] * self.vel
@@ -60,7 +60,7 @@ class Player():
                 self.speed[1] = -6
                 self.on["Ground"] = False
                 self.on["Slab"] = False
-        self.fall(self, gravity, dt)
+        self.fall(gravity, dt)
 
     def fall(self, gravity, dt):
         if not self.on["Ground"] and not self.on["Slab"]:
