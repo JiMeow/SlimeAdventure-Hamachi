@@ -45,25 +45,32 @@ class Layer:
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
         self.offset = pygame.math.Vector2()
-        
+        # background setup
         self.background_image = pygame.Surface((400,100))
         self.background_image.fill("red")
         self.background_rect = self.background_image.get_rect(topleft=(0,0))
-        
+        # sprite groups
         self.player_sprites = player_sprites
         self.projectile_sprites = projectile_sprites
         self.all_sprites = [self.player_sprites, self.projectile_sprites]
-    
+        # box setup
+        self.camera_boarders = {"left": 200, "right": 200, "top": 200, "bottom": 200}
+        l = self.camera_boarders["left"]
+        t = self.camera_boarders["top"]
+        w = self.width - self.camera_boarders["right"] - self.camera_boarders["left"]
+        h = self.height - self.camera_boarders["bottom"] - self.camera_boarders["top"]
+        self.camera_rect = pygame.Rect(l,t,w,h)
+        
     def render(self,player,dt):
         self.update(dt)
-        self.screen.fill(background_color)
         
+        self.screen.fill(background_color)
         self.camera_render(player)
         # self.default_render(player)
     
     def default_render(self,player):
         self.screen.blit(self.background_image, self.background_rect)
-        player.draw_cursor(self.screen, self.offset)
+        player.draw_cursor(self.screen)
         for sprite in self.sprites():
             self.screen.blit(sprite.image, sprite.rect)
     
@@ -85,15 +92,15 @@ class Layer:
         #test object
         offset_pos = self.background_rect.topleft - self.offset
         self.screen.blit(self.background_image, offset_pos)
-        
+        #all sprites
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
             if sprite == player:
                 continue
             offset_pos = sprite.rect.topleft - self.offset
             self.screen.blit(sprite.image, offset_pos)
-
+        pygame.draw.rect(self.screen, "yellow", self.camera_rect, 5)
+        #cursor
         player.draw_cursor(self.screen, self.offset)
-        
         #player
         offset_pos = player.rect.topleft - self.offset
         self.screen.blit(player.image, offset_pos)
