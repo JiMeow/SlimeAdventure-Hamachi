@@ -22,6 +22,7 @@ players = [Player(1, 30, -100, 50, 50, (255, 0, 0), "Player1"), Player(2, 30, -1
 
 def threaded_client(conn, player):
     # print("I Try")
+    global currentPlayer
     conn.send(pickle.dumps(players[player]))
     reply = ""
     while True:
@@ -33,15 +34,15 @@ def threaded_client(conn, player):
                 print("Disconnected")
                 break
             else:
-                reply = players
+                reply = {"players": players,
+                         "status": currentPlayer}
 
             conn.sendall(pickle.dumps(reply))
         except:
             break
     print(f"{player} Lost connection")
-    global currentPlayer
     currentPlayer[player] = 0
-    players[player].x = -30
+    players[player].x = 30
     players[player].y = -100
     conn.close()
 

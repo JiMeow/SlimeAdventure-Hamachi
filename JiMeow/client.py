@@ -44,16 +44,19 @@ def redrawWindow(layout, p, allp, dt, collision):
     debug(f'{clock.get_fps():.2f}', 0, 0)
 
 
-def getDataP(network, p, tempallp=[]):
+def getDataP(network, p, tempallp=[], tempstatus={0: False, 1: False, 2: False, 3: False}):
     while(len(tempallp) != 0):
         tempallp.pop(0)
-    tempallp += network.send(p)
-    return tempallp
+    data = network.send(p)
+    tempallp += data["players"]
+    for i in range(4):
+        tempstatus[i] = data["status"][i]
+    return tempallp, tempstatus
 
 
-def exterpolation(p, allp, dt, collision):
+def exterpolation(p, allp, dt, collision, status):
     for i in allp:
-        if i.id != p.id:
+        if i.id != p.id and status[i.id-1]:
             i.jump(False, screen.gravity, dt)
             collision.addPlayer(i)
             i.update(dt, collision)
@@ -71,8 +74,11 @@ def main():
     p = n.getP()
     p.name = username
     frame = 0
-    allp = getDataP(n, p)
+
+    allp, status = getDataP(n, p)
     tempallp = list(allp)
+    tempstatus = dict(status)
+
     thread = Thread(target=getDataP, args=(n, p, tempallp))
     beforetime = time.time()
     layout = Layout(win)
@@ -84,7 +90,8 @@ def main():
         beforetime = time.time()
         if not thread.is_alive():
             allp = list(tempallp)
-            thread = Thread(target=getDataP, args=(n, p, tempallp))
+            status = dict(tempstatus)
+            thread = Thread(target=getDataP, args=(n, p, tempallp, tempstatus))
             thread.start()
 
         for event in pygame.event.get():
@@ -103,8 +110,9 @@ def main():
 
         if not thread.is_alive():
             allp = list(tempallp)
+            status = dict(tempstatus)
         else:
-            exterpolation(p, allp, dt, collision)
+            exterpolation(p, allp, dt, collision, status)
 
         setNewCollision(p, allp, collision)
         redrawWindow(layout, p, allp, dt, collision)
