@@ -4,7 +4,7 @@ from settings import *
 
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, x, y, direction, **kwargs):
-        super().__init__(kwargs["projectile_sprites"])
+        super().__init__(kwargs.get("projectile_sprites"))
         self.speed = 20
         # self.rotate_speed = 30
         self.direction = direction

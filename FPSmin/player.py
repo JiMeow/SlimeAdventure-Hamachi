@@ -5,10 +5,10 @@ from settings import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, color, name, control=False, **kwargs):
-        super().__init__(kwargs["player_sprites"])
+        super().__init__(kwargs.get("player_sprites"))
         self.screen = pygame.display.get_surface()
-        self.client_data = kwargs["client_data"]
-        self.projectile_sprites = kwargs["projectile_sprites"]
+        self.client_data = kwargs.get("client_data")
+        self.projectile_sprites = kwargs.get("projectile_sprites")
         self.init_player_image(color, name, x, y)
         self.init_cursor_image()
         self.name = name
@@ -70,7 +70,12 @@ class Player(pygame.sprite.Sprite):
             if self.face_direction.magnitude() != 0:
                 bullet = {"pos": [self.rect.centerx, self.rect.centery], "direction": [self.face_direction.x, self.face_direction.y]}
                 self.client_data["event"]["bullets"].append(bullet)
-                Projectile(self.rect.centerx, self.rect.centery,self.face_direction, projectile_sprites=self.projectile_sprites)
+                Projectile(
+                    self.rect.centerx,
+                    self.rect.centery,
+                    self.face_direction,
+                    projectile_sprites=self.projectile_sprites
+                    )
         if pygame.mouse.get_pressed()[2]:
             self.target_pos = [mouse[0] - width//2 + self.rect.centerx, mouse[1] - height//2 + self.rect.centery]
             self.client_data["event"]["target_pos"] = self.target_pos[:]

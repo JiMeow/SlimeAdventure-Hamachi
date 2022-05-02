@@ -1,21 +1,19 @@
+from flask import g
 import pygame
 from settings import *
 
-
-class Layer:
-    def __init__(self,**kwargs):
+class CameraGroup(pygame.sprite.Group):
+    def __init__(self, all_sprites_groups):
+        super().__init__()
         self.screen = pygame.display.get_surface()
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
         self.offset = pygame.math.Vector2()
-        # background setup
+        self.all_sprites_groups = all_sprites_groups
+        # background setup [optional]
         self.background_image = pygame.Surface((400,100))
         self.background_image.fill("red")
         self.background_rect = self.background_image.get_rect(topleft=(0,0))
-        # sprite groups
-        self.player_sprites = kwargs["player_sprites"]
-        self.projectile_sprites = kwargs["projectile_sprites"]
-        self.all_sprites = [self.player_sprites, self.projectile_sprites]
         # box setup [nessary]
         self.camera_boarders = {"left": 200, "right": 200, "top": 200, "bottom": 200}
         l = self.camera_boarders["left"]
@@ -36,30 +34,13 @@ class Layer:
         self.internal_offset = pygame.math.Vector2()
         self.internal_offset.x = self.internal_surface_size[0] // 2 - self.width // 2
         self.internal_offset.y = self.internal_surface_size[1] // 2 - self.height // 2
-        
-    def render(self,player,dt):
-        self.update(dt)
-        
-        self.screen.fill(background_color)
-        self.camera_render(player)
-        # self.default_render(player)
     
-    def default_render(self,player):
-        self.screen.blit(self.background_image, self.background_rect)
-        player.draw_cursor(self.screen)
-        for sprite in self.sprites():
-            self.screen.blit(sprite.image, sprite.rect)
-    
-    def update(self,dt):
-        self.player_sprites.update(dt)
-        self.projectile_sprites.update(dt)
-
     def sprites(self):
         sprites = []
-        for group in self.all_sprites:
+        for group in self.all_sprites_groups:
             sprites += group.sprites()
         return sprites
-    
+        
     def center_target_camera(self, target):
         self.offset.x = target.rect.centerx - self.width//2
         self.offset.y = target.rect.centery - self.height//2
@@ -139,7 +120,6 @@ class Layer:
             self.zoom_scale = self.min_zoom_scale
         if self.zoom_scale > self.max_zoom_scale:
             self.zoom_scale = self.max_zoom_scale
-            
 
     def pre_zoom(self):
         self.zoom_keyboard_control()
@@ -178,3 +158,30 @@ class Layer:
         self.surface.blit(player.image, offset_pos)
         
         self.post_zoom()
+class Layer:
+    def __init__(self,**kwargs):
+        self.screen = pygame.display.get_surface()
+        # sprite groups
+        self.player_sprites = kwargs.get("player_sprites")
+        self.projectile_sprites = kwargs.get("projectile_sprites")
+        self.all_sprites_groups = [self.player_sprites, self.projectile_sprites]
+        self.camera = CameraGroup(self.all_sprites_groups)
+
+        
+    def render(self,player,dt):
+        self.update(dt)
+        
+        self.screen.fill(background_color)
+        self.camera.camera_render(player)
+        # self.default_render(player)
+    
+    def default_render(self,player):
+        self.screen.blit(self.background_image, self.background_rect)
+        player.draw_cursor(self.screen)
+        for sprite in self.sprites():
+            self.screen.blit(sprite.image, sprite.rect)
+    
+    def update(self,dt):
+        self.player_sprites.update(dt)
+        self.projectile_sprites.update(dt)
+
