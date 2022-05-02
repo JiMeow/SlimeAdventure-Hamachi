@@ -43,6 +43,8 @@ class Login():
         self.root.update()
 
     def show(self):
+        while(self.username != []):
+            self.username.pop()
         self.root.update()
         self.root.deiconify()
         self.draw()
