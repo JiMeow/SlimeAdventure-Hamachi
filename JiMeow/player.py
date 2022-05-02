@@ -98,7 +98,6 @@ class Player():
         # hit spike
         mask, pos = collision.playerCollideSpike()
         if mask:
-            print("Collide")
             self.x, self.y = pos
 
         # no negative stage

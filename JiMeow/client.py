@@ -9,19 +9,6 @@ from ui import Login
 import time
 import os
 
-username = []
-ui = Login(username)
-ui.draw()
-username = username[0]
-
-win = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Client")
-pygame.init()
-clock = pygame.time.Clock()
-clock.tick(60)
-
-screen = Map(win, "JiMeow/photo/forest.png")
-
 
 def debug(info, x, y):
     font = pygame.font.Font(None, 20)
@@ -32,14 +19,14 @@ def debug(info, x, y):
     screen.blit(text, rect)
 
 
-def redrawWindow(layout, p, allp, dt, collision):
+def redrawWindow(layout, p, allp, dt, collision, map):
     layout.setCollision(collision)
-    layout.setScreen(screen)
+    layout.setScreen(map)
     layout.setPlayer(p)
     layout.setAllPlayer(allp)
     layout.setDt(dt)
     layout.drawPlayerFrame()
-    debug(f'{clock.get_fps():.2f}', 0, 0)
+    # debug(f'{clock.get_fps():.2f}', 0, 0)
 
 
 def getDataP(network, p, tempallp=[], tempstatus={0: False, 1: False, 2: False, 3: False}):
@@ -52,31 +39,37 @@ def getDataP(network, p, tempallp=[], tempstatus={0: False, 1: False, 2: False, 
     return tempallp, tempstatus
 
 
-def exterpolation(p, allp, dt, collision, status):
+def exterpolation(p, allp, dt, collision, status, map):
     for i in allp:
         if i.id != p.id and status[i.id-1]:
-            i.jump(False, screen.gravity, dt)
+            i.jump(False, map.gravity, dt)
             collision.setPlayer(i)
             i.update(dt, collision)
 
 
-def setNewCollision(p, allp, collision):
+def setNewCollision(p, allp, collision, map):
     collision.setPlayer(p)
     collision.setAllPlayer(allp)
-    collision.setMap(screen)
+    collision.setMap(map)
 
 
 def test(p, stage):
     p.x += width*stage
 
 
-def main():
+def game(username):
+    win = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("Client")
+    pygame.init()
+    clock = pygame.time.Clock()
+
     run = True
     n = Network()
     p = n.getP()
     # test(p, 1)
     p.name = username
     frame = 0
+    map = Map(win, "JiMeow/photo/forest.png")
 
     allp, status = getDataP(n, p)
     tempallp = list(allp)
@@ -85,9 +78,10 @@ def main():
     thread = Thread(target=getDataP, args=(n, p, tempallp))
     beforetime = time.time()
     layout = Layout(win)
-    collision = Collision(p, allp, screen)
+    collision = Collision(p, allp, map)
 
     while run:
+        clock.tick(60)
         isPlayerJump = False
         dt = time.time() - beforetime
         beforetime = time.time()
@@ -108,20 +102,28 @@ def main():
         if not run:
             break
         p.move()
-        p.jump(isPlayerJump, screen.gravity, dt)
-        setNewCollision(p, allp, collision)
+        p.jump(isPlayerJump, map.gravity, dt)
+        setNewCollision(p, allp, collision, map)
         p.update(dt, collision)
 
         if not thread.is_alive():
             allp = list(tempallp)
             status = dict(tempstatus)
         else:
-            exterpolation(p, allp, dt, collision, status)
+            exterpolation(p, allp, dt, collision, status, map)
 
-        setNewCollision(p, allp, collision)
-        redrawWindow(layout, p, allp, dt, collision)
+        setNewCollision(p, allp, collision, map)
+        redrawWindow(layout, p, allp, dt, collision, map)
         frame += 1
 
 
+def main():
+    username = []
+    ui = Login(username)
+    while(1):
+        ui.show()
+        name = username[0]
+        game(name)
+
+
 main()
-ui.show()
