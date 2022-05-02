@@ -10,6 +10,7 @@ from projectile import Projectile
 # done
 # right click to walk
 # connection timeout socket.settimeout
+# camera lock
 
 # done?
 # interpolation
@@ -18,7 +19,7 @@ from projectile import Projectile
 # to do
 # walk point image
 # map
-# camera lock
+# offset mouse target point
 # camera follow by mouse
 # select server
 
@@ -44,14 +45,37 @@ class Layer:
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
         self.offset = pygame.math.Vector2()
-        
+        # background setup
+        self.background_image = pygame.Surface((400,100))
+        self.background_image.fill("red")
+        self.background_rect = self.background_image.get_rect(topleft=(0,0))
+        # sprite groups
         self.player_sprites = player_sprites
         self.projectile_sprites = projectile_sprites
         self.all_sprites = [self.player_sprites, self.projectile_sprites]
-    
+        # box setup
+        self.camera_boarders = {"left": 200, "right": 200, "top": 200, "bottom": 200}
+        l = self.camera_boarders["left"]
+        t = self.camera_boarders["top"]
+        w = self.width - self.camera_boarders["right"] - self.camera_boarders["left"]
+        h = self.height - self.camera_boarders["bottom"] - self.camera_boarders["top"]
+        self.camera_rect = pygame.Rect(l,t,w,h)
+        
+        self.keyboard_speed = 5
+        self.mouse_speed = 0.4
+        
     def render(self,player,dt):
         self.update(dt)
-        self.camera_draw(player)
+        
+        self.screen.fill(background_color)
+        self.camera_render(player)
+        # self.default_render(player)
+    
+    def default_render(self,player):
+        self.screen.blit(self.background_image, self.background_rect)
+        player.draw_cursor(self.screen)
+        for sprite in self.sprites():
+            self.screen.blit(sprite.image, sprite.rect)
     
     def update(self,dt):
         self.player_sprites.update(dt)
@@ -63,53 +87,102 @@ class Layer:
             sprites += group.sprites()
         return sprites
     
-    def camera_draw(self,player):
-        self.screen.fill(background_color)
+    def center_target_camera(self, target):
+        self.offset.x = target.rect.centerx - self.width//2
+        self.offset.y = target.rect.centery - self.height//2
+    
+    def box_target_camera(self,target):
+        if target.rect.left < self.camera_rect.left:
+            self.camera_rect.left = target.rect.left
+        if target.rect.right > self.camera_rect.right:
+            self.camera_rect.right = target.rect.right
+        if target.rect.top < self.camera_rect.top:
+            self.camera_rect.top = target.rect.top
+        if target.rect.bottom > self.camera_rect.bottom:
+            self.camera_rect.bottom = target.rect.bottom
+            
+        self.offset.x = self.camera_rect.left - self.camera_boarders["left"]
+        self.offset.y = self.camera_rect.top - self.camera_boarders["top"]
+    
+    def keyboard_control(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a]:
+            self.offset.x -= self.keyboard_speed
+        if keys[pygame.K_d]:
+            self.offset.x += self.keyboard_speed
+        if keys[pygame.K_w]:
+            self.offset.y -= self.keyboard_speed
+        if keys[pygame.K_s]:
+            self.offset.y += self.keyboard_speed
+    
+    def mouse_control(self):
+        mouse = pygame.math.Vector2(pygame.mouse.get_pos())
+        mouse_offset_vector = pygame.math.Vector2()
         
-        self.offset.x = self.width//2 - player.rect.centerx - player.rect.width//2
-        self.offset.y = self.height//2 - player.rect.centery - player.rect.height//2
+        left_border = self.camera_boarders["left"]
+        top_border = self.camera_boarders["top"]
+        right_border = self.width - self.camera_boarders["right"]
+        bottom_border = self.height - self.camera_boarders["bottom"]
+        
+        if top_border < mouse.y < bottom_border:
+            if mouse.x < left_border:
+                mouse_offset_vector.x = mouse.x - left_border
+                pygame.mouse.set_pos(left_border, mouse.y)
+            if mouse.x > right_border:
+                mouse_offset_vector.x = mouse.x - right_border
+                pygame.mouse.set_pos(right_border, mouse.y)
+        elif mouse.y < top_border:
+            if mouse.x < left_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(left_border, top_border)
+                pygame.mouse.set_pos(left_border, top_border)
+            if mouse.x > right_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(right_border, top_border)
+                pygame.mouse.set_pos(right_border, top_border)
+        elif mouse.y > bottom_border:
+            if mouse.x < left_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(left_border, bottom_border)
+                pygame.mouse.set_pos(left_border, bottom_border)
+            if mouse.x > right_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(right_border, bottom_border)
+                pygame.mouse.set_pos(right_border, bottom_border)
+            
+        if left_border < mouse.x < right_border:
+            if mouse.y < top_border:
+                mouse_offset_vector.y = mouse.y - top_border
+                pygame.mouse.set_pos(mouse.x, top_border)
+            if mouse.y > bottom_border:
+                mouse_offset_vector.y = mouse.y - bottom_border
+                pygame.mouse.set_pos(mouse.x, bottom_border)
+        
+        self.offset += mouse_offset_vector * self.mouse_speed
+    
+    def camera_render(self,player):
+        
+        # self.center_target_camera(player)
+        # self.box_target_camera(player)
+        # self.keyboard_control()
+        self.mouse_control()
+        
+        #test object
+        offset_pos = self.background_rect.topleft - self.offset
+        self.screen.blit(self.background_image, offset_pos)
+        #all sprites
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
             if sprite == player:
                 continue
-            offset_pos = sprite.rect.center + self.offset
+            offset_pos = sprite.rect.topleft - self.offset
             self.screen.blit(sprite.image, offset_pos)
-        
-        player.draw_cursor(self.offset)
-        
-        offset_pos = player.rect.center + self.offset
+        pygame.draw.rect(self.screen, "yellow", self.camera_rect, 5)    
+        #cursor
+        player.draw_cursor(self.screen, self.offset)
+        #player
+        offset_pos = player.rect.topleft - self.offset
         self.screen.blit(player.image, offset_pos)
         
-
-    # def draw_cursor(self, offset=pygame.math.Vector2(0, 0)):
-    #     if self.move_direction.magnitude() != 0:
-    #         self.cursor_rect = self.cursor_image.get_rect(center = self.target_pos + offset)
-    #         self.screen.blit(self.cursor_image, self.cursor_rect)
-        
-        
-class SpriteCameraGroup(pygame.sprite.Group):
-    def __init__(self):
-        super().__init__()
-        self.screen = pygame.display.get_surface()
-        self.width = self.screen.get_width()
-        self.height = self.screen.get_height()
-        self.offset = pygame.math.Vector2()
-        
-    def custom_draw(self,player):
-        self.screen.fill("Green")
-        
-        self.offset.x = self.width//2 - player.rect.centerx - player.rect.width//2
-        self.offset.y = self.height//2 - player.rect.centery - player.rect.height//2
-        
-        for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
-            if sprite == player:
-                continue
-            offset_pos = sprite.rect.center + self.offset
-            self.screen.blit(sprite.image, offset_pos)
-        offset_pos = player.rect.center + self.offset
-        self.screen.blit(player.image, offset_pos)
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.event.set_grab(True)
         pygame.display.set_caption("Client")
         self.screen = pygame.display.set_mode((width, height))
         self.clock = pygame.time.Clock()
@@ -195,7 +268,6 @@ class Game:
             self.update_stc()
             self.set_client_data()
             
-            print(self.other_players)
             self.layer.render(self.player, self.dt)
 
             self.display_debug()
@@ -205,9 +277,11 @@ class Game:
     def display_debug(self):
         self.debug_count = [0]
         debug(f"fps: {self.clock.get_fps():.2f}", self.debug_count)
-        debug(f"pos: {self.player.rect.x},{self.player.rect.y}", self.debug_count)
+        debug(f"pos: {self.player.rect.centerx},{self.player.rect.centery}", self.debug_count)
         debug(f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}", self.debug_count)
         debug(f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}", self.debug_count)
+        debug(f"face_angle: {self.player.face_direction.angle_to(pygame.math.Vector2(1, 0)):.2f}",self.debug_count)
+        debug(f"target_pos: {self.player.target_pos[0]},{self.player.target_pos[1]}", self.debug_count)
         debug(f"players: {len(self.layer.player_sprites.sprites())}", self.debug_count)
         debug(f"projectiles: {len(self.layer.projectile_sprites.sprites())}", self.debug_count)
         
