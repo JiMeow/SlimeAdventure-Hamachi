@@ -27,13 +27,13 @@ class Collision():
     def addPlayer(self, player):
         self.player = player
 
-    def playerCollideFlyingFloor(self):
-        for i in self.map.flyfloor:
-            if self.player.rect.colliderect(i.rect):
-                return True
-        return False
-
     def playerCollideFloor(self):
         if self.player.y >= floor:
-            return True
-        return False
+            return True, (self.player.x, floor)
+        return False, None
+
+    def playerCollideFlyingFloor(self):
+        for i in self.map.flyfloor:
+            if pygame.Rect(self.player.x, self.player.y+self.player.height-1, self.player.width, 1).colliderect(i.rect):
+                return True, (self.player.x, i.y-self.player.height+1)
+        return False, None

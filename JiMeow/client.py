@@ -93,14 +93,13 @@ def main():
             status = dict(tempstatus)
             thread = Thread(target=getDataP, args=(n, p, tempallp, tempstatus))
             thread.start()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
                 n.disconnect()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == pygame.K_w:
                     isPlayerJump = True
 
         p.move()

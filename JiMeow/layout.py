@@ -27,8 +27,8 @@ class Layout():
         self.collision = collision
 
     def drawPlayerFrame(self):
-        self.screen.draw()
         stage = self.player.x//width
+        self.screen.draw(stage)
         for i in self._eval:
             eval(i)
         for i in self.allp:
