@@ -8,27 +8,27 @@ class Layout():
         self.dt = 1/60
         self._eval = []
 
-    def addPlayer(self, player):
+    def setPlayer(self, player):
         self.player = player
 
-    def addAllPlayer(self, player):
+    def setAllPlayer(self, player):
         self.allp = player
 
-    def addScreen(self, screen):
+    def setScreen(self, screen):
         self.screen = screen
 
-    def addEval(self, command):
+    def setEval(self, command):
         self._eval.append(command)
 
-    def addDt(self, dt):
+    def setDt(self, dt):
         self.dt = dt
 
-    def addCollision(self, collision):
+    def setCollision(self, collision):
         self.collision = collision
 
     def drawPlayerFrame(self):
-        self.screen.draw()
         stage = self.player.x//width
+        self.screen.draw(stage)
         for i in self._eval:
             eval(i)
         for i in self.allp:
@@ -37,7 +37,7 @@ class Layout():
                 i.drawname(self.win, stage)
         for i in self.allp:
             if i.id == self.player.id:
-                self.collision.addPlayer(i)
+                self.collision.setPlayer(i)
                 self.player.update(self.dt, self.collision)
                 self.player.draw(self.win, stage)
                 self.player.drawname(self.win, stage)
