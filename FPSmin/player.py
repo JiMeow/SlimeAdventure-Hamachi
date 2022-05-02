@@ -1,13 +1,14 @@
 import pygame
-from glovar import *
 from projectile import Projectile
 from settings import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, color, name, control=False):
-        super().__init__(player_sprites)
+    def __init__(self, x, y, color, name, control=False, **kwargs):
+        super().__init__(kwargs.get("player_sprites"))
         self.screen = pygame.display.get_surface()
+        self.client_data = kwargs.get("client_data")
+        self.projectile_sprites = kwargs.get("projectile_sprites")
         self.init_player_image(color, name, x, y)
         self.init_cursor_image()
         self.name = name
@@ -21,8 +22,13 @@ class Player(pygame.sprite.Sprite):
 
     def init_player_image(self, color, name, x, y):
         # setup original image
-        self.original_image = pygame.image.load(f"FPSmin/assets/{color}.png").convert()
-        self.original_image = pygame.transform.scale(self.original_image, (100, 100))
+        self.original_image = pygame.image.load(
+            f"FPSmin/assets/{color}.png"
+        ).convert()
+        self.original_image = pygame.transform.scale(
+            self.original_image,
+            (100, 100)
+        )
         self.original_image.set_colorkey((0, 0, 0))
         # setup text
         text = font.render(str(name), True, "White")
@@ -62,20 +68,37 @@ class Player(pygame.sprite.Sprite):
 
     def mouse(self):
         mouse = pygame.mouse.get_pos()
-        self.face_direction = pygame.math.Vector2(mouse[0] - width//2, mouse[1] - height//2)
+        self.face_direction = pygame.math.Vector2(
+            mouse[0] - width//2,
+            mouse[1] - height//2
+        )
         if self.face_direction.magnitude() != 0:
             self.face_direction.normalize_ip()
         if pygame.mouse.get_pressed()[0]:
             if self.face_direction.magnitude() != 0:
-                bullet = {"pos": [self.rect.centerx, self.rect.centery], "direction": [self.face_direction.x, self.face_direction.y]}
-                client_data["event"]["bullets"].append(bullet)
-                Projectile(self.rect.centerx, self.rect.centery,self.face_direction)
+                bullet = {
+                    "pos": [self.rect.centerx, self.rect.centery],
+                    "direction": [self.face_direction.x, self.face_direction.y]
+                }
+                self.client_data["event"]["bullets"].append(bullet)
+                Projectile(
+                    self.rect.centerx,
+                    self.rect.centery,
+                    self.face_direction,
+                    projectile_sprites=self.projectile_sprites
+                )
         if pygame.mouse.get_pressed()[2]:
-            self.target_pos = [mouse[0] - width//2 + self.rect.centerx, mouse[1] - height//2 + self.rect.centery]
-            client_data["event"]["target_pos"] = self.target_pos[:]
-            
+            self.target_pos = [
+                mouse[0] - width//2 + self.rect.centerx,
+                mouse[1] - height//2 + self.rect.centery
+            ]
+            self.client_data["event"]["target_pos"] = self.target_pos[:]
+
     def move(self, dt):
-        self.move_direction = pygame.math.Vector2(self.target_pos[0] - self.rect.centerx, self.target_pos[1] - self.rect.centery)
+        self.move_direction = pygame.math.Vector2(
+            self.target_pos[0] - self.rect.centerx,
+            self.target_pos[1] - self.rect.centery
+        )
         if self.move_direction.magnitude() != 0:
             self.move_direction.normalize_ip()
         if pygame.math.Vector2(self.target_pos[0] - self.rect.centerx, self.target_pos[1] - self.rect.centery).magnitude() < (self.move_direction * self.speed * dt).magnitude():
@@ -87,7 +110,9 @@ class Player(pygame.sprite.Sprite):
 
     def draw_cursor(self, screen, offset=pygame.math.Vector2(0, 0)):
         if self.move_direction.magnitude() != 0:
-            self.cursor_rect = self.cursor_image.get_rect(center = self.target_pos)
+            self.cursor_rect = self.cursor_image.get_rect(
+                center=self.target_pos
+            )
             # offset.x = int(offset.x * 1.5)
             # offset.y = int(offset.y * 1.5)
             offset_pos = self.cursor_rect.topleft - offset
