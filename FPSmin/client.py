@@ -63,6 +63,14 @@ class Layer:
         
         self.keyboard_speed = 5
         self.mouse_speed = 0.4
+        self.zoom_scale = 1
+        self.internal_surface_size = (2500,2500)
+        self.internal_surface = pygame.Surface(self.internal_surface_size, pygame.SRCALPHA)
+        self.internal_rect = self.internal_surface.get_rect(center = (self.width//2,self.height//2))
+        self.internal_surface_size_vector = pygame.math.Vector2(self.internal_surface_size)
+        self.internal_offset = pygame.math.Vector2()
+        self.internal_offset.x = self.internal_surface_size[0] // 2 - self.width // 2
+        self.internal_offset.y = self.internal_surface_size[1] // 2 - self.height // 2
         
     def render(self,player,dt):
         self.update(dt)
@@ -156,29 +164,46 @@ class Layer:
         
         self.offset += mouse_offset_vector * self.mouse_speed
     
+    def zoom_keyboard_control(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_q]:
+            self.zoom_scale += 0.1
+        if keys[pygame.K_e]:
+            self.zoom_scale -= 0.1
+        if self.zoom_scale < 0:
+            self.zoom_scale = 0
+    
     def camera_render(self,player):
         
         # self.center_target_camera(player)
-        # self.box_target_camera(player)
+        self.box_target_camera(player)
         # self.keyboard_control()
-        self.mouse_control()
+        # self.mouse_control()
+        # self.zoom_keyboard_control()
+        
+        self.internal_surface.fill(background_color)
         
         #test object
-        offset_pos = self.background_rect.topleft - self.offset
-        self.screen.blit(self.background_image, offset_pos)
+        offset_pos = self.background_rect.topleft - self.offset + self.internal_offset
+        self.internal_surface.blit(self.background_image, offset_pos)
         #all sprites
         for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
             if sprite == player:
                 continue
-            offset_pos = sprite.rect.topleft - self.offset
-            self.screen.blit(sprite.image, offset_pos)
-        pygame.draw.rect(self.screen, "yellow", self.camera_rect, 5)    
+            offset_pos = sprite.rect.topleft - self.offset + self.internal_offset
+            self.internal_surface.blit(sprite.image, offset_pos)
+        pygame.draw.rect(self.internal_surface, "yellow", self.camera_rect, 5)    
         #cursor
-        player.draw_cursor(self.screen, self.offset)
+        player.draw_cursor(self.internal_surface, self.offset + self.internal_offset)
         #player
-        offset_pos = player.rect.topleft - self.offset
-        self.screen.blit(player.image, offset_pos)
+        offset_pos = player.rect.topleft - self.offset + self.internal_offset
+        self.internal_surface.blit(player.image, offset_pos)
         
+        scaled_surface = pygame.transform.scale(self.internal_surface,self.internal_surface_size_vector*self.zoom_scale)
+        scaled_rect = scaled_surface.get_rect(center = (self.width//2,self.height//2))
+        
+        self.screen.blit(scaled_surface, scaled_rect)
+                
 class Game:
     def __init__(self):
         pygame.init()
@@ -256,6 +281,8 @@ class Game:
                 self.running = False
                 self.network.disconnect()
                 pygame.quit()
+            if event.type == pygame.MOUSEWHEEL:
+                self.layer.zoom_scale += event.y * 0.03
     
     def run(self):
         while self.running:
