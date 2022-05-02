@@ -11,7 +11,8 @@ class Player(pygame.sprite.Sprite):
         self.init_player_image(color, name, x, y)
         self.init_cursor_image()
         self.name = name
-        self.speed = 10
+        self.speed = 7
+        self.slow_speed = 3
         # self.rotate_speed = 30
         self.control = control
         self.target_pos = [x, y]
@@ -43,21 +44,21 @@ class Player(pygame.sprite.Sprite):
         # self.keyboard()
         self.mouse()
 
-    def keyboard(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
-            self.move_direction.y = -1
-        elif keys[pygame.K_s]:
-            self.move_direction.y = 1
-        else:
-            self.move_direction.y = 0
+    # def keyboard(self):
+    #     keys = pygame.key.get_pressed()
+    #     if keys[pygame.K_w]:
+    #         self.move_direction.y = -1
+    #     elif keys[pygame.K_s]:
+    #         self.move_direction.y = 1
+    #     else:
+    #         self.move_direction.y = 0
 
-        if keys[pygame.K_a]:
-            self.move_direction.x = -1
-        elif keys[pygame.K_d]:
-            self.move_direction.x = 1
-        else:
-            self.move_direction.x = 0
+    #     if keys[pygame.K_a]:
+    #         self.move_direction.x = -1
+    #     elif keys[pygame.K_d]:
+    #         self.move_direction.x = 1
+    #     else:
+    #         self.move_direction.x = 0
 
     def mouse(self):
         mouse = pygame.mouse.get_pos()
@@ -72,13 +73,7 @@ class Player(pygame.sprite.Sprite):
         if pygame.mouse.get_pressed()[2]:
             self.target_pos = [mouse[0] - width//2 + self.rect.centerx, mouse[1] - height//2 + self.rect.centery]
             client_data["event"]["target_pos"] = self.target_pos[:]
-
-    # def interpolation(self):
-    #     pass
-
-    # def exterpolation(self):
-    #     pass
-
+            
     def move(self, dt):
         self.move_direction = pygame.math.Vector2(self.target_pos[0] - self.rect.centerx, self.target_pos[1] - self.rect.centery)
         if self.move_direction.magnitude() != 0:
@@ -106,6 +101,5 @@ class Player(pygame.sprite.Sprite):
     def update(self, dt):
         if self.control:
             self.input()
-            # self.draw_cursor()
         self.move(dt)
         # self.rotate()

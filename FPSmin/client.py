@@ -10,6 +10,7 @@ from projectile import Projectile
 # done
 # right click to walk
 # connection timeout socket.settimeout
+# camera lock
 
 # done?
 # interpolation
@@ -18,7 +19,7 @@ from projectile import Projectile
 # to do
 # walk point image
 # map
-# camera lock
+# offset mouse target point
 # camera follow by mouse
 # select server
 
@@ -197,6 +198,7 @@ class Game:
         debug(f"pos: {self.player.rect.centerx},{self.player.rect.centery}", self.debug_count)
         debug(f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}", self.debug_count)
         debug(f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}", self.debug_count)
+        debug(f"face_angle: {self.player.face_direction.angle_to(pygame.math.Vector2(1, 0)):.2f}",self.debug_count)
         debug(f"target_pos: {self.player.target_pos[0]},{self.player.target_pos[1]}", self.debug_count)
         debug(f"players: {len(self.layer.player_sprites.sprites())}", self.debug_count)
         debug(f"projectiles: {len(self.layer.projectile_sprites.sprites())}", self.debug_count)
