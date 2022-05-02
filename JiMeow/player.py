@@ -68,7 +68,7 @@ class Player():
     def update(self, dt=1/60, collision=None):
         self.x += self.speed[0] * 60 * dt
         self.y += self.speed[1] * 60 * dt
-        collision.addPlayerXY(self.x, self.y)
+        collision.setPlayerXY(self.x, self.y)
 
         # on slab
         mask, pos = collision.playerCollideFloor()
@@ -100,5 +100,9 @@ class Player():
         if mask:
             print("Collide")
             self.x, self.y = pos
+
+        # no negative stage
+        if self.x < 0:
+            self.x = 0
 
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

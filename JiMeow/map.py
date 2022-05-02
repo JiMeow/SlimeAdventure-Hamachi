@@ -1,7 +1,7 @@
 import pygame
-from spike import Spike
 from setting import *
-from flyfloor import FlyingFloor
+from obstacle.spike import Spike
+from obstacle.flyfloor import FlyingFloor
 
 
 class Map():

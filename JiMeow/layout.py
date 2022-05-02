@@ -8,22 +8,22 @@ class Layout():
         self.dt = 1/60
         self._eval = []
 
-    def addPlayer(self, player):
+    def setPlayer(self, player):
         self.player = player
 
-    def addAllPlayer(self, player):
+    def setAllPlayer(self, player):
         self.allp = player
 
-    def addScreen(self, screen):
+    def setScreen(self, screen):
         self.screen = screen
 
-    def addEval(self, command):
+    def setEval(self, command):
         self._eval.append(command)
 
-    def addDt(self, dt):
+    def setDt(self, dt):
         self.dt = dt
 
-    def addCollision(self, collision):
+    def setCollision(self, collision):
         self.collision = collision
 
     def drawPlayerFrame(self):

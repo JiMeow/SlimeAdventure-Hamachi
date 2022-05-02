@@ -8,23 +8,23 @@ class Collision():
         self.allp = allp
         self.map = map
 
-    def addAllPlayer(self, allp):
+    def setAllPlayer(self, allp):
         self.allp = allp
 
-    def addPlayerX(self, x):
+    def setPlayerX(self, x):
         self.player.x = x
 
-    def addPlayerY(self, y):
+    def setPlayerY(self, y):
         self.player.y = y
 
-    def addPlayerXY(self, x, y):
-        self.addPlayerX(x)
-        self.addPlayerY(y)
+    def setPlayerXY(self, x, y):
+        self.setPlayerX(x)
+        self.setPlayerY(y)
 
-    def addMap(self, map):
+    def setMap(self, map):
         self.map = map
 
-    def addPlayer(self, player):
+    def setPlayer(self, player):
         self.player = player
 
     def playerCollideFloor(self):

@@ -35,11 +35,11 @@ def debug(info, x, y):
 
 
 def redrawWindow(layout, p, allp, dt, collision):
-    layout.addCollision(collision)
-    layout.addScreen(screen)
-    layout.addPlayer(p)
-    layout.addAllPlayer(allp)
-    layout.addDt(dt)
+    layout.setCollision(collision)
+    layout.setScreen(screen)
+    layout.setPlayer(p)
+    layout.setAllPlayer(allp)
+    layout.setDt(dt)
     layout.drawPlayerFrame()
     debug(f'{clock.get_fps():.2f}', 0, 0)
 
@@ -58,14 +58,14 @@ def exterpolation(p, allp, dt, collision, status):
     for i in allp:
         if i.id != p.id and status[i.id-1]:
             i.jump(False, screen.gravity, dt)
-            collision.addPlayer(i)
+            collision.setPlayer(i)
             i.update(dt, collision)
 
 
 def setNewCollision(p, allp, collision):
-    collision.addPlayer(p)
-    collision.addAllPlayer(allp)
-    collision.addMap(screen)
+    collision.setPlayer(p)
+    collision.setAllPlayer(allp)
+    collision.setMap(screen)
 
 
 def test(p, stage):
@@ -76,7 +76,7 @@ def main():
     run = True
     n = Network()
     p = n.getP()
-    test(p, 1)
+    # test(p, 1)
     p.name = username
     frame = 0
 
