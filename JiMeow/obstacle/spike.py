@@ -5,6 +5,15 @@ from setting import *
 class Spike():
 
     def __init__(self, win, x, y, stage):
+        """
+        set default value of spike depend on stage
+
+        Args:
+            win (pygame.display): pygame window
+            x (int): x position of spike
+            y (int): y position of spike
+            stage (int): stage of game
+        """
         self.win = win
         self.img = pygame.transform.scale(
             pygame.image.load("JiMeow/photo/spike.png"), (70, 50))
@@ -15,4 +24,10 @@ class Spike():
         self.rect = pygame.Rect(self.x, y, 70, 50)
 
     def draw(self, stage):
+        """
+         draw spike at stage by rect
+
+        Args:
+            stage (int): stage of game #can change to self.stage
+        """
         self.win.blit(self.img, (self.x-width*stage, self.y))

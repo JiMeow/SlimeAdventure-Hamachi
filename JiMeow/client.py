@@ -11,6 +11,14 @@ import os
 
 
 def debug(info, x, y):
+    """
+    debug for show information on screen
+
+    Args:
+        info (str): text to show
+        x (int): x position of text
+        y (int): y position of text
+    """
     font = pygame.font.Font(None, 20)
     screen = pygame.display.get_surface()
     text = font.render(str(info), True, "White")
@@ -20,16 +28,40 @@ def debug(info, x, y):
 
 
 def redrawWindow(layout, p, allp, dt, collision, map):
+    """
+    add all the elements to the layout
+    for each element, draw it on the screen
+
+    Args:
+        layout (Layout): layout to add elements
+        p (Player): information of player
+        allp (List[Player]): information of all players
+        dt (float): time between two frames
+        collision (Collision): collision data
+        map (Map): map data
+    """
     layout.setCollision(collision)
-    layout.setScreen(map)
+    layout.setMap(map)
     layout.setPlayer(p)
     layout.setAllPlayer(allp)
     layout.setDt(dt)
     layout.drawPlayerFrame()
-    # debug(f'{clock.get_fps():.2f}', 0, 0)
 
 
 def getDataP(network, p, tempallp=[], tempstatus={0: False, 1: False, 2: False, 3: False}):
+    """
+    get all data information from server and update them
+
+    Args:
+        network (_type_): _description_
+        p (Player): _description_
+        tempallp (List[Player], optional): list of information of all player . Defaults to [].
+        tempstatus (dict, optional): which player are online. Defaults to {0: False, 1: False, 2: False, 3: False}.
+
+    Returns:
+        List[Player]: list of information of all player
+        dict: which player are online
+    """
     while(len(tempallp) != 0):
         tempallp.pop(0)
     data = network.send(p)
@@ -40,6 +72,19 @@ def getDataP(network, p, tempallp=[], tempstatus={0: False, 1: False, 2: False, 
 
 
 def exterpolation(p, allp, dt, collision, status, map):
+    """
+    predict the position of another players
+    if data is not available but if the player is not 
+    online, do nothing
+
+    Args:
+        p (Player): information of player
+        allp (List[Player]): information of all players
+        dt (float): time between two frames
+        collision (Collision): collision data
+        status (dict): which player are online
+        map (Map): map data
+    """
     for i in allp:
         if i.id != p.id and status[i.id-1]:
             i.jump(False, map.gravity, dt)
@@ -48,16 +93,40 @@ def exterpolation(p, allp, dt, collision, status, map):
 
 
 def setNewCollision(p, allp, collision, map):
+    """
+    update new collision data
+
+    Args:
+        p (Player): information of player
+        allp (List[Player]): information of all players
+        collision (Collision): collision information for check collision.
+        map (Map): _description_
+    """
     collision.setPlayer(p)
     collision.setAllPlayer(allp)
     collision.setMap(map)
 
 
 def test(p, stage):
+    """
+    test by warp player to stage
+
+    Args:
+        p (Player): _description_
+        stage (int): _description_
+    """
     p.x += width*stage
 
 
 def game(username):
+    """
+    run game with username by connecting to server
+    and receive data from server then generate map
+    and all player
+
+    Args:
+        username (str): name of player
+    """
     win = pygame.display.set_mode((width, height))
     pygame.display.set_caption("Client")
     pygame.init()
@@ -118,6 +187,9 @@ def game(username):
 
 
 def main():
+    """
+    show login window and run game when login successfully
+    """
     username = []
     ui = Login(username)
     while(1):

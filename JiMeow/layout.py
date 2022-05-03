@@ -4,33 +4,68 @@ from setting import *
 
 class Layout():
     def __init__(self, win):
+        """
+        set default value of layout for setting draw layer
+
+        Args:
+            win (pygame.display): pygame window
+        """
         self.win = win
         self.dt = 1/60
-        self._eval = []
 
     def setPlayer(self, player):
+        """
+        set player information to layout
+
+        Args:
+            player (Player): player who play client information
+        """
         self.player = player
 
     def setAllPlayer(self, player):
+        """
+        set all player information to layout
+
+        Args:
+            player (List[Player]): list infomation of all player
+        """
         self.allp = player
 
-    def setScreen(self, screen):
-        self.screen = screen
+    def setMap(self, map):
+        """
+        set map information to layout
 
-    def setEval(self, command):
-        self._eval.append(command)
+        Args:
+            map (Map): map information
+        """
+        self.map = map
 
     def setDt(self, dt):
+        """
+        set delta time to layout
+
+        Args:
+            dt (float): delta time check for lag
+        """
         self.dt = dt
 
     def setCollision(self, collision):
+        """
+        set collision information to layout
+
+        Args:
+            collision (Collision): collision information
+        """
         self.collision = collision
 
     def drawPlayerFrame(self):
+        """
+        calculate stage by position of player and draw stage that player in 
+        then draw another player then set player information for collision
+        update player information and draw player 
+        """
         stage = self.player.x//width
-        self.screen.draw(stage)
-        for i in self._eval:
-            eval(i)
+        self.map.draw(stage)
         for i in self.allp:
             if i.id != self.player.id:
                 i.draw(self.win, stage)
