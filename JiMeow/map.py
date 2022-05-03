@@ -111,12 +111,21 @@ class Map():
         then draw this stage
         """
         self.reset()
+
         for i in range(2):
             self.addflyfloor(45*i, floor-200, 1)
-        for i in range(20):
-            self.addflyfloor(45*i, floor-300, 1)
-        for i in range(10):
-            self.addspike(300+50*i, floor, 1)
+        for i in range(14):
+            self.addspike(125+75*i, floor, 1)
+
+        for i in range(2):
+            self.addflyfloor(300+45*i, floor-300, 1)
+        for i in range(2):
+            self.addflyfloor(600+45*i, floor-400, 1)
+        for i in range(2):
+            self.addflyfloor(900+45*i, floor-500, 1)
+        for i in range(2):
+            self.addflyfloor(1200+45*i, floor-400, 1)
+
         self.setobstacle()
         for i in self.obstacle:
             i.draw(1)

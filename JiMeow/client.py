@@ -7,7 +7,6 @@ from network import Network
 from map import Map
 from ui import Login
 import time
-import os
 
 
 def redrawWindow(layout, p, allp, dt, collision, map, clock):
@@ -120,7 +119,7 @@ def game(username):
     run = True
     n = Network()
     p = n.getP()
-    # test(p, 1)
+    test(p, 1)
     p.name = username
     frame = 0
     map = Map(win, "JiMeow/photo/forest.png")
