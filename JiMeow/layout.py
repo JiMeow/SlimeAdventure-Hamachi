@@ -58,6 +58,19 @@ class Layout():
         """
         self.collision = collision
 
+    def setDebug(self, info, x, y):
+        """
+        debug for show information on screen
+
+        Args:
+            info (str): text to show
+            x (int): x position of text
+            y (int): y position of text
+        """
+        font = pygame.font.Font(None, 20)
+        self.text = font.render(str(info), True, "White")
+        self.textrect = self.text.get_rect(topleft=(x, y))
+
     def drawPlayerFrame(self):
         """
         calculate stage by position of player and draw stage that player in 
@@ -76,4 +89,7 @@ class Layout():
                 self.player.update(self.dt, self.collision)
                 self.player.draw(self.win, stage)
                 self.player.drawname(self.win, stage)
+
+        # debug
+        self.win.blit(self.text, self.textrect)
         pygame.display.update()

@@ -7,27 +7,9 @@ from network import Network
 from map import Map
 from ui import Login
 import time
-import os
 
 
-def debug(info, x, y):
-    """
-    debug for show information on screen
-
-    Args:
-        info (str): text to show
-        x (int): x position of text
-        y (int): y position of text
-    """
-    font = pygame.font.Font(None, 20)
-    screen = pygame.display.get_surface()
-    text = font.render(str(info), True, "White")
-    rect = text.get_rect(topleft=(x, y))
-    pygame.draw.rect(screen, "Black", rect)
-    screen.blit(text, rect)
-
-
-def redrawWindow(layout, p, allp, dt, collision, map):
+def redrawWindow(layout, p, allp, dt, collision, map, clock):
     """
     add all the elements to the layout
     for each element, draw it on the screen
@@ -45,6 +27,8 @@ def redrawWindow(layout, p, allp, dt, collision, map):
     layout.setPlayer(p)
     layout.setAllPlayer(allp)
     layout.setDt(dt)
+    # Debug Fps
+    layout.setDebug(f"{clock.get_fps():.2f}", 10, 10)
     layout.drawPlayerFrame()
 
 
@@ -135,7 +119,7 @@ def game(username):
     run = True
     n = Network()
     p = n.getP()
-    # test(p, 1)
+    test(p, 1)
     p.name = username
     frame = 0
     map = Map(win, "JiMeow/photo/forest.png")
@@ -182,7 +166,7 @@ def game(username):
             exterpolation(p, allp, dt, collision, status, map)
 
         setNewCollision(p, allp, collision, map)
-        redrawWindow(layout, p, allp, dt, collision, map)
+        redrawWindow(layout, p, allp, dt, collision, map, clock)
         frame += 1
 
 
