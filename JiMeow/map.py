@@ -139,20 +139,14 @@ class Map():
         """
         stage = 2
         self.reset()
+
         for i in range(14):
             self.addspike(125+75*i, floor, stage)
 
-        for i in range(4):
-            self.addflyfloor(200+45*i, floor-150, stage)
-        self.addhedgehog(200, floor-200, stage, 120)
-
-        for i in range(4):
-            self.addflyfloor(500+45*i, floor-150, stage)
-        self.addhedgehog(500, floor-200, stage, 120)
-
-        for i in range(4):
-            self.addflyfloor(800+45*i, floor-150, stage)
-        self.addhedgehog(800, floor-200, stage, 120)
+        self.addflyfloor(200, floor-100, stage)
+        self.addflyfloor(400, floor-250, stage)
+        self.addflyfloor(600, floor-400, stage)
+        self.addflyfloor(800, floor-550, stage)
 
         self.setobstacle()
         for i in self.obstacle:
@@ -183,14 +177,20 @@ class Map():
         """
         stage = 4
         self.reset()
-
         for i in range(14):
             self.addspike(125+75*i, floor, stage)
 
-        self.addflyfloor(200, floor-100, stage)
-        self.addflyfloor(400, floor-250, stage)
-        self.addflyfloor(600, floor-400, stage)
-        self.addflyfloor(800, floor-550, stage)
+        for i in range(4):
+            self.addflyfloor(200+45*i, floor-150, stage)
+        self.addhedgehog(200, floor-200, stage, 120)
+
+        for i in range(4):
+            self.addflyfloor(500+45*i, floor-150, stage)
+        self.addhedgehog(500, floor-200, stage, 120)
+
+        for i in range(4):
+            self.addflyfloor(800+45*i, floor-150, stage)
+        self.addhedgehog(800, floor-200, stage, 120)
 
         self.setobstacle()
         for i in self.obstacle:

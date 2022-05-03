@@ -26,7 +26,7 @@ class Hedgehog():
         self.height = 50
         self.x = x + width * stage
         self.y = y
-        self.rect = pygame.Rect(self.x, y, 70, 50)
+        self.rect = pygame.Rect(self.x+5, y+5, -5, -5)
         self.speed = 1
         self.time = time % (distance*2) + 1
         self.distance = distance
