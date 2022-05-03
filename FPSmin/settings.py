@@ -6,9 +6,10 @@ font = pygame.font.Font(None, 20)
 
 
 fps = 60
-width = 800
-height = 800
-pygame.display.set_mode((width, height))  # make it can load image
+width = 1920
+height = 1080
+# make it can load image
+pygame.display.set_mode((width, height))
 background_color = (100, 100, 200)
 gb_colorkey = (1, 1, 1)
 # player settings

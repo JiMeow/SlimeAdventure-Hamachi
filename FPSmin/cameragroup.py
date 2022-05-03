@@ -163,7 +163,8 @@ class CameraGroup(pygame.sprite.Group):
         # self.box_target_camera(player)
         # self.keyboard_control()
         # self.mouse_control()
-        self.pre_zoom()
+
+        # self.pre_zoom()
 
         # test object
         offset_pos = self.background_rect.topleft - self.offset
@@ -182,4 +183,4 @@ class CameraGroup(pygame.sprite.Group):
         offset_pos = player.rect.topleft - self.offset
         self.surface.blit(player.image, offset_pos)
 
-        self.post_zoom()
+        # self.post_zoom()
