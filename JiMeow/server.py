@@ -17,6 +17,8 @@ print("Waiting for a connection, Server Started")
 players = [Player(1, 30, -100, 50, 50, (255, 0, 0), "Player1"), Player(2, 30, -100, 50, 50, (0, 255, 0), "Player2"),
            Player(3, 30, -100, 50, 50, (0, 0, 255), "Player3"), Player(4, 30, -100, 50, 50, (255, 0, 255), "Player4")]
 
+currentPlayer = {}
+
 
 def threaded_client(conn, player):
     """
@@ -58,7 +60,6 @@ def main():
     which client will be which id
     """
     maxPlayers = 4
-    currentPlayer = {}
     for i in range(maxPlayers):
         currentPlayer[i] = 0
     idx = 0

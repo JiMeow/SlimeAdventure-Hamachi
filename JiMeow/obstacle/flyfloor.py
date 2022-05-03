@@ -17,7 +17,7 @@ class FlyingFloor():
         self.win = win
         self.img = pygame.transform.scale(
             pygame.image.load("JiMeow/photo/flyfloor.png"), (45, 15))
-        self.weight = 45
+        self.width = 45
         self.height = 15
         self.x = x + width*stage
         self.y = y
