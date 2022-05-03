@@ -20,6 +20,8 @@ from projectile import Projectile
 # map
 # offset mouse target point
 # camera follow by mouse
+# projectile author
+# slow speed when cast
 # select server
 
 # select elements qwer asdf 8 elements
@@ -33,7 +35,7 @@ from projectile import Projectile
 
 # element iteration like fire + water
 # health damage stun slow fire ice falling knockback
-# when cast should slow speed to rotate face direction
+# when cast should slow speed and speed rotate face direction
 
 # server validation data
 
@@ -42,7 +44,9 @@ class Game:
     def __init__(self):
         # setup game ------------------------------------------------------------
         pygame.init()
-        self.screen = pygame.display.set_mode((width, height))
+        self.screen = pygame.display.set_mode(
+            (width, height),
+        )
         pygame.display.set_caption("Client")
         # pygame.event.set_grab(True)
         self.clock = pygame.time.Clock()
@@ -107,7 +111,7 @@ class Game:
 
     def event_handler(self):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 self.running = False
                 self.network.disconnect()
                 # pygame.quit()
