@@ -12,7 +12,7 @@ class Projectile(pygame.sprite.Sprite):
 
         self.max_health = projectile_max_health
         self.health = self.max_health
-        self.origin_image = load_img(projectile_image_path)
+        self.origin_image = projectile_image  # load_img(projectile_image_path)
         self.origin_image.set_colorkey((1, 1, 1))
         self.origin_image = pygame.transform.scale(
             self.origin_image,

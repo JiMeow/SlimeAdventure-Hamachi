@@ -24,19 +24,35 @@ class Player(pygame.sprite.Sprite):
 
     def init_player_image(self, pos, color, name):
         # setup original image
-        self.origin_image = pygame.image.load(
-            f"FPSmin/assets/{color}.png"
-        ).convert()
+        if color == "red":
+            self.origin_image = player_image_red
+        elif color == "green":
+            self.origin_image = player_image_green
         self.origin_image = pygame.transform.scale(
             self.origin_image,
-            (100, 100)
+            player_image_size
         )
-        self.origin_image.set_colorkey((1, 1, 1))
         # setup text
-        text = font.render(str(name), True, "White")
-        text_rect = text.get_rect(center=(50, 50))
-        pygame.draw.rect(self.origin_image, "Black", text_rect)
-        self.origin_image.blit(text, text_rect)
+        draw_text_to_surface(
+            surface=self.origin_image,
+            font=font,
+            text=name,
+            text_color="white",
+            bg_color="black",
+            pos=[
+                player_image_size[0]//2,
+                player_image_size[1]//2
+            ]
+        )
+        # text = font.render(str(name), True, "White")
+        # text_rect = text.get_rect(
+        #     center=(
+        #         player_image_size[0]//2,
+        #         player_image_size[1]//2
+        #     )
+        # )
+        # pygame.draw.rect(self.origin_image, "Black", text_rect)
+        # self.origin_image.blit(text, text_rect)
         # setup image and rect
         self.image = self.origin_image
         self.rect = self.image.get_rect(center=pos)

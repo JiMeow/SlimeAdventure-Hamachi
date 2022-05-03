@@ -11,7 +11,7 @@ class CameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
         self.all_sprites_groups = all_sprites_groups
         # background setup [optional]
-        self.background_image = pygame.Surface((400, 100))
+        self.background_image = pygame.Surface((400, 100)).convert()
         self.background_image.fill("red")
         self.background_rect = self.background_image.get_rect(topleft=(0, 0))
         # box setup [nessary]
