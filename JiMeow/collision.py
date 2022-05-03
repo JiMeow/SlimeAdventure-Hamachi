@@ -3,7 +3,7 @@ from setting import *
 
 
 class Collision():
-    def __init__(self, p, allp, map):
+    def __init__(self, p, allp, map, spawnstage):
         """
         set player, all player, and map to the class
 
@@ -15,6 +15,7 @@ class Collision():
         self.player = p
         self.allp = allp
         self.map = map
+        self.spawnstage = spawnstage
 
     def setAllPlayer(self, allp):
         """
@@ -72,6 +73,15 @@ class Collision():
         """
         self.player = player
 
+    def setSpawnStage(self, spawnstage):
+        """
+        set spawn stage to the class
+
+        Args:
+            spawnstage (int): spawn stage
+        """
+        self.spawnstage = spawnstage
+
     def playerCollideFloor(self):
         """
         check if player collide with floor or not and return the result
@@ -107,7 +117,7 @@ class Collision():
         """
         for i in self.map.spike:
             if self.player.rect.colliderect(i.rect):
-                return True, (30, -100)
+                return True, (30+width*self.spawnstage, -100)
         return False, None
 
     def playerCollideHedgehog(self):
@@ -120,5 +130,5 @@ class Collision():
         """
         for i in self.map.hedgehog:
             if self.player.rect.colliderect(i.rect):
-                return True, (30, -100)
+                return True, (30+width*self.spawnstage, -100)
         return False, None

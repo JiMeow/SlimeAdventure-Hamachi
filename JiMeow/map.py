@@ -23,7 +23,7 @@ class Map():
         self.spike = []
         self.flyfloor = []
         self.hedgehog = []
-        self.stage = list(range(2))
+        self.stage = list(range(6))
 
     def reset(self):
         """
@@ -94,38 +94,121 @@ class Map():
         reset all obstacle then add new obstacle to stage 0 
         then draw this stage
         """
+        stage = 0
         self.reset()
         for i in range(10):
-            self.addflyfloor(500+45*i, floor-100, 0)
+            self.addflyfloor(500+45*i, floor-100, stage)
         for i in range(10):
-            self.addflyfloor(950+45*i, floor-200, 0)
+            self.addflyfloor(950+45*i, floor-200, stage)
         for i in range(3):
-            self.addhedgehog(400+75*i, floor, 0, 200)
+            self.addhedgehog(400+75*i, floor, stage, 200)
         self.setobstacle()
         for i in self.obstacle:
-            i.draw(0)
+            i.draw(stage)
 
     def stage1(self):
         """
         reset all obstacle then add new obstacle to stage 1
         then draw this stage
         """
+        stage = 1
         self.reset()
 
         for i in range(2):
-            self.addflyfloor(45*i, floor-200, 1)
+            self.addflyfloor(45*i, floor-200, stage)
         for i in range(14):
-            self.addspike(125+75*i, floor, 1)
+            self.addspike(125+75*i, floor, stage)
 
         for i in range(2):
-            self.addflyfloor(300+45*i, floor-300, 1)
+            self.addflyfloor(300+45*i, floor-300, stage)
         for i in range(2):
-            self.addflyfloor(600+45*i, floor-400, 1)
+            self.addflyfloor(600+45*i, floor-400, stage)
         for i in range(2):
-            self.addflyfloor(900+45*i, floor-500, 1)
+            self.addflyfloor(900+45*i, floor-500, stage)
         for i in range(2):
-            self.addflyfloor(1200+45*i, floor-400, 1)
+            self.addflyfloor(1200+45*i, floor-400, stage)
 
         self.setobstacle()
         for i in self.obstacle:
-            i.draw(1)
+            i.draw(stage)
+
+    def stage2(self):
+        """
+        reset all obstacle then add new obstacle to stage 1
+        then draw this stage
+        """
+        stage = 2
+        self.reset()
+        for i in range(14):
+            self.addspike(125+75*i, floor, stage)
+
+        for i in range(4):
+            self.addflyfloor(200+45*i, floor-150, stage)
+        self.addhedgehog(200, floor-200, stage, 120)
+
+        for i in range(4):
+            self.addflyfloor(500+45*i, floor-150, stage)
+        self.addhedgehog(500, floor-200, stage, 120)
+
+        for i in range(4):
+            self.addflyfloor(800+45*i, floor-150, stage)
+        self.addhedgehog(800, floor-200, stage, 120)
+
+        self.setobstacle()
+        for i in self.obstacle:
+            i.draw(stage)
+
+    def stage3(self):
+        """
+        reset all obstacle then add new obstacle to stage 1
+        then draw this stage
+        """
+        stage = 3
+        self.reset()
+
+        self.addhedgehog(150, floor, stage, 200)
+        self.addhedgehog(350, floor, stage, 200)
+        self.addhedgehog(550, floor, stage, 200)
+        self.addhedgehog(750, floor, stage, 200)
+        self.addhedgehog(950, floor, stage, 200)
+
+        self.setobstacle()
+        for i in self.obstacle:
+            i.draw(stage)
+
+    def stage4(self):
+        """
+        reset all obstacle then add new obstacle to stage 1
+        then draw this stage
+        """
+        stage = 4
+        self.reset()
+
+        for i in range(14):
+            self.addspike(125+75*i, floor, stage)
+
+        self.addflyfloor(200, floor-100, stage)
+        self.addflyfloor(400, floor-250, stage)
+        self.addflyfloor(600, floor-400, stage)
+        self.addflyfloor(800, floor-550, stage)
+
+        self.setobstacle()
+        for i in self.obstacle:
+            i.draw(stage)
+
+    def stage5(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 5
+        self.reset()
+        for i in range(10):
+            self.addflyfloor(500+45*i, floor-100, stage)
+        for i in range(10):
+            self.addflyfloor(950+45*i, floor-200, stage)
+        for i in range(3):
+            self.addhedgehog(400+75*i, floor, stage, 200)
+        self.setobstacle()
+        for i in self.obstacle:
+            i.draw(stage)
