@@ -10,7 +10,7 @@ ips = {
 
 
 class Network:
-    def __init__(self, client_data):
+    def __init__(self, client_sending_data):
         # setup server data and environment ------------------------------------
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.settimeout(1)
@@ -21,8 +21,8 @@ class Network:
         self.pos = self.data["pos"]
         # setup data for client and server --------------------------------------
         self.server_data = {"player": {}}
-        self.client_data = client_data
-        self.set_client_data()
+        self.client_sending_data = client_sending_data
+        self.set_client_sending_data()
         # setup thread ----------------------------------------------------------
         self.thread = Thread(target=self.get_server_data)
 
@@ -58,21 +58,41 @@ class Network:
         # self.missing_frame += 1
 
     def _get_server_data(self):
-        self.server_data = self.send(self.client_data)
+        self.server_data = self.send(self.client_sending_data)
 
-    def set_client_data(self, player=None):
+    def set_client_sending_data(self, player=None):
         if player:
-            self.client_data["pos"] = [*player.rect.center]
+            self.client_sending_data["pos"] = [*player.rect.center]
         else:
-            self.client_data["pos"] = [*self.pos]
-        self.client_data["id"] = self.id
-        self.client_data["event"] = {
+            self.client_sending_data["pos"] = [*self.pos]
+        self.client_sending_data["id"] = self.id
+        self.client_sending_data["event"] = {
             "bullets": [],
             "target_pos": []
         }
 
-    def validate_other_players(self, other_players):
-        for k, v in list(other_players.items()):
-            if k not in self.server_data["player"]:
-                v.kill()
-                del other_players[k]
+    def valid_player_client_data(self, client_data):
+        for player_id, player in list(client_data["player"].items()):
+            if player_id not in self.server_data["player"]:
+                player["player"].kill()
+                del client_data["player"][player_id]
+
+    def update_client_data(self, client_data):
+        self.valid_player_client_data(client_data)
+        player_client_data = client_data["player"]
+        for player_id, player in self.server_data["player"].items():
+            if player_id == self.id:
+                continue
+            # update data
+            if player_id in player_client_data:
+                player_client_data[player_id]["id"] = player["id"]
+                player_client_data[player_id]["pos"] = player["pos"]
+                player_client_data[player_id]["event"] = player["event"]
+            # create new player
+            else:
+                player_client_data[player_id] = {
+                    "player": None,
+                    "id": player["id"],
+                    "pos": player["pos"],
+                    "event": player["event"]
+                }

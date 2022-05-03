@@ -56,9 +56,9 @@ class Game:
         }
         self.layer = Layer(self.all_sprites_group)
         # setup network ---------------------------------------------------------
-        self.client_data = {}
-        self.other_players = {}
-        self.network = Network(self.client_data)
+        self.client_sending_data = {}
+        self.client_data = {"player": {}}
+        self.network = Network(self.client_sending_data)
         self.id = self.network.id
         # setup player ----------------------------------------------------------
         self.player = Player(
@@ -66,7 +66,7 @@ class Game:
             color="green",
             name="player " + self.id,
             control=True,
-            client_data=self.client_data,
+            client_sending_data=self.client_sending_data,
             all_sprites_group=self.all_sprites_group
         )
 
@@ -74,49 +74,43 @@ class Game:
     def update_stc(self):
         # prepare data from server
         self.server_data = self.network.server_data
-        self.network.validate_other_players(self.other_players)
+        self.network.update_client_data(self.client_data)
         # update data from server to client
-        for player_id, player in self.server_data["player"].items():
-            # if player is client player
-            if player_id == self.id:
-                continue
-            # other player
-            if player_id in self.other_players:
-                # if no bullets
-                if not player["event"]["bullets"]:
-                    continue
+        player_client_data = self.client_data["player"]
+        for player_id, player in player_client_data.items():
+            if player["player"] == None:
+                player["player"] = Player(
+                    pos=player["pos"],
+                    color="red",
+                    name="player " + player_id,
+                    all_sprites_group=self.all_sprites_group
+                )
+            if player["event"]["bullets"]:
                 bullets = player["event"]["bullets"]
                 for bullet in bullets:
-                    face_direction = pygame.math.Vector2(
-                        bullet["direction"][0],
-                        bullet["direction"][1]
-                    )
+                    face_direction = pygame.math.Vector2(*bullet["direction"])
                     Projectile(
                         bullet["pos"],
                         face_direction,
-                        projectile_sprites=self.projectile_sprites
+                        all_sprites_group=self.all_sprites_group
                     )
-                if player["event"]["target_pos"]:
-                    self.other_players[player_id].target_pos = player["event"]["target_pos"]
-            else:
-                self.other_players[player_id] = Player(
-                    pos=player["pos"],
-                    color="red",
-                    name="player "+player_id,
-                    all_sprites_group=self.all_sprites_group
-                )
+            if player["event"]["target_pos"]:
+                player["player"].target_pos = player["event"]["target_pos"]
 
     def network_update(self):
+        # get data from server
         self.network.get_server_data()
+        # update data from server to client
         self.update_stc()
-        self.network.set_client_data(self.player)
+        # set sending data for sending to server
+        self.network.set_client_sending_data(self.player)
 
     def event_handler(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
                 self.network.disconnect()
-                pygame.quit()
+                # pygame.quit()
             if event.type == pygame.MOUSEWHEEL:
                 self.layer.camera.zoom_scale += event.y * 0.03
 
