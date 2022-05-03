@@ -4,46 +4,48 @@ from settings import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, color, name, control=False, **kwargs):
-        super().__init__(kwargs.get("player_sprites"))
+    def __init__(self, pos, color, name, control=False, **kwargs):
         self.screen = pygame.display.get_surface()
-        self.client_data = kwargs.get("client_data")
-        self.projectile_sprites = kwargs.get("projectile_sprites")
-        self.init_player_image(color, name, x, y)
+
+        self.client_data = kwargs["client_data"]
+        self.all_sprites_group = kwargs["all_sprites_group"]
+        super().__init__(self.all_sprites_group["player"])
+        self.init_player_image(pos, color, name)
         self.init_cursor_image()
+
         self.name = name
-        self.speed = 7
-        self.slow_speed = 3
-        # self.rotate_speed = 30
         self.control = control
-        self.target_pos = [x, y]
+        self.target_pos = list(pos)
+        self.speed = player_speed
+        self.slow_speed = player_slow_speed
+        self.rotate_speed = player_rotation_speed
         self.move_direction = pygame.math.Vector2()
         self.face_direction = pygame.math.Vector2()
 
-    def init_player_image(self, color, name, x, y):
+    def init_player_image(self, pos, color, name):
         # setup original image
-        self.original_image = pygame.image.load(
+        self.origin_image = pygame.image.load(
             f"FPSmin/assets/{color}.png"
         ).convert()
-        self.original_image = pygame.transform.scale(
-            self.original_image,
+        self.origin_image = pygame.transform.scale(
+            self.origin_image,
             (100, 100)
         )
-        self.original_image.set_colorkey((0, 0, 0))
+        self.origin_image.set_colorkey((1, 1, 1))
         # setup text
         text = font.render(str(name), True, "White")
         text_rect = text.get_rect(center=(50, 50))
-        pygame.draw.rect(self.original_image, "Black", text_rect)
-        self.original_image.blit(text, text_rect)
+        pygame.draw.rect(self.origin_image, "Black", text_rect)
+        self.origin_image.blit(text, text_rect)
         # setup image and rect
-        self.image = self.original_image
-        self.rect = self.image.get_rect(center=(x, y))
+        self.image = self.origin_image
+        self.rect = self.image.get_rect(center=pos)
 
         self.angle = 0
 
     def init_cursor_image(self):
-        self.cursor_image = pygame.surface.Surface((8, 8)).convert()
-        self.cursor_image.fill((255, 255, 255))
+        self.cursor_image = pygame.surface.Surface(cursor_size).convert()
+        self.cursor_image.fill(cursor_color)
         self.cursor_rect = self.cursor_image.get_rect()
 
     def input(self):
@@ -82,10 +84,9 @@ class Player(pygame.sprite.Sprite):
                 }
                 self.client_data["event"]["bullets"].append(bullet)
                 Projectile(
-                    self.rect.centerx,
-                    self.rect.centery,
+                    self.rect.center,
                     self.face_direction,
-                    projectile_sprites=self.projectile_sprites
+                    all_sprites_group=self.all_sprites_group
                 )
         if pygame.mouse.get_pressed()[2]:
             self.target_pos = [
@@ -119,7 +120,7 @@ class Player(pygame.sprite.Sprite):
             screen.blit(self.cursor_image, offset_pos)
 
     # def rotate(self):
-    #     self.image = pygame.transform.rotate(self.original_image, self.angle)
+    #     self.image = pygame.transform.rotate(self.origin_image, self.angle)
     #     self.rect = self.image.get_rect(center=self.rect.center)
     #     self.angle += self.rotate_speed
 

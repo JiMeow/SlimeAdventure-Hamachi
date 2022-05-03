@@ -3,30 +3,29 @@ from settings import *
 
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction, **kwargs):
-        super().__init__(kwargs.get("projectile_sprites"))
-        self.speed = 20
-        # self.rotate_speed = 30
+    def __init__(self, pos, direction, **kwargs):
+        self.all_sprites_group = kwargs["all_sprites_group"]
+        super().__init__(self.all_sprites_group["projectile"])
+        self.speed = projectile_speed
+        # self.rotate_speed = projectile_rotation_speed
         self.direction = direction
 
-        self.max_health = fps * 5
-        self.health = fps * 5
-        self.original_image = pygame.image.load(
-            f"FPSmin/assets/black.png"
-        ).convert()
-        self.original_image.set_colorkey((1, 1, 1))
-        self.original_image = pygame.transform.scale(
-            self.original_image,
+        self.max_health = projectile_max_health
+        self.health = self.max_health
+        self.origin_image = load_img(projectile_image_path)
+        self.origin_image.set_colorkey((1, 1, 1))
+        self.origin_image = pygame.transform.scale(
+            self.origin_image,
             (10, 10)
         )
-        self.original_image = pygame.transform.rotate(
-            self.original_image,
+        self.origin_image = pygame.transform.rotate(
+            self.origin_image,
             self.direction.angle_to(
                 pygame.math.Vector2(1, 0)
             )
         )
-        self.image = self.original_image
-        self.rect = self.image.get_rect(center=(x, y))
+        self.image = self.origin_image
+        self.rect = self.image.get_rect(center=pos)
 
         self.angle = 0
 
@@ -48,7 +47,7 @@ class Projectile(pygame.sprite.Sprite):
             self.direction.y *= -1
 
     # def rotate(self):
-    #     self.image = pygame.transform.rotate(self.original_image, self.angle)
+    #     self.image = pygame.transform.rotate(self.origin_image, self.angle)
     #     self.rect = self.image.get_rect(center=self.rect.center)
     #     self.angle += self.max_health - self.health
 

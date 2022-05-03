@@ -10,7 +10,7 @@ ips = {
 
 
 class Network:
-    def __init__(self):
+    def __init__(self, client_data):
         # setup server data and environment ------------------------------------
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.settimeout(1)
@@ -21,15 +21,13 @@ class Network:
         self.pos = self.data["pos"]
         # setup data for client and server --------------------------------------
         self.server_data = {"player": {}}
+        self.client_data = client_data
+        self.set_client_data()
         # setup thread ----------------------------------------------------------
         self.thread = Thread(target=self.get_server_data)
 
         # self.missing_frame = 0
         # self.get_server_data_time = 0
-
-    def set_data(self, client_data):
-        self.client_data = client_data
-        self.set_client_data()
 
     def disconnect(self):
         self.client.close()

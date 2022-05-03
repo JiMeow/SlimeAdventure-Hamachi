@@ -48,7 +48,7 @@ class Game:
         self.screen = pygame.display.set_mode((width, height))
         self.clock = pygame.time.Clock()
         self.running = True
-        # setup data ------------------------------------------------------------
+        # setup sprites and layer ------------------------------------------------
         self.player_sprites = pygame.sprite.Group()
         self.projectile_sprites = pygame.sprite.Group()
         self.all_sprites_group = {
@@ -59,19 +59,16 @@ class Game:
         # setup network ---------------------------------------------------------
         self.client_data = {}
         self.other_players = {}
-        self.network = Network()
-        self.network.set_data(self.client_data)
+        self.network = Network(self.client_data)
         self.id = self.network.id
         # setup player ----------------------------------------------------------
         self.player = Player(
-            self.network.pos[0],
-            self.network.pos[1],
+            pos=self.network.pos,
             color="green",
             name="player " + self.id,
             control=True,
-            player_sprites=self.player_sprites,
-            projectile_sprites=self.projectile_sprites,
-            client_data=self.client_data
+            client_data=self.client_data,
+            all_sprites_group=self.all_sprites_group
         )
 
     def update_stc(self):
@@ -89,8 +86,7 @@ class Game:
                             bullet["direction"][1]
                         )
                         Projectile(
-                            bullet["pos"][0],
-                            bullet["pos"][1],
+                            bullet["pos"],
                             face_direction,
                             projectile_sprites=self.projectile_sprites
                         )
@@ -98,12 +94,10 @@ class Game:
                     self.other_players[player_id].target_pos = player["event"]["target_pos"]
             else:
                 self.other_players[player_id] = Player(
-                    player["pos"][0],
-                    player["pos"][1],
+                    pos=player["pos"],
                     color="red",
                     name="player "+player_id,
-                    player_sprites=self.player_sprites,
-                    projectile_sprites=self.projectile_sprites
+                    all_sprites_group=self.all_sprites_group
                 )
 
     def network_update(self):
