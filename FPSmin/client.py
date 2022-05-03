@@ -41,23 +41,28 @@ from projectile import Projectile
 
 class Game:
     def __init__(self):
+        # setup game ------------------------------------------------------------
         pygame.init()
         pygame.event.set_grab(True)
         pygame.display.set_caption("Client")
         self.screen = pygame.display.set_mode((width, height))
         self.clock = pygame.time.Clock()
         self.running = True
-
-        self.client_data = {}
+        # setup data ------------------------------------------------------------
         self.player_sprites = pygame.sprite.Group()
         self.projectile_sprites = pygame.sprite.Group()
-        self.layer = Layer(
-            player_sprites=self.player_sprites,
-            projectile_sprites=self.projectile_sprites
+        self.layer = Layer()
+        self.layer.set_sprite_groups(
+            self.player_sprites,
+            self.projectile_sprites
         )
-
+        self.other_players = {}
+        # setup network ---------------------------------------------------------
+        self.client_data = {}
         self.network = Network()
+        self.network.set_data(self.client_data)
         self.id = self.network.id
+        # setup player ----------------------------------------------------------
         self.player = Player(
             self.network.pos[0],
             self.network.pos[1],
@@ -69,51 +74,8 @@ class Game:
             client_data=self.client_data
         )
 
-        # setup data and thread
-        self.set_client_data()
-
-        self.old_server_data = None
-        self.server_data = {"player": {}}
-        self.other_players = {}
-
-        self.thread = Thread(target=self.get_server_data)
-
-        self.missing_frame = 0
-        self.get_server_data_dt = 0
-
-    def get_server_data(self):
-
-        if not self.thread.is_alive():
-            self.thread = Thread(target=self._get_server_data)
-            self.thread.start()
-            self.interpolation_dt = self.get_server_data_dt
-            self.get_server_data_dt = 0
-            # print(self.missing_frame)
-            self.missing_frame = 0
-        self.get_server_data_dt += self.dt
-        self.missing_frame += 1
-
-    def _get_server_data(self):
-        self.old_server_data = self.server_data
-        self.server_data = self.network.send(self.client_data)
-
-    def set_client_data(self):
-        self.client_data["pos"] = [
-            self.player.rect.centerx,
-            self.player.rect.centery
-        ]
-        self.client_data["id"] = self.id
-        self.client_data["event"] = {"bullets": [], "target_pos": []}
-
-    # validate other players to matched with server data
-    def validate_other_players(self):
-        for k, v in tuple(self.other_players.items()):
-            if k not in self.server_data["player"]:
-                v.kill()
-                del self.other_players[k]
-
     def update_stc(self):
-        self.validate_other_players()
+        self.server_data = self.network.server_data
         for player_id, player in self.server_data["player"].items():
             if player_id == self.id:
                 continue
@@ -143,6 +105,12 @@ class Game:
                     projectile_sprites=self.projectile_sprites
                 )
 
+    def network_update(self):
+        self.network.get_server_data()
+        self.network.validate_other_players(self.other_players)
+        self.update_stc()
+        self.network.set_client_data(self.player)
+
     def event_handler(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -154,47 +122,33 @@ class Game:
 
     def run(self):
         while self.running:
+            # game tick ----------------------------------------------------------
             self.clock.tick(fps)
-            self.dt = (self.clock.get_time() * fps) / 1000
-
+            # pygame event -------------------------------------------------------
             self.event_handler()
-
-            self.get_server_data()
-            self.update_stc()
-            self.set_client_data()
-
-            self.layer.render(self.player, self.dt)
-
+            # client data and server data ----------------------------------------
+            self.network_update()
+            # render layer -------------------------------------------------------
+            self.layer.render(self.player)
+            # display debug ------------------------------------------------------
             self.display_debug()
-
+            # pygame display update ----------------------------------------------
             pygame.display.update()
 
     def display_debug(self):
         self.debug_count = [0]
-        debug(
-            f"fps: {self.clock.get_fps():.2f}", self.debug_count
-        )
-        debug(
-            f"pos: {self.player.rect.centerx},{self.player.rect.centery}", self.debug_count
-        )
-        debug(
-            f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}", self.debug_count
-        )
-        debug(
-            f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}", self.debug_count
-        )
-        debug(
-            f"face_angle: {self.player.face_direction.angle_to(pygame.math.Vector2(1, 0)):.2f}", self.debug_count
-        )
-        debug(
-            f"target_pos: {self.player.target_pos[0]},{self.player.target_pos[1]}", self.debug_count
-        )
-        debug(
-            f"players: {len(self.layer.player_sprites.sprites())}", self.debug_count
-        )
-        debug(
-            f"projectiles: {len(self.layer.projectile_sprites.sprites())}", self.debug_count
-        )
+        debugs = [
+            f"fps: {self.clock.get_fps():.2f}",
+            f"pos: {self.player.rect.centerx},{self.player.rect.centery}",
+            f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}",
+            f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}",
+            f"face_angle: {self.player.face_direction.angle_to(pygame.math.Vector2(1, 0)):.2f}",
+            f"target_pos: {self.player.target_pos[0]},{self.player.target_pos[1]}",
+            f"players: {len(self.player_sprites.sprites())}",
+            f"projectiles: {len(self.projectile_sprites.sprites())}"
+        ]
+        for text in debugs:
+            debug(text, self.debug_count)
 
 
 game = Game()
