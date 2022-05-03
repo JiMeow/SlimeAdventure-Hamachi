@@ -99,8 +99,8 @@ class Map():
             self.addflyfloor(500+45*i, floor-100, 0)
         for i in range(10):
             self.addflyfloor(950+45*i, floor-200, 0)
-        self.addhedgehog(400, floor, 0, 200)
-        self.addhedgehog(470, floor, 0, 200)
+        for i in range(3):
+            self.addhedgehog(400+75*i, floor, 0, 200)
         self.setobstacle()
         for i in self.obstacle:
             i.draw(0)
@@ -116,7 +116,7 @@ class Map():
         for i in range(20):
             self.addflyfloor(45*i, floor-300, 1)
         for i in range(10):
-            self.addspike(200+70*i, floor+2, 1)
+            self.addspike(300+50*i, floor, 1)
         self.setobstacle()
         for i in self.obstacle:
             i.draw(1)

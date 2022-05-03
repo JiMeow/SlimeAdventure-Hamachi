@@ -158,6 +158,11 @@ class Player():
         if mask:
             self.x, self.y = pos
 
+        # hit hedgehog
+        mask, pos = collision.playerCollideHedgehog()
+        if mask:
+            self.x, self.y = pos
+
         # no negative stage
         if self.x < 0:
             self.x = 0

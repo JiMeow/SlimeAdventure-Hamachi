@@ -16,12 +16,12 @@ class Spike():
         """
         self.win = win
         self.img = pygame.transform.scale(
-            pygame.image.load("JiMeow/photo/spike.png"), (70, 50))
-        self.width = 70
+            pygame.image.load("JiMeow/photo/spike.png"), (40, 50))
+        self.width = 40
         self.height = 50
         self.x = x + width * stage
         self.y = y
-        self.rect = pygame.Rect(self.x, y, 70, 50)
+        self.rect = pygame.Rect(self.x, y, 40, 50)
 
     def draw(self, stage):
         """
