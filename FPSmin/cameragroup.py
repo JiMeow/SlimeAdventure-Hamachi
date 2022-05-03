@@ -54,7 +54,7 @@ class CameraGroup(pygame.sprite.Group):
 
     def sprites(self):
         sprites = []
-        for group in self.all_sprites_groups:
+        for group in self.all_sprites_groups.values():
             sprites += group.sprites()
         return sprites
 

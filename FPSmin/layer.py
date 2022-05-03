@@ -4,18 +4,16 @@ from cameragroup import CameraGroup
 
 
 class Layer:
-    def __init__(self):
+    def __init__(self, all_sprites_group):
+        # screen --------------------------------------------------------------
         self.screen = pygame.display.get_surface()
-        # sprite groups
-        self.all_sprites_groups = []
+        # sprite groups -------------------------------------------------------
+        self.all_sprites_groups = all_sprites_group
         self.camera = CameraGroup(self.all_sprites_groups)
-
+        # time setup ------------------------------------------------------------
         self.lt = 0
         self.t = 0
         self.dt = 0
-
-    def set_sprite_groups(self, *sprite_groups):
-        self.all_sprites_groups += list(sprite_groups)
 
     def render(self, player):
         self.set_dt()
@@ -37,5 +35,5 @@ class Layer:
         self.lt = self.t
 
     def update(self):
-        for sprites_group in self.all_sprites_groups:
+        for sprites_group in self.all_sprites_groups.values():
             sprites_group.update(self.dt)

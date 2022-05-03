@@ -51,14 +51,14 @@ class Game:
         # setup data ------------------------------------------------------------
         self.player_sprites = pygame.sprite.Group()
         self.projectile_sprites = pygame.sprite.Group()
-        self.layer = Layer()
-        self.layer.set_sprite_groups(
-            self.player_sprites,
-            self.projectile_sprites
-        )
-        self.other_players = {}
+        self.all_sprites_group = {
+            "player": self.player_sprites,
+            "projectile": self.projectile_sprites
+        }
+        self.layer = Layer(self.all_sprites_group)
         # setup network ---------------------------------------------------------
         self.client_data = {}
+        self.other_players = {}
         self.network = Network()
         self.network.set_data(self.client_data)
         self.id = self.network.id
@@ -76,6 +76,7 @@ class Game:
 
     def update_stc(self):
         self.server_data = self.network.server_data
+        self.network.validate_other_players(self.other_players)
         for player_id, player in self.server_data["player"].items():
             if player_id == self.id:
                 continue
@@ -107,7 +108,6 @@ class Game:
 
     def network_update(self):
         self.network.get_server_data()
-        self.network.validate_other_players(self.other_players)
         self.update_stc()
         self.network.set_client_data(self.player)
 
