@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, color, name, control=False, **kwargs):
         self.screen = pygame.display.get_surface()
 
-        self.client_data = kwargs["client_data"]
+        self.client_sending_data = kwargs.get("client_sending_data")
         self.all_sprites_group = kwargs["all_sprites_group"]
         super().__init__(self.all_sprites_group["player"])
         self.init_player_image(pos, color, name)
@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.name = name
         self.control = control
         self.target_pos = list(pos)
-        self.speed = player_speed
+        self.normal_speed = player_normal_speed
         self.slow_speed = player_slow_speed
         self.rotate_speed = player_rotation_speed
         self.move_direction = pygame.math.Vector2()
@@ -44,15 +44,6 @@ class Player(pygame.sprite.Sprite):
                 player_image_size[1]//2
             ]
         )
-        # text = font.render(str(name), True, "White")
-        # text_rect = text.get_rect(
-        #     center=(
-        #         player_image_size[0]//2,
-        #         player_image_size[1]//2
-        #     )
-        # )
-        # pygame.draw.rect(self.origin_image, "Black", text_rect)
-        # self.origin_image.blit(text, text_rect)
         # setup image and rect
         self.image = self.origin_image
         self.rect = self.image.get_rect(center=pos)
@@ -64,9 +55,15 @@ class Player(pygame.sprite.Sprite):
         self.cursor_image.fill(cursor_color)
         self.cursor_rect = self.cursor_image.get_rect()
 
-    def input(self):
-        # self.keyboard()
-        self.mouse()
+    def draw_cursor(self, screen, offset=pygame.math.Vector2(0, 0)):
+        if self.move_direction.magnitude() != 0:
+            self.cursor_rect = self.cursor_image.get_rect(
+                center=self.target_pos
+            )
+            # offset.x = int(offset.x * 1.5)
+            # offset.y = int(offset.y * 1.5)
+            # offset_pos = self.cursor_rect.topleft - offset
+            screen.blit(self.cursor_image, self.cursor_rect)
 
     # def keyboard(self):
     #     keys = pygame.key.get_pressed()
@@ -84,32 +81,21 @@ class Player(pygame.sprite.Sprite):
     #     else:
     #         self.move_direction.x = 0
 
-    def mouse(self):
+    def set_face_direction(self):
         mouse = pygame.mouse.get_pos()
         self.face_direction = pygame.math.Vector2(
             mouse[0] - width//2,
             mouse[1] - height//2
         )
-        if self.face_direction.magnitude() != 0:
-            self.face_direction.normalize_ip()
-        if pygame.mouse.get_pressed()[0]:
-            if self.face_direction.magnitude() != 0:
-                bullet = {
-                    "pos": [self.rect.centerx, self.rect.centery],
-                    "direction": [self.face_direction.x, self.face_direction.y]
-                }
-                self.client_data["event"]["bullets"].append(bullet)
-                Projectile(
-                    self.rect.center,
-                    self.face_direction,
-                    all_sprites_group=self.all_sprites_group
-                )
+
+    def walk(self):
+        mouse = pygame.mouse.get_pos()
         if pygame.mouse.get_pressed()[2]:
             self.target_pos = [
                 mouse[0] - width//2 + self.rect.centerx,
                 mouse[1] - height//2 + self.rect.centery
             ]
-            self.client_data["event"]["target_pos"] = self.target_pos[:]
+            self.client_sending_data["event"]["target_pos"] = self.target_pos
 
     def move(self, dt):
         self.move_direction = pygame.math.Vector2(
@@ -117,23 +103,30 @@ class Player(pygame.sprite.Sprite):
             self.target_pos[1] - self.rect.centery
         )
         if self.move_direction.magnitude() != 0:
-            self.move_direction.normalize_ip()
-        if pygame.math.Vector2(self.target_pos[0] - self.rect.centerx, self.target_pos[1] - self.rect.centery).magnitude() < (self.move_direction * self.speed * dt).magnitude():
-            self.rect.centerx = self.target_pos[0]
-            self.rect.centery = self.target_pos[1]
-        else:
-            self.rect.x += int(self.move_direction.x * self.speed * dt)
-            self.rect.y += int(self.move_direction.y * self.speed * dt)
+            if self.move_direction.magnitude() < (self.move_direction.normalize() * self.normal_speed * dt).magnitude():
+                self.rect.centerx = self.target_pos[0]
+                self.rect.centery = self.target_pos[1]
+            else:
+                self.move_direction.normalize_ip()
+                self.rect.x += int(self.move_direction.x *
+                                   self.normal_speed * dt)
+                self.rect.y += int(self.move_direction.y *
+                                   self.normal_speed * dt)
 
-    def draw_cursor(self, screen, offset=pygame.math.Vector2(0, 0)):
-        if self.move_direction.magnitude() != 0:
-            self.cursor_rect = self.cursor_image.get_rect(
-                center=self.target_pos
-            )
-            # offset.x = int(offset.x * 1.5)
-            # offset.y = int(offset.y * 1.5)
-            offset_pos = self.cursor_rect.topleft - offset
-            screen.blit(self.cursor_image, offset_pos)
+    def shoot(self):
+        if pygame.mouse.get_pressed()[0]:
+            if self.face_direction.magnitude() != 0:
+                self.face_direction.normalize_ip()
+                bullet = {
+                    "pos": [self.rect.centerx, self.rect.centery],
+                    "direction": [self.face_direction.x, self.face_direction.y]
+                }
+                self.client_sending_data["event"]["bullets"].append(bullet)
+                Projectile(
+                    self.rect.center,
+                    self.face_direction,
+                    all_sprites_group=self.all_sprites_group
+                )
 
     # def rotate(self):
     #     self.image = pygame.transform.rotate(self.origin_image, self.angle)
@@ -142,6 +135,9 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, dt):
         if self.control:
-            self.input()
+            self.set_face_direction()
+            self.walk()
+            self.shoot()
+            # self.keyboard()
         self.move(dt)
         # self.rotate()

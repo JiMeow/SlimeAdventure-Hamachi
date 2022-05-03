@@ -6,17 +6,15 @@ class Projectile(pygame.sprite.Sprite):
     def __init__(self, pos, direction, **kwargs):
         self.all_sprites_group = kwargs["all_sprites_group"]
         super().__init__(self.all_sprites_group["projectile"])
+        self.direction = direction
         self.speed = projectile_speed
         # self.rotate_speed = projectile_rotation_speed
-        self.direction = direction
-
         self.max_health = projectile_max_health
-        self.health = self.max_health
-        self.origin_image = projectile_image  # load_img(projectile_image_path)
-        self.origin_image.set_colorkey((1, 1, 1))
+        self.health = projectile_max_health
+        self.origin_image = projectile_image
         self.origin_image = pygame.transform.scale(
             self.origin_image,
-            (10, 10)
+            projectile_image_size
         )
         self.origin_image = pygame.transform.rotate(
             self.origin_image,
