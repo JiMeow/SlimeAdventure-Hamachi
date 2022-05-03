@@ -166,5 +166,5 @@ class Player():
         # no negative stage
         if self.x < 0:
             self.x = 0
-
+        # print(self.rect)
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

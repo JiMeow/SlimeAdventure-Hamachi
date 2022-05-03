@@ -91,7 +91,7 @@ def setNewCollision(p, allp, collision, map):
     collision.setMap(map)
 
 
-def test(p, stage):
+def setspawn(p, stage):
     """
     test by warp player to stage
 
@@ -99,7 +99,20 @@ def test(p, stage):
         p (Player): _description_
         stage (int): _description_
     """
-    p.x += width*stage
+    p.x = 30+width*stage
+    return stage
+
+
+def spawnpointAtEveryXstage(collision, stage, player):
+    """
+    set new spawn point for player at every x stage
+
+    Args:
+        collision (Collision): collision information
+        stage (int): number of every x stage to set player spawn point
+        player (Player): player information
+    """
+    collision.setSpawnStage(player.x//width//stage*stage)
 
 
 def game(username):
@@ -119,7 +132,7 @@ def game(username):
     run = True
     n = Network()
     p = n.getP()
-    test(p, 1)
+    spawnpoint = setspawn(p, 0)
     p.name = username
     frame = 0
     map = Map(win, "JiMeow/photo/forest.png")
@@ -131,7 +144,10 @@ def game(username):
     thread = Thread(target=getDataP, args=(n, p, tempallp))
     beforetime = time.time()
     layout = Layout(win)
-    collision = Collision(p, allp, map)
+    collision = Collision(p, allp, map, spawnpoint)
+
+    # for bug player not fall
+    p.jump(True, map.gravity, 1/60)
 
     while run:
         clock.tick(60)
@@ -167,6 +183,7 @@ def game(username):
 
         setNewCollision(p, allp, collision, map)
         redrawWindow(layout, p, allp, dt, collision, map, clock)
+        spawnpointAtEveryXstage(collision, 5, p)
         frame += 1
 
 
