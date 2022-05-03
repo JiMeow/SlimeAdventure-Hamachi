@@ -66,10 +66,13 @@ class Network:
         else:
             self.client_data["pos"] = [*self.pos]
         self.client_data["id"] = self.id
-        self.client_data["event"] = {"bullets": [], "target_pos": []}
+        self.client_data["event"] = {
+            "bullets": [],
+            "target_pos": []
+        }
 
     def validate_other_players(self, other_players):
-        for k, v in tuple(other_players.items()):
+        for k, v in list(other_players.items()):
             if k not in self.server_data["player"]:
                 v.kill()
                 del other_players[k]

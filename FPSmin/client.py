@@ -1,8 +1,7 @@
 import pygame
-from threading import Thread
-from layer import Layer
-from debug import debug
 from settings import *
+from debug import debug
+from layer import Layer
 from network import Network
 from player import Player
 from projectile import Projectile
@@ -43,9 +42,9 @@ class Game:
     def __init__(self):
         # setup game ------------------------------------------------------------
         pygame.init()
-        pygame.event.set_grab(True)
-        pygame.display.set_caption("Client")
         self.screen = pygame.display.set_mode((width, height))
+        pygame.display.set_caption("Client")
+        # pygame.event.set_grab(True)
         self.clock = pygame.time.Clock()
         self.running = True
         # setup sprites and layer ------------------------------------------------
@@ -71,25 +70,32 @@ class Game:
             all_sprites_group=self.all_sprites_group
         )
 
+    # this func need to refactor
     def update_stc(self):
+        # prepare data from server
         self.server_data = self.network.server_data
         self.network.validate_other_players(self.other_players)
+        # update data from server to client
         for player_id, player in self.server_data["player"].items():
+            # if player is client player
             if player_id == self.id:
                 continue
+            # other player
             if player_id in self.other_players:
-                if player["event"]["bullets"]:
-                    bullets = player["event"]["bullets"]
-                    for bullet in bullets:
-                        face_direction = pygame.math.Vector2(
-                            bullet["direction"][0],
-                            bullet["direction"][1]
-                        )
-                        Projectile(
-                            bullet["pos"],
-                            face_direction,
-                            projectile_sprites=self.projectile_sprites
-                        )
+                # if no bullets
+                if not player["event"]["bullets"]:
+                    continue
+                bullets = player["event"]["bullets"]
+                for bullet in bullets:
+                    face_direction = pygame.math.Vector2(
+                        bullet["direction"][0],
+                        bullet["direction"][1]
+                    )
+                    Projectile(
+                        bullet["pos"],
+                        face_direction,
+                        projectile_sprites=self.projectile_sprites
+                    )
                 if player["event"]["target_pos"]:
                     self.other_players[player_id].target_pos = player["event"]["target_pos"]
             else:
