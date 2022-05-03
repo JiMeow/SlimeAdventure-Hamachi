@@ -18,9 +18,11 @@ class Player(pygame.sprite.Sprite):
         self.target_pos = list(pos)
         self.normal_speed = player_normal_speed
         self.slow_speed = player_slow_speed
+        self.speed = self.normal_speed
         self.rotate_speed = player_rotation_speed
         self.move_direction = pygame.math.Vector2()
         self.face_direction = pygame.math.Vector2()
+        self.is_shoot = False
 
     def init_player_image(self, pos, color, name):
         # setup original image
@@ -62,8 +64,8 @@ class Player(pygame.sprite.Sprite):
             )
             # offset.x = int(offset.x * 1.5)
             # offset.y = int(offset.y * 1.5)
-            # offset_pos = self.cursor_rect.topleft - offset
-            screen.blit(self.cursor_image, self.cursor_rect)
+            offset_pos = self.cursor_rect.topleft - offset
+            screen.blit(self.cursor_image, offset_pos)
 
     # def keyboard(self):
     #     keys = pygame.key.get_pressed()
@@ -97,25 +99,12 @@ class Player(pygame.sprite.Sprite):
             ]
             self.client_sending_data["event"]["target_pos"] = self.target_pos
 
-    def move(self, dt):
-        self.move_direction = pygame.math.Vector2(
-            self.target_pos[0] - self.rect.centerx,
-            self.target_pos[1] - self.rect.centery
-        )
-        if self.move_direction.magnitude() != 0:
-            if self.move_direction.magnitude() < (self.move_direction.normalize() * self.normal_speed * dt).magnitude():
-                self.rect.centerx = self.target_pos[0]
-                self.rect.centery = self.target_pos[1]
-            else:
-                self.move_direction.normalize_ip()
-                self.rect.x += int(self.move_direction.x *
-                                   self.normal_speed * dt)
-                self.rect.y += int(self.move_direction.y *
-                                   self.normal_speed * dt)
-
     def shoot(self):
+        if self.is_shoot:
+            self.is_shoot = False
         if pygame.mouse.get_pressed()[0]:
             if self.face_direction.magnitude() != 0:
+                self.is_shoot = True
                 self.face_direction.normalize_ip()
                 bullet = {
                     "pos": [self.rect.centerx, self.rect.centery],
@@ -128,6 +117,28 @@ class Player(pygame.sprite.Sprite):
                     all_sprites_group=self.all_sprites_group
                 )
 
+    def move(self, dt):
+        self.move_direction = pygame.math.Vector2(
+            self.target_pos[0] - self.rect.centerx,
+            self.target_pos[1] - self.rect.centery
+        )
+        if self.move_direction.magnitude() != 0:
+            if self.move_direction.magnitude() < (self.move_direction.normalize() * self.speed * dt).magnitude():
+                self.rect.centerx = self.target_pos[0]
+                self.rect.centery = self.target_pos[1]
+            else:
+                self.move_direction.normalize_ip()
+                self.rect.x += int(self.move_direction.x *
+                                   self.speed * dt)
+                self.rect.y += int(self.move_direction.y *
+                                   self.speed * dt)
+
+    def set_speed(self):
+        if self.is_shoot:
+            self.speed = self.slow_speed
+        else:
+            if self.speed == self.slow_speed:
+                self.speed = self.normal_speed
     # def rotate(self):
     #     self.image = pygame.transform.rotate(self.origin_image, self.angle)
     #     self.rect = self.image.get_rect(center=self.rect.center)
@@ -139,5 +150,6 @@ class Player(pygame.sprite.Sprite):
             self.walk()
             self.shoot()
             # self.keyboard()
+        self.set_speed()
         self.move(dt)
         # self.rotate()
