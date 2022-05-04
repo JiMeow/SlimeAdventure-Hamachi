@@ -11,11 +11,12 @@ class TileGroup(pygame.sprite.Group):
     def create_random_tile(self, radius):
         for x in range(-radius, radius+1, tile_image_size[0]):
             for y in range(-radius, radius+1, tile_image_size[1]):
-                r = random.randint(0, 255)
-                g = random.randint(0, 255)
-                b = random.randint(0, 255)
-                Tile(
-                    self,
-                    pos=(x, y),
-                    color=(r, g, b),
-                )
+                if random.randint(0, 100) > 97:
+                    r = random.randint(0, 255)
+                    g = random.randint(0, 255)
+                    b = random.randint(0, 255)
+                    Tile(
+                        self,
+                        pos=(x, y),
+                        color=(r, g, b),
+                    )
