@@ -4,4 +4,4 @@ server = "25.34.159.172"  # JiMeow
 port = 5555
 width = 1300
 height = 900
-floor = 640
+floor = 690

@@ -115,7 +115,7 @@ def spawnpointAtEveryXstage(collision, stage, player):
     collision.setSpawnStage(player.x//width//stage*stage)
 
 
-def game(username):
+def game(username, skinid):
     """
     run game with username by connecting to server
     and receive data from server then generate map
@@ -132,7 +132,8 @@ def game(username):
     run = True
     n = Network()
     p = n.getP()
-    spawnpoint = setspawn(p, 6)
+    p.skinid = skinid
+    spawnpoint = setspawn(p, 0)
     p.name = username
     frame = 0
     map = Map(win, "JiMeow/photo/forest.png")
@@ -197,7 +198,8 @@ def main():
     while(1):
         ui.show()
         name = username[0]
-        game(name)
+        skinid = username[1]
+        game(name, skinid)
 
 
 main()
