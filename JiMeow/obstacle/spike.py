@@ -6,8 +6,9 @@ class Spike():
 
     img = pygame.transform.scale(
         pygame.image.load("JiMeow/photo/spike.png"), (40, 50))
+    imgflip = pygame.transform.flip(img, True, False)
 
-    def __init__(self, win, x, y, stage):
+    def __init__(self, win, x, y, stage, flip=False):
         """
         set default value of spike depend on stage
 
@@ -22,6 +23,7 @@ class Spike():
         self.height = 50
         self.x = x + width * stage
         self.y = y
+        self.flip = flip
         self.rect = pygame.Rect(self.x, y, 40, 50)
 
     def draw(self, stage):
@@ -31,4 +33,7 @@ class Spike():
         Args:
             stage (int): stage of game #can change to self.stage
         """
-        self.win.blit(Spike.img, (self.x-width*stage, self.y))
+        if not self.flip:
+            self.win.blit(Spike.img, (self.x-width*stage, self.y))
+        else:
+            self.win.blit(Spike.imgflip, (self.x-width*stage, self.y))
