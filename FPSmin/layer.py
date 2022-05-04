@@ -15,12 +15,12 @@ class Layer:
         self.t = 0
         self.dt = 0
 
-    def render(self, player):
+    def render(self):
         self.set_dt()
         self.update()
 
         self.screen.fill(background_color)
-        self.camera.camera_render(player)
+        self.camera.camera_render()
         # self.default_render(player)
 
     def default_render(self, player):

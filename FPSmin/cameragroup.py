@@ -9,6 +9,7 @@ class CameraGroup(pygame.sprite.Group):
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
         self.offset = pygame.math.Vector2()
+        self.pcmc_vec = pygame.math.Vector2()
         self.all_sprites_groups = all_sprites_groups
         # background setup [optional]
         self.background_image = pygame.Surface((400, 100)).convert()
@@ -51,6 +52,9 @@ class CameraGroup(pygame.sprite.Group):
             self.width // 2
         self.internal_offset.y = self.internal_surface_size[1] // 2 - \
             self.height // 2
+
+    def set_player(self):
+        self.player = self.all_sprites_groups["player"].get_player()
 
     def sprites(self):
         sprites = []
@@ -169,12 +173,15 @@ class CameraGroup(pygame.sprite.Group):
         percent = min(max(mouse_mag-r, 0)/(R-r), 1)
         if mouse_vec.magnitude() != 0:
             mouse_vec.normalize_ip()
-        self.offset += mouse_vec * percent * 100
+        self.pcmc_vec.x = mouse_vec.x * percent * 100
+        self.pcmc_vec.y = mouse_vec.y * percent * 100
 
-    def camera_render(self, player):
+        self.offset += self.pcmc_vec
+
+    def camera_render(self):
         self.surface = self.screen
-        self.center_target_camera(player)
-        # self.box_target_camera(player)
+        self.center_target_camera(self.player)
+        # self.box_target_camera(self.player)
         # self.keyboard_control()
         # self.mouse_control()
         self.plan_camera_mouse_control()
@@ -186,7 +193,7 @@ class CameraGroup(pygame.sprite.Group):
         self.surface.blit(self.background_image, offset_pos)
         # all sprites
         for sprite in self.sprites():
-            if sprite == player:
+            if sprite == self.player:
                 continue
             if sprite in self.all_sprites_groups["circle"]:
                 continue
@@ -195,9 +202,9 @@ class CameraGroup(pygame.sprite.Group):
         for sprite in self.all_sprites_groups["circle"]:
             self.surface.blit(sprite.image, sprite.rect)
         # cursor
-        player.draw_cursor(self.surface, self.offset)
+        self.player.draw_cursor(self.surface, self.offset)
         # player
-        offset_pos = player.rect.topleft - self.offset
-        self.surface.blit(player.image, offset_pos)
+        offset_pos = self.player.rect.topleft - self.offset
+        self.surface.blit(self.player.image, offset_pos)
 
         # self.post_zoom()

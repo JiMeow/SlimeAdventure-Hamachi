@@ -22,7 +22,11 @@ class Player(pygame.sprite.Sprite):
         self.rotate_speed = player_rotation_speed
         self.move_direction = pygame.math.Vector2()
         self.face_direction = pygame.math.Vector2()
+        self.pcmc_vec = pygame.math.Vector2()
         self.is_shoot = False
+
+    def set_pcmc_vec(self, pcmc_vec):
+        self.pcmc_vec = pcmc_vec
 
     def init_player_image(self, pos, color, name):
         # setup original image
@@ -94,8 +98,8 @@ class Player(pygame.sprite.Sprite):
         mouse = pygame.mouse.get_pos()
         if pygame.mouse.get_pressed()[2]:
             self.target_pos = [
-                mouse[0] - width//2 + self.rect.centerx,
-                mouse[1] - height//2 + self.rect.centery
+                int(mouse[0] - width//2 + self.rect.centerx + self.pcmc_vec.x),
+                int(mouse[1] - height//2 + self.rect.centery + self.pcmc_vec.y)
             ]
             self.client_sending_data["event"]["target_pos"] = self.target_pos
 

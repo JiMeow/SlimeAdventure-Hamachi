@@ -5,11 +5,14 @@ from layer import Layer
 from network import Network
 from player import Player
 from projectile import Projectile
-
+from playergroup import PlayerGroup
 # done
 # right click to walk
 # connection timeout socket.settimeout
 # camera lock
+# camera follow by mouse
+# slow speed when cast
+# offset mouse target point
 
 # done?
 # interpolation
@@ -18,10 +21,8 @@ from projectile import Projectile
 # to do
 # walk point image
 # map
-# offset mouse target point
-# camera follow by mouse
 # projectile author
-# slow speed when cast
+# slow other player
 # select server
 
 # select elements qwer asdf 8 elements
@@ -40,6 +41,8 @@ from projectile import Projectile
 # server validation data
 
 # refactor update_stc, other player slow walk
+# refactor camera follow by mouse
+# refactor circle
 
 
 class Circle(pygame.sprite.Sprite):
@@ -68,7 +71,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         # setup sprites and layer ------------------------------------------------
-        self.player_sprites = pygame.sprite.Group()
+        self.player_sprites = PlayerGroup()
         self.projectile_sprites = pygame.sprite.Group()
         self.circle_sprites = pygame.sprite.Group()
         for i in range(720):
@@ -94,6 +97,8 @@ class Game:
             client_sending_data=self.client_sending_data,
             all_sprites_group=self.all_sprites_group
         )
+        self.layer.camera.set_player()
+        self.player.set_pcmc_vec(self.layer.camera.pcmc_vec)
 
     # this func need to refactor
     def update_stc(self):
@@ -150,7 +155,7 @@ class Game:
             # client data and server data ----------------------------------------
             self.network_update()
             # render layer -------------------------------------------------------
-            self.layer.render(self.player)
+            self.layer.render()
             # display debug ------------------------------------------------------
             self.display_debug()
             # pygame display update ----------------------------------------------
