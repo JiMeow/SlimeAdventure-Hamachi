@@ -89,7 +89,9 @@ class Game:
                     name="player " + player_id,
                     all_sprites_group=self.all_sprites_group
                 )
+            player["player"].is_shoot = False
             if player["event"]["bullets"]:
+                player["player"].is_shoot = True
                 bullets = player["event"]["bullets"]
                 for bullet in bullets:
                     face_direction = pygame.math.Vector2(*bullet["direction"])

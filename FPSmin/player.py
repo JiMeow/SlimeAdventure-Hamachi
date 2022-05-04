@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         # setup text
         draw_text_to_surface(
             surface=self.origin_image,
-            font=font,
+            font=pygame.font.Font(None, 10),
             text=name,
             text_color="white",
             bg_color="black",
@@ -105,15 +105,21 @@ class Player(pygame.sprite.Sprite):
         if pygame.mouse.get_pressed()[0]:
             if self.face_direction.magnitude() != 0:
                 self.is_shoot = True
+                if self.move_direction.magnitude() != 0:
+                    self.bullet_direction = (self.face_direction.normalize() * projectile_speed +
+                                             self.move_direction.normalize() * self.slow_speed).normalize()
+                else:
+                    self.bullet_direction = self.face_direction
+                self.bullet_direction.normalize_ip()
                 self.face_direction.normalize_ip()
                 bullet = {
                     "pos": [self.rect.centerx, self.rect.centery],
-                    "direction": [self.face_direction.x, self.face_direction.y]
+                    "direction": [self.bullet_direction.x, self.bullet_direction.y]
                 }
                 self.client_sending_data["event"]["bullets"].append(bullet)
                 Projectile(
                     self.rect.center,
-                    self.face_direction,
+                    self.bullet_direction,
                     all_sprites_group=self.all_sprites_group
                 )
 
