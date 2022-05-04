@@ -1,6 +1,6 @@
 import pygame
+from circlegroup import CircleGroup
 from settings import *
-from debug import debug
 from layer import Layer
 from network import Network
 from player import Player
@@ -8,6 +8,7 @@ from playergroup import PlayerGroup
 from projectile import Projectile
 from tile import Tile
 import random
+
 # done
 # right click to walk
 # connection timeout socket.settimeout
@@ -44,7 +45,6 @@ import random
 
 # refactor update_stc, other player slow walk
 # refactor camera follow by mouse
-# refactor circle
 
 
 class Game:
@@ -59,11 +59,10 @@ class Game:
         pygame.mouse.set_visible(False)
         self.clock = pygame.time.Clock()
         self.running = True
-        # setup sprites and layer ------------------------------------------------
+        # setup sprites ----------------------------------------------------------
         self.player_sprites = PlayerGroup()
         self.projectile_sprites = pygame.sprite.Group()
         self.tile_sprites = pygame.sprite.Group()
-        t = pygame.time.get_ticks()
         for x in range(-2000, 2001, tile_image_size[0]):
             for y in range(-2000, 2001, tile_image_size[1]):
                 r = random.randint(0, 255)
@@ -74,14 +73,13 @@ class Game:
                     pos=(x, y),
                     color=(r, g, b),
                 )
-        self.circle_sprites = pygame.sprite.Group()
+        self.circle_sprites = CircleGroup(pcmc=False)
         self.all_sprites_group = {
             "tile": self.tile_sprites,
             "circle": self.circle_sprites,
             "projectile": self.projectile_sprites,
             "player": self.player_sprites,
         }
-        self.layer = Layer(self.all_sprites_group)
         # setup network ---------------------------------------------------------
         self.client_sending_data = {}
         self.client_data = {"player": {}}
@@ -96,8 +94,8 @@ class Game:
             client_sending_data=self.client_sending_data,
             all_sprites_group=self.all_sprites_group
         )
-        self.layer.camera.set_player()
-        self.player.set_pcmc_vec(self.layer.camera.pcmc_vec)
+        # setup layer -----------------------------------------------------------
+        self.layer = Layer(self.all_sprites_group)
 
     # this func need to refactor
     def update_stc(self):
