@@ -132,3 +132,30 @@ class Collision():
             if self.player.rect.colliderect(i.rect):
                 return True, (30+width*self.spawnstage, -100)
         return False, None
+
+    def playerCollideJellyFish(self):
+        """
+        check if player collide with jellyfish or not and return the result
+
+        Returns:
+            bool: True if player collide with jellyfish, False if not
+            tuple: position of player after collision
+        """
+        for i in self.map.jellyfish:
+            if self.player.rect.colliderect(i.rect):
+                return True, (30+width*self.spawnstage, -100)
+        return False, None
+
+    def playerCollideJumpBoost(self):
+        """
+        check if player collide with uni or not and return the result
+
+        Returns:
+            bool: True if player collide with uni, False if not
+            tuple: position of player after collision
+        """
+        for i in self.map.jumpboost:
+            if self.player.rect.colliderect(i.rect):
+                i.used()
+                return True, None
+        return False, None

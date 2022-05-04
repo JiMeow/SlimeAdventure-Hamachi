@@ -4,6 +4,8 @@ from setting import *
 from obstacle.spike import Spike
 from obstacle.flyfloor import FlyingFloor
 from obstacle.hedgehog import Hedgehog
+from obstacle.jellyfish import Jellyfish
+from powerup.jumpboost import Jumpboost
 
 
 class Map():
@@ -18,12 +20,15 @@ class Map():
         self.win = win
         self.img = pygame.transform.scale(
             pygame.image.load(img), (width, height))
+        self.nowstage = -1
         self.gravity = 0.3
         self.obstacle = []
         self.spike = []
         self.flyfloor = []
         self.hedgehog = []
-        self.stage = list(range(6))
+        self.jellyfish = []
+        self.jumpboost = []
+        self.stage = list(range(7))
 
     def reset(self):
         """
@@ -33,12 +38,15 @@ class Map():
         self.spike = []
         self.flyfloor = []
         self.hedgehog = []
+        self.jellyfish = []
+        self.jumpboost = []
 
     def setobstacle(self):
         """
         set all obstacle by combine all obstacle
         """
-        self.obstacle = self.spike + self.flyfloor + self.hedgehog
+        self.obstacle = self.spike + self.flyfloor + \
+            self.hedgehog + self.jellyfish + self.jumpboost
 
     def addflyfloor(self, x, y, stage):
         """
@@ -76,7 +84,33 @@ class Map():
             distance (int): maximum distance of hedgehog can walk
         """
         self.hedgehog.append(Hedgehog(
-            self.win, x, y, stage, int(time.time()*100), distance))
+            self.win, x, y, stage, distance))
+
+    def addjellyfish(self, x, y, stage, distance):
+        """
+        add jellyfish at (x,y) position to stage by flying time
+        and maximum distance of jellyfish can fly
+
+        Args:
+            x (int): x position of jellyfish
+            y (int): y position of jellyfish
+            stage (int): stage of game
+            distance (int): maximum distance of jellyfish can flying
+        """
+        self.jellyfish.append(Jellyfish(
+            self.win, x, y, stage, distance))
+
+    def addjumpboost(self, x, y, stage):
+        """
+        add jumpboost at (x,y) position to stage
+
+        Args:
+            x (int): x position of jumpboost
+            y (int): y position of jumpboost
+            stage (int): stage of game
+        """
+        self.jumpboost.append(Jumpboost(
+            self.win, x, y, stage))
 
     def draw(self, stage):
         """
@@ -86,8 +120,13 @@ class Map():
             stage (int): stage of game
         """
         self.win.blit(self.img, (0, 0))
-        if stage in self.stage:
-            eval("self.stage"+str(int(stage))+f"()")
+        if stage == self.nowstage:
+            for i in self.obstacle:
+                i.draw(stage)
+        else:
+            if stage in self.stage:
+                eval("self.stage"+str(int(stage))+f"()")
+                self.nowstage = stage
 
     def stage0(self):
         """
@@ -159,12 +198,20 @@ class Map():
         """
         stage = 3
         self.reset()
+        for i in range(14):
+            self.addspike(125+75*i, floor, stage)
 
-        self.addhedgehog(150, floor, stage, 200)
-        self.addhedgehog(350, floor, stage, 200)
-        self.addhedgehog(550, floor, stage, 200)
-        self.addhedgehog(750, floor, stage, 200)
-        self.addhedgehog(950, floor, stage, 200)
+        for i in range(4):
+            self.addflyfloor(200+45*i, floor-150, stage)
+        self.addhedgehog(200, floor-200, stage, 180)
+
+        for i in range(4):
+            self.addflyfloor(500+45*i, floor-150, stage)
+        self.addhedgehog(500, floor-200, stage, 180)
+
+        for i in range(4):
+            self.addflyfloor(800+45*i, floor-150, stage)
+        self.addhedgehog(800, floor-200, stage, 180)
 
         self.setobstacle()
         for i in self.obstacle:
@@ -177,20 +224,12 @@ class Map():
         """
         stage = 4
         self.reset()
-        for i in range(14):
-            self.addspike(125+75*i, floor, stage)
 
-        for i in range(4):
-            self.addflyfloor(200+45*i, floor-150, stage)
-        self.addhedgehog(200, floor-200, stage, 120)
-
-        for i in range(4):
-            self.addflyfloor(500+45*i, floor-150, stage)
-        self.addhedgehog(500, floor-200, stage, 120)
-
-        for i in range(4):
-            self.addflyfloor(800+45*i, floor-150, stage)
-        self.addhedgehog(800, floor-200, stage, 120)
+        self.addhedgehog(150, floor, stage, 200)
+        self.addhedgehog(350, floor, stage, 200)
+        self.addhedgehog(550, floor, stage, 200)
+        self.addhedgehog(750, floor, stage, 200)
+        self.addhedgehog(950, floor, stage, 200)
 
         self.setobstacle()
         for i in self.obstacle:
@@ -203,12 +242,32 @@ class Map():
         """
         stage = 5
         self.reset()
-        for i in range(10):
-            self.addflyfloor(500+45*i, floor-100, stage)
-        for i in range(10):
-            self.addflyfloor(950+45*i, floor-200, stage)
-        for i in range(3):
-            self.addhedgehog(400+75*i, floor, stage, 200)
+
+        for i in range(14):
+            self.addspike(125+75*i, floor, stage)
+        for i in range(16):
+            self.addflyfloor(335+45*i, floor-300, stage)
+        for i in range(5):
+            self.addflyfloor(50+50*(i+1), floor-100-50*i, stage)
+        for i in range(4):
+            self.addflyfloor(1005+50*(i+1), floor-250+50*i, stage)
+        self.addjellyfish(200, floor-400, stage, 300)
+        self.addjellyfish(400, floor-600, stage, 500)
+        self.addjellyfish(600, floor-500, stage, 400)
+        self.addjellyfish(800, floor-300, stage, 200)
+        self.addjellyfish(1000, floor-500, stage, 200)
+        self.setobstacle()
+        for i in self.obstacle:
+            i.draw(stage)
+
+    def stage6(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 6
+        self.reset()
+        self.addjumpboost(600, floor-200, 6)
         self.setobstacle()
         for i in self.obstacle:
             i.draw(stage)

@@ -1,5 +1,6 @@
 import pygame
 from setting import *
+import time
 
 
 class Hedgehog():
@@ -9,7 +10,7 @@ class Hedgehog():
     imgflip = pygame.transform.flip(img, True, False)
     img = [img, imgflip]
 
-    def __init__(self, win, x, y, stage, time, distance):
+    def __init__(self, win, x, y, stage, distance):
         """
         set default value of flying floor depend on stage
 
@@ -26,10 +27,9 @@ class Hedgehog():
         self.height = 50
         self.x = x + width * stage
         self.y = y
-        self.rect = pygame.Rect(self.x+5, y+5, -5, -5)
-        self.speed = 1
-        self.time = time % (distance*2) + 1
         self.distance = distance
+        self.starttime = int(time.time()*100)
+        self.speed = 1
 
     def draw(self, stage):
         """
@@ -49,15 +49,24 @@ class Hedgehog():
         Returns:
             int: 1 for walk to left, -1 for walk to right
         """
+        self.settime()
         if self.time <= self.distance:
-            self.x += self.speed * self.time
+            self.x += self.speed
             return 0  # 0 means hedgehog walk to left
         else:
-            self.x += self.speed * (self.distance*2-self.time)
+            self.x -= self.speed
             return 1  # 1 means hedgehog walk to right
 
     def update(self):
         """
         hedgehog walk and set new rect of hedgehog
         """
-        self.rect = pygame.Rect(self.x, self.y, 70, 50)
+        self.rect = pygame.Rect(
+            self.x+5, self.y+5, self.width-5, self.height-5)
+
+    def settime(self):
+        """
+        set time for set position of hedgehog
+        """
+        self.time = (int(time.time()*100) -
+                     self.starttime) % (self.distance*2) + 1

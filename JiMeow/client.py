@@ -132,7 +132,7 @@ def game(username):
     run = True
     n = Network()
     p = n.getP()
-    spawnpoint = setspawn(p, 0)
+    spawnpoint = setspawn(p, 6)
     p.name = username
     frame = 0
     map = Map(win, "JiMeow/photo/forest.png")
@@ -148,6 +148,7 @@ def game(username):
 
     # for bug player not fall
     p.jump(True, map.gravity, 1/60)
+    p.jumpcount = 0
 
     while run:
         clock.tick(60)
@@ -183,7 +184,7 @@ def game(username):
 
         setNewCollision(p, allp, collision, map)
         redrawWindow(layout, p, allp, dt, collision, map, clock)
-        spawnpointAtEveryXstage(collision, 5, p)
+        spawnpointAtEveryXstage(collision, 1, p)
         frame += 1
 
 
