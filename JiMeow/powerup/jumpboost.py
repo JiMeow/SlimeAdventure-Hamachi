@@ -39,7 +39,6 @@ class Jumpboost():
             self.update()
 
     def used(self):
-        print("used")
         """
         update is item was used or not and change position of uni
         """
