@@ -66,6 +66,7 @@ class Network:
         else:
             self.client_sending_data["pos"] = [*self.pos]
         self.client_sending_data["id"] = self.id
+        self.client_sending_data["speed"] = 0
         self.client_sending_data["event"] = {
             "bullets": [],
             "target_pos": []
@@ -87,12 +88,21 @@ class Network:
             if player_id in player_client_data:
                 player_client_data[player_id]["id"] = player["id"]
                 player_client_data[player_id]["pos"] = player["pos"]
+                player_client_data[player_id]["speed"] = player["speed"]
                 player_client_data[player_id]["event"] = player["event"]
             # create new player
             else:
                 player_client_data[player_id] = {
                     "player": None,
                     "id": player["id"],
+                    "speed": player["speed"],
                     "pos": player["pos"],
                     "event": player["event"]
                 }
+
+# 5 point to chage data structure
+# 1.set_client_sending_data
+# 2.update_client_data
+# 3.update_client_data
+# 4.update_stc
+# 5.interact point
