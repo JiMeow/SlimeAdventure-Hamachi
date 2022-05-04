@@ -136,21 +136,17 @@ class Player(pygame.sprite.Sprite):
         )
         if self.move_direction.magnitude() != 0:
             if self.move_direction.magnitude() < (self.move_direction.normalize() * self.speed * dt).magnitude():
-                self.rect.centerx = self.target_pos[0]
-                self.rect.centery = self.target_pos[1]
+                self.rect.center = self.target_pos
             else:
                 self.move_direction.normalize_ip()
-                self.rect.x += int(self.move_direction.x *
-                                   self.speed * dt)
-                self.rect.y += int(self.move_direction.y *
-                                   self.speed * dt)
+                self.rect.center += self.move_direction * self.speed * dt
 
     def set_speed(self):
         if self.is_shoot:
             self.speed = self.slow_speed
         elif self.speed == self.slow_speed:
             self.speed = self.normal_speed
-
+        self.client_sending_data["speed"] = self.speed
     # def rotate(self):
     #     self.image = pygame.transform.rotate(self.origin_image, self.angle)
     #     self.rect = self.image.get_rect(center=self.rect.center)
@@ -162,8 +158,7 @@ class Player(pygame.sprite.Sprite):
             self.set_target_pos()
             self.shoot()
             # self.keyboard()
-
-        self.set_speed()
+            self.set_speed()
         self.move(dt)
         self.animation()
         # self.rotate()

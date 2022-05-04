@@ -43,7 +43,22 @@ player_fast_speed = 8
 player_normal_speed = 5
 player_slow_speed = 3
 player_rotation_speed = 5
+
+player_max_hp = 100
+player_max_mp = 100
+
 # projectile settings
+"""
+projectile types have 8 types
+1.water(q)
+2.heal(w)
+3.shield(e)
+4.ice(r)
+5.thunder(a)
+6.death(s)
+7.stone(d)
+8.fire(f)
+"""
 projectile_image_path = "FPSmin/assets/black.png"
 projectile_image = load_img(projectile_image_path, gb_colorkey)
 projectile_image_size = (5, 5)
@@ -51,7 +66,29 @@ projectile_speed = 20
 projectile_rotation_speed = 30
 projectile_life_time = 5
 projectile_max_health = fps * projectile_life_time
+
+
 # tile settings
 tile_image_path = ""
 tile_image = ""
 tile_image_size = (50, 50)
+
+# UI settings
+UI_element_order = [
+    "water", "heal", "shield", "ice",
+    "thunder", "death", "stone", "fire"
+]
+UI_element_keys = [
+    pygame.K_q,
+    pygame.K_w,
+    pygame.K_e,
+    pygame.K_r,
+    pygame.K_a,
+    pygame.K_s,
+    pygame.K_d,
+    pygame.K_f
+
+]
+UI_element_images = None
+UI_element_image_size = (50, 50)
+UI_element_image_radius = UI_element_image_size[0]//2

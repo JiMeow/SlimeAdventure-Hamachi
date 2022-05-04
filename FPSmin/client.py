@@ -1,13 +1,12 @@
 import pygame
-from circlegroup import CircleGroup
 from settings import *
+from circlegroup import CircleGroup
+from tilegroup import TileGroup
 from layer import Layer
 from network import Network
-from player import Player
 from playergroup import PlayerGroup
 from projectile import Projectile
-from tile import Tile
-import random
+from ui import UIGroup
 
 # done
 # right click to walk
@@ -16,16 +15,16 @@ import random
 # camera follow by mouse
 # slow speed when cast
 # offset mouse target point
+# walk point image
+# slow other player
 
 # done?
 # interpolation
 # exterpolation
 
 # to do
-# walk point image
 # map
 # projectile author
-# slow other player
 # select server
 
 # select elements qwer asdf 8 elements
@@ -45,6 +44,7 @@ import random
 
 # refactor update_stc, other player slow walk
 # refactor camera follow by mouse
+# connect everything together
 
 
 class Game:
@@ -60,25 +60,18 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         # setup sprites ----------------------------------------------------------
-        self.player_sprites = PlayerGroup()
-        self.projectile_sprites = pygame.sprite.Group()
-        self.tile_sprites = pygame.sprite.Group()
-        for x in range(-2000, 2001, tile_image_size[0]):
-            for y in range(-2000, 2001, tile_image_size[1]):
-                r = random.randint(0, 255)
-                g = random.randint(0, 255)
-                b = random.randint(0, 255)
-                Tile(
-                    self.tile_sprites,
-                    pos=(x, y),
-                    color=(r, g, b),
-                )
+        self.tile_sprites = TileGroup()
+        self.tile_sprites.create_random_tile(2000)
         self.circle_sprites = CircleGroup(pcmc=False)
+        self.projectile_sprites = pygame.sprite.Group()
+        self.player_sprites = PlayerGroup()
+        self.UI_sprites = UIGroup()
         self.all_sprites_group = {
             "tile": self.tile_sprites,
             "circle": self.circle_sprites,
             "projectile": self.projectile_sprites,
             "player": self.player_sprites,
+            "UI": self.UI_sprites
         }
         # setup network ---------------------------------------------------------
         self.client_sending_data = {}
@@ -86,7 +79,7 @@ class Game:
         self.network = Network(self.client_sending_data)
         self.id = self.network.id
         # setup player ----------------------------------------------------------
-        self.player = Player(
+        self.player = self.player_sprites.create_player(
             pos=self.network.pos,
             color="green",
             name="player " + self.id,
@@ -97,25 +90,21 @@ class Game:
         # setup layer -----------------------------------------------------------
         self.layer = Layer(self.all_sprites_group)
 
-    # this func need to refactor
     def update_stc(self):
-        # prepare data from server
-        self.server_data = self.network.server_data
-        self.network.update_client_data(self.client_data)
         # update data from server to client
-        player_client_data = self.client_data["player"]
-        for player_id, player in player_client_data.items():
-            if player["player"] == None:
-                player["player"] = Player(
-                    pos=player["pos"],
+        other_player_client_data = self.client_data["player"]
+        for player_id, other_player in other_player_client_data.items():
+            if other_player["player"] == None:
+                other_player["player"] = self.player_sprites.create_player(
+                    pos=other_player["pos"],
                     color="red",
                     name="player " + player_id,
                     all_sprites_group=self.all_sprites_group
                 )
-            player["player"].is_shoot = False
-            if player["event"]["bullets"]:
-                player["player"].is_shoot = True
-                bullets = player["event"]["bullets"]
+            # other_player["player"].is_shoot = False
+            if other_player["event"]["bullets"]:
+                # other_player["player"].is_shoot = True
+                bullets = other_player["event"]["bullets"]
                 for bullet in bullets:
                     face_direction = pygame.math.Vector2(*bullet["direction"])
                     Projectile(
@@ -123,15 +112,19 @@ class Game:
                         face_direction,
                         all_sprites_group=self.all_sprites_group
                     )
-            if player["event"]["target_pos"]:
-                player["player"].target_pos = player["event"]["target_pos"]
+            if other_player["event"]["target_pos"]:
+                other_player["player"].target_pos = other_player["event"]["target_pos"]
+            other_player["player"].speed = other_player["speed"]
 
     def network_update(self):
-        # get data from server
+        # get data from server --------------------------------------------------
         self.network.get_server_data()
-        # update data from server to client
+        # prepare data from server -----------------------------------------------
+        self.server_data = self.network.server_data
+        self.network.update_client_data(self.client_data)
+        # update data from server to client -------------------------------------
         self.update_stc()
-        # set sending data for sending to server
+        # set sending data for sending to server --------------------------------
         self.network.set_client_sending_data(self.player)
 
     def event_handler(self):
