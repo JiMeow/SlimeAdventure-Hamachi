@@ -5,10 +5,8 @@ cm:
 	python FPSmin\client.py
 
 
-# server and client makefiles for JiMeow project
-sj:
-	python JiMeow\server.py
-cj:
+#client makefiles for JiMeow project
+c:
 	python JiMeow\client.py
 
 # How to use

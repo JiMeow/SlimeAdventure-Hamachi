@@ -4,7 +4,6 @@ import pygame
 def getAllSkin():
     # set player wing img
     playerimg = ["temp"]
-
     # set player1 img
     imgleft = pygame.transform.scale(
         pygame.image.load("JiMeow/photo/player1.png"), (50, 34))
@@ -34,7 +33,6 @@ def getAllSkin():
         pygame.image.load("JiMeow/photo/player5.png"), (62, 34))
     imgright = pygame.transform.flip(imgleft, True, False)
     playerimg.append((imgright, imgleft))
-
     # set player6 img
     imgleft = pygame.transform.scale(
         pygame.image.load("JiMeow/photo/player6.png"), (50, 34))
