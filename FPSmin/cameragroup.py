@@ -190,10 +190,14 @@ class CameraGroup(pygame.sprite.Group):
                 continue
             if sprite in self.all_sprites_groups["circle"]:
                 continue
+            if sprite in self.all_sprites_groups["UI"]:
+                continue
+
             offset_pos = sprite.rect.topleft - self.offset
             if offset_pos.x < -100 or offset_pos.y < -100 or offset_pos.x > self.width + 100 or offset_pos.y > self.height + 100:
                 continue
             self.surface.blit(sprite.image, offset_pos)
+
         for sprite in self.all_sprites_groups["circle"]:
             self.surface.blit(sprite.image, sprite.rect)
         # cursor

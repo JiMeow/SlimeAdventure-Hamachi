@@ -6,6 +6,7 @@ from layer import Layer
 from network import Network
 from playergroup import PlayerGroup
 from projectile import Projectile
+from ui import UIGroup
 
 # done
 # right click to walk
@@ -14,16 +15,16 @@ from projectile import Projectile
 # camera follow by mouse
 # slow speed when cast
 # offset mouse target point
+# walk point image
+# slow other player
 
 # done?
 # interpolation
 # exterpolation
 
 # to do
-# walk point image
 # map
 # projectile author
-# slow other player
 # select server
 
 # select elements qwer asdf 8 elements
@@ -43,6 +44,7 @@ from projectile import Projectile
 
 # refactor update_stc, other player slow walk
 # refactor camera follow by mouse
+# connect everything together
 
 
 class Game:
@@ -58,16 +60,18 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         # setup sprites ----------------------------------------------------------
-        self.player_sprites = PlayerGroup()
-        self.projectile_sprites = pygame.sprite.Group()
         self.tile_sprites = TileGroup()
         self.tile_sprites.create_random_tile(2000)
         self.circle_sprites = CircleGroup(pcmc=False)
+        self.projectile_sprites = pygame.sprite.Group()
+        self.player_sprites = PlayerGroup()
+        self.UI_sprites = UIGroup()
         self.all_sprites_group = {
             "tile": self.tile_sprites,
             "circle": self.circle_sprites,
             "projectile": self.projectile_sprites,
             "player": self.player_sprites,
+            "UI": self.UI_sprites
         }
         # setup network ---------------------------------------------------------
         self.client_sending_data = {}

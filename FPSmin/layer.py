@@ -9,6 +9,7 @@ class Layer:
         self.screen = pygame.display.get_surface()
         # sprite groups -------------------------------------------------------
         self.all_sprites_groups = all_sprites_group
+        self.UI_sprites = self.all_sprites_groups["UI"]
         self.camera = CameraGroup(self.all_sprites_groups)
         # init cursor ---------------------------------------------------------
         self.init_cursor()
@@ -21,6 +22,8 @@ class Layer:
 
         self.screen.fill(background_color)
         self.camera.camera_render()
+        self.UI_sprites.update()
+        self.UI_sprites.draw()
         self.draw_cursor()
         # self.default_render(player)
 
