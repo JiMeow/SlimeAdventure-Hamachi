@@ -74,10 +74,10 @@ class Game:
                     pos=(x, y),
                     color=(r, g, b),
                 )
-        # self.circle_sprites = pygame.sprite.Group()
+        self.circle_sprites = pygame.sprite.Group()
         self.all_sprites_group = {
             "tile": self.tile_sprites,
-            # "circle": self.circle_sprites,
+            "circle": self.circle_sprites,
             "projectile": self.projectile_sprites,
             "player": self.player_sprites,
         }
