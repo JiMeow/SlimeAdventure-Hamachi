@@ -99,7 +99,7 @@ class Player():
                 self.speed[0] = 1
             else:
                 cnt += 1
-            if cnt == 2:
+            if cnt == 2 or cnt == 0:
                 self.speed[0] = 0
             self.speed[0] = self.speed[0] * self.vel
         else:

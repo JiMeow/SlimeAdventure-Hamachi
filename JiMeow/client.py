@@ -197,9 +197,13 @@ def main():
     ui = Login(username)
     while(1):
         ui.show()
-        name = username[0]
-        skinid = username[1]
-        game(name, skinid)
+        try:
+            name = username[0]
+            skinid = username[1]
+            game(name, skinid)
+        except:
+            break
+    print("Thanks for playing")
 
 
 main()
