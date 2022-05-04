@@ -8,6 +8,10 @@ font = pygame.font.Font(None, 20)
 fps = 60
 width = 800
 height = 800
+# width = 1920
+# height = 1080
+small_cir_rad = width//4
+big_cir_rad = width//2
 # make it can load image
 pygame.display.set_mode((width, height))
 background_color = (100, 100, 200)

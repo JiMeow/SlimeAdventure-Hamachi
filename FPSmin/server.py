@@ -5,7 +5,7 @@ import pickle
 ip = "25.31.231.0"
 port = 3000
 server_data = {"player": {}}
-start_pos = [100, 100]
+start_pos = [0, 0]
 
 # initial socket
 soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
