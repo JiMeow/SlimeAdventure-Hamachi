@@ -44,3 +44,16 @@ def debug(info, debug_count):
     pygame.draw.rect(screen, "Black", rect)
     screen.blit(text, rect)
     debug_count[0] += 1
+
+
+lt = 0
+t = 0
+dt = 0
+
+
+def get_dt(fps):
+    global lt, t, dt
+    t = pygame.time.get_ticks()
+    dt = (t - lt) * fps / 1000
+    lt = t
+    return dt

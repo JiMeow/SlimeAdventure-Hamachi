@@ -1,4 +1,5 @@
 import pygame
+from player import Player
 
 
 class PlayerGroup(pygame.sprite.Group):
@@ -9,3 +10,6 @@ class PlayerGroup(pygame.sprite.Group):
         for player in self.sprites():
             if player.control:
                 return player
+
+    def create_player(self, pos, color, name, control=False, **kwargs):
+        return Player(pos, color, name, control, **kwargs)
