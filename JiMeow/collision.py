@@ -90,8 +90,8 @@ class Collision():
             bool: True if player collide with floor, False if not
             tuple: position of player after collision
         """
-        if self.player.y >= floor:
-            return True, (self.player.x, floor)
+        if self.player.y >= floor-self.player.height:
+            return True, (self.player.x, floor-self.player.height)
         return False, None
 
     def playerCollideFlyingFloor(self):

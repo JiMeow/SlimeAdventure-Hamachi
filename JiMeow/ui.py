@@ -13,8 +13,9 @@ class Login():
             username.pop()
         self.username = username
         self.root = Tk()
-        self.root.geometry('480x270')
+        self.root.geometry('480x270+720+405')
         self.root.title("Dota3 test")
+        self.root.resizable(0, 0)
 
     def draw(self):
         """
@@ -40,11 +41,14 @@ class Login():
         if length of username is >= 6 or username is empty 
         function will warn user then hide and quit ui
         """
-        if len(self.entry_name.get()) >= 6 or self.entry_name.get() == "":
+        if len(self.entry_name.get()) > 8 or self.entry_name.get() == "":
             self.entry_name.delete(0, END)
             self.warning = Label(
-                self.root, text="length of username must less than 6 and not empty", font=("", 8), fg='red', bg='lightblue')
+                self.root, text="length of username must less than 8", font=("", 8), fg='red', bg='lightblue')
             self.warning.place(x=150, y=105)
+            self.warning = Label(
+                self.root, text="and not be empty.", font=("", 8), fg='red', bg='lightblue')
+            self.warning.place(x=150, y=120)
             return None
         self.username.append(self.entry_name.get())
         self.entry_name.delete(0, END)

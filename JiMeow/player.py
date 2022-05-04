@@ -1,10 +1,13 @@
 import pygame
 from setting import *
+from skin import getAllSkin
 
 
 class Player():
+
     wingimg = pygame.transform.scale(
         pygame.image.load("JiMeow/photo/playerwings.png"), (128, 80))
+    playerimg = getAllSkin()
 
     def __init__(self, id, x, y, width, height, color, name):
         """
@@ -31,24 +34,35 @@ class Player():
         self.name = name
         self.jumpcount = 0
         self.wing = False
-
+        self.skinid = 1
         self.on = {"Ground": False, "Slab": False}
 
         # use for drop to floor fromm slab
         self.dropTo = 0
 
+        # draw walk right or left by 0 or 1
+        self.turn = 0
+
     def draw(self, win, stage=0):
         """
-        draw player img at stage by rect
-
+        draw player img and wing at stage by rect
+        and it animation (left or right)
         Args:
             win (pygame.display): pygame window
             stage (int): stage of game. Defaults to 0.
         """
         if self.wing:
             win.blit(Player.wingimg, (self.x-width*stage-39, self.y-40))
-        pygame.draw.rect(win, self.color, pygame.Rect(
-            self.rect.x-width*stage, self.rect.y, self.rect.width, self.rect.height))
+
+        if self.speed[0] > 0:
+            self.turn = 0
+        elif self.speed[0] < 0:
+            self.turn = 1
+        win.blit(Player.playerimg[self.skinid][self.turn],
+                 (self.x-width*stage, self.y))
+
+        # pygame.draw.rect(win, self.color, pygame.Rect(
+        #     self.rect.x-width*stage, self.rect.y, self.rect.width, self.rect.height))
 
     def drawname(self, win, stage=0):
         """
@@ -59,10 +73,13 @@ class Player():
             stage (int): stage of game. Defaults to 0.
         """
         font = pygame.font.Font(None, 20)
-        text = font.render(str(self.name), True, "White")
+        text = font.render(str(self.name), True, "black")
         rect = text.get_rect()
-        rect.center = self.rect.center
+        rect.center = (self.x, self.y)
+        rect.x += self.width//2
+        rect.y += self.height//2
         rect.x -= width*stage
+        rect.y -= self.height-5
         win.blit(text, rect)
 
     def move(self):
