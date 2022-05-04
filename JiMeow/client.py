@@ -132,7 +132,7 @@ def game(username):
     run = True
     n = Network()
     p = n.getP()
-    spawnpoint = setspawn(p, 0)
+    spawnpoint = setspawn(p, 6)
     p.name = username
     frame = 0
     map = Map(win, "JiMeow/photo/forest.png")
@@ -184,7 +184,7 @@ def game(username):
 
         setNewCollision(p, allp, collision, map)
         redrawWindow(layout, p, allp, dt, collision, map, clock)
-        spawnpointAtEveryXstage(collision, 3, p)
+        spawnpointAtEveryXstage(collision, 5, p)
         frame += 1
 
 

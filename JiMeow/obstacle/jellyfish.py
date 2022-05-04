@@ -24,7 +24,7 @@ class Jellyfish():
             time (int): now time.time()*100 for generate position of jellyfish walk
             distance (int): distance of jellyfish will walk then turnback
         """
-        self.distance = distance
+        self.distance = distance*17//10
         self.win = win
         self.x = x + width * stage
         self.y = y

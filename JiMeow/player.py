@@ -3,6 +3,9 @@ from setting import *
 
 
 class Player():
+    wingimg = pygame.transform.scale(
+        pygame.image.load("JiMeow/photo/playerwings.png"), (128, 80))
+
     def __init__(self, id, x, y, width, height, color, name):
         """
         set player infomation
@@ -27,6 +30,7 @@ class Player():
         self.speed = [0, 0]
         self.name = name
         self.jumpcount = 0
+        self.wing = False
 
         self.on = {"Ground": False, "Slab": False}
 
@@ -41,6 +45,8 @@ class Player():
             win (pygame.display): pygame window
             stage (int): stage of game. Defaults to 0.
         """
+        if self.wing:
+            win.blit(Player.wingimg, (self.x-width*stage-39, self.y-40))
         pygame.draw.rect(win, self.color, pygame.Rect(
             self.rect.x-width*stage, self.rect.y, self.rect.width, self.rect.height))
 
@@ -181,6 +187,12 @@ class Player():
         mask, pos = collision.playerCollideJumpBoost()
         if mask:
             self.jumpcount = 0
+            # draw wing
+            self.wing = True
+
+        # del wing
+        if self.jumpcount == 2 or self.on["Ground"] or self.on["Slab"]:
+            self.wing = False
 
         # no negative stage
         if self.x < 0:
