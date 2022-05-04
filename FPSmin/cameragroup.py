@@ -157,12 +157,27 @@ class CameraGroup(pygame.sprite.Group):
         )
         self.screen.blit(scaled_surface, scaled_rect)
 
+    def plan_camera_mouse_control(self):
+        mouse = pygame.mouse.get_pos()
+        mouse_vec = pygame.math.Vector2(
+            mouse[0]-self.width//2,
+            mouse[1]-self.height//2
+        )
+        mouse_mag = mouse_vec.magnitude()
+        r = small_cir_rad
+        R = big_cir_rad
+        percent = min(max(mouse_mag-r, 0)/(R-r), 1)
+        if mouse_vec.magnitude() != 0:
+            mouse_vec.normalize_ip()
+        self.offset += mouse_vec * percent * 100
+
     def camera_render(self, player):
         self.surface = self.screen
         self.center_target_camera(player)
         # self.box_target_camera(player)
         # self.keyboard_control()
         # self.mouse_control()
+        self.plan_camera_mouse_control()
 
         # self.pre_zoom()
 
@@ -170,13 +185,15 @@ class CameraGroup(pygame.sprite.Group):
         offset_pos = self.background_rect.topleft - self.offset
         self.surface.blit(self.background_image, offset_pos)
         # all sprites
-        for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
+        for sprite in self.sprites():
             if sprite == player:
+                continue
+            if sprite in self.all_sprites_groups["circle"]:
                 continue
             offset_pos = sprite.rect.topleft - self.offset
             self.surface.blit(sprite.image, offset_pos)
-        # draw camera block
-        # pygame.draw.rect(self.surface, "yellow", self.camera_rect, 5)
+        for sprite in self.all_sprites_groups["circle"]:
+            self.surface.blit(sprite.image, sprite.rect)
         # cursor
         player.draw_cursor(self.surface, self.offset)
         # player

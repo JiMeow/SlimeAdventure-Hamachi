@@ -39,6 +39,22 @@ from projectile import Projectile
 
 # server validation data
 
+# refactor update_stc, other player slow walk
+
+
+class Circle(pygame.sprite.Sprite):
+    def __init__(self, group, radius, angle, color):
+        super().__init__(group)
+        self.real_image = pygame.Surface((2, 2)).convert()
+        self.real_image.set_colorkey((0, 0, 0))
+        self.real_image.fill(color)
+        self.real_image_rect = self.real_image.get_rect(topleft=(0, 0))
+        self.image = pygame.Surface((radius*2, 2)).convert()
+        self.image.set_colorkey((0, 0, 0))
+        self.image.blit(self.real_image, self.real_image_rect)
+        self.image = pygame.transform.rotate(self.image, angle)
+        self.rect = self.image.get_rect(center=(width//2, height//2))
+
 
 class Game:
     def __init__(self):
@@ -54,9 +70,14 @@ class Game:
         # setup sprites and layer ------------------------------------------------
         self.player_sprites = pygame.sprite.Group()
         self.projectile_sprites = pygame.sprite.Group()
+        self.circle_sprites = pygame.sprite.Group()
+        for i in range(720):
+            Circle(self.circle_sprites, small_cir_rad, i/2, "yellow")
+            Circle(self.circle_sprites, big_cir_rad, i/2, "red")
         self.all_sprites_group = {
             "player": self.player_sprites,
-            "projectile": self.projectile_sprites
+            "projectile": self.projectile_sprites,
+            "circle": self.circle_sprites
         }
         self.layer = Layer(self.all_sprites_group)
         # setup network ---------------------------------------------------------
@@ -140,10 +161,11 @@ class Game:
         debugs = [
             f"fps: {self.clock.get_fps():.2f}",
             f"pos: {self.player.rect.centerx},{self.player.rect.centery}",
+            f"target_pos: {self.player.target_pos[0]},{self.player.target_pos[1]}",
+            f"mouse_pos: {pygame.mouse.get_pos()}",
             f"move_durection: {self.player.move_direction.x:.2f},{self.player.move_direction.y:.2f}",
             f"face_direction: {self.player.face_direction.x:.2f},{self.player.face_direction.y:.2f}",
             f"face_angle: {self.player.face_direction.angle_to(pygame.math.Vector2(1, 0)):.2f}",
-            f"target_pos: {self.player.target_pos[0]},{self.player.target_pos[1]}",
             f"players: {len(self.player_sprites.sprites())}",
             f"projectiles: {len(self.projectile_sprites.sprites())}"
         ]
