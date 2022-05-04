@@ -49,6 +49,13 @@ class Login():
                              command=self.get, width=25, height=3)
         self.BCheck.place(x=150, y=200)
 
+        self.warning = Label(
+            self.root, text="length of username must less than 8", font=("", 8), fg='red', bg='lightblue')
+        self.warning.place(x=150, y=155)
+        self.warning = Label(
+            self.root, text="and not be empty.", font=("", 8), fg='red', bg='lightblue')
+        self.warning.place(x=150, y=172)
+
         self.buttonlist = []
 
         def setshowimg(event):
@@ -73,14 +80,9 @@ class Login():
         """
         if len(self.entry_name.get()) > 8 or self.entry_name.get() == "":
             self.entry_name.delete(0, END)
-            self.warning = Label(
-                self.root, text="length of username must less than 8", font=("", 8), fg='red', bg='lightblue')
-            self.warning.place(x=150, y=155)
-            self.warning = Label(
-                self.root, text="and not be empty.", font=("", 8), fg='red', bg='lightblue')
-            self.warning.place(x=150, y=170)
             return None
         self.username.append(self.entry_name.get())
+        self.username.append(self.skinid)
         self.entry_name.delete(0, END)
         self.root.quit()
         self.hide()
