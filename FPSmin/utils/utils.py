@@ -23,3 +23,11 @@ def load_ani(path, colorkey=(0, 0, 0), size=None):
         img_path = os.path.join(path, filename)
         ani.append(load_img(img_path, colorkey, size))
     return ani
+
+
+def create_surface(size, color=None, colorkey=(0, 0, 0)):
+    surface = pygame.Surface(size).convert()
+    surface.set_colorkey(colorkey)
+    if color:
+        surface.fill(color)
+    return surface
