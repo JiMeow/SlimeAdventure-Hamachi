@@ -20,6 +20,7 @@ class Map():
         self.win = win
         self.img = pygame.transform.scale(
             pygame.image.load(img), (width, height))
+        self.timeoffset = 0
         self.nowstage = -1
         self.gravity = 0.3
         self.obstacle = []
@@ -86,7 +87,7 @@ class Map():
             distance (int): maximum distance of hedgehog can walk
         """
         self.hedgehog.append(Hedgehog(
-            self.win, x, y, stage, distance))
+            self.win, x, y, stage, distance, self.timeoffset))
 
     def addjellyfish(self, x, y, stage, distance):
         """
@@ -100,7 +101,7 @@ class Map():
             distance (int): maximum distance of jellyfish can flying
         """
         self.jellyfish.append(Jellyfish(
-            self.win, x, y, stage, distance))
+            self.win, x, y, stage, distance, self.timeoffset))
 
     def addjumpboost(self, x, y, stage):
         """

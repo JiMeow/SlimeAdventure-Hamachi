@@ -10,7 +10,7 @@ class Hedgehog():
     imgflip = pygame.transform.flip(img, True, False)
     img = [img, imgflip]
 
-    def __init__(self, win, x, y, stage, distance):
+    def __init__(self, win, x, y, stage, distance, timeoffset):
         """
         set default value of flying floor depend on stage
 
@@ -30,6 +30,7 @@ class Hedgehog():
         self.y = y
         self.distance = distance*2//3
         self.speed = 1
+        self.timeoffset = timeoffset
 
     def draw(self, stage):
         """
@@ -50,7 +51,7 @@ class Hedgehog():
             int: 1 for walk to left, 0 for walk to right
         """
         self.settime()
-        self.x = self.constx + (int(time.time()*100) *
+        self.x = self.constx + (int((time.time()-self.timeoffset)*100) *
                                 self.speed) % (self.distance*2)
         if self.x > self.constx + self.distance:
             self.x = self.constx + self.distance - \

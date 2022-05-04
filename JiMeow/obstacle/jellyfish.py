@@ -12,7 +12,7 @@ class Jellyfish():
     img3 = pygame.transform.scale(
         pygame.image.load("JiMeow/photo/jellyfish3.png"), (60, 40))
 
-    def __init__(self, win, x, y, stage, distance):
+    def __init__(self, win, x, y, stage, distance, timeoffset):
         """
         set default value of flying floor depend on stage
 
@@ -30,6 +30,7 @@ class Jellyfish():
         self.y = y
         self.speed = 1
         self.consty = y
+        self.timeoffset = timeoffset
 
     def draw(self, stage):
         """
@@ -50,7 +51,7 @@ class Jellyfish():
         """
         jellyfish walk to up or down depend on time
         """
-        self.y = self.consty + (int(time.time()*100) *
+        self.y = self.consty + (int((time.time()-self.timeoffset)*100) *
                                 self.speed) % (self.distance*2)
         if self.y > self.consty + self.distance:
             self.y = self.consty + self.distance - \

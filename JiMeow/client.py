@@ -1,4 +1,3 @@
-from turtle import screensize
 import pygame
 from threading import *
 from setting import *
@@ -134,14 +133,17 @@ def game(username, skinid):
     pygame.init()
     clock = pygame.time.Clock()
 
+    map = Map(win, "JiMeow/photo/forest.png")
     run = True
     n = Network()
-    p = n.getP()
+
+    p, setdefaulttime = n.getP()
+    map.timeoffset = time.time()-setdefaulttime
+
     p.skinid = skinid
     spawnpoint = setspawn(p, 5)
     p.name = username
     frame = 0
-    map = Map(win, "JiMeow/photo/forest.png")
 
     allp, status = getDataP(n, p)
     tempallp = list(allp)
