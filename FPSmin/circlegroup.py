@@ -4,8 +4,11 @@ from circle import Circle
 
 
 class CircleGroup(pygame.sprite.Group):
-    def __init__(self):
+    def __init__(self, pcmc):
         super().__init__()
+        self.pcmc = pcmc
+        if self.pcmc:
+            self.create_pcmc()
 
     def create_pcmc(self):
         for i in range(720):
