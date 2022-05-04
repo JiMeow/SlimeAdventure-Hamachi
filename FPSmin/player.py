@@ -64,32 +64,30 @@ class Player(pygame.sprite.Sprite):
             self.cursor_rect = self.cursor_image.get_rect(
                 center=self.target_pos
             )
-            # offset.x = int(offset.x * 1.5)
-            # offset.y = int(offset.y * 1.5)
             offset_pos = self.cursor_rect.topleft - offset
             screen.blit(self.cursor_image, offset_pos)
 
     def animation(self):
         # cursor
         self.cursor_image_frame = (
-            self.cursor_image_frame + 0.25) % self.cursor_image_len
+            self.cursor_image_frame + player_cursor_animation_speed) % self.cursor_image_len
         self.cursor_image = self.cursor_images[int(self.cursor_image_frame)]
 
-        # def keyboard(self):
-        #     keys = pygame.key.get_pressed()
-        #     if keys[pygame.K_w]:
-        #         self.move_direction.y = -1
-        #     elif keys[pygame.K_s]:
-        #         self.move_direction.y = 1
-        #     else:
-        #         self.move_direction.y = 0
+    # def keyboard(self):
+    #     keys = pygame.key.get_pressed()
+    #     if keys[pygame.K_w]:
+    #         self.move_direction.y = -1
+    #     elif keys[pygame.K_s]:
+    #         self.move_direction.y = 1
+    #     else:
+    #         self.move_direction.y = 0
 
-        #     if keys[pygame.K_a]:
-        #         self.move_direction.x = -1
-        #     elif keys[pygame.K_d]:
-        #         self.move_direction.x = 1
-        #     else:
-        #         self.move_direction.x = 0
+    #     if keys[pygame.K_a]:
+    #         self.move_direction.x = -1
+    #     elif keys[pygame.K_d]:
+    #         self.move_direction.x = 1
+    #     else:
+    #         self.move_direction.x = 0
 
     def set_face_direction(self):
         mouse = pygame.mouse.get_pos()
@@ -98,7 +96,7 @@ class Player(pygame.sprite.Sprite):
             mouse[1] - height//2
         )
 
-    def walk(self):
+    def set_target_pos(self):
         mouse = pygame.mouse.get_pos()
         if pygame.mouse.get_pressed()[2]:
             self.target_pos = [
@@ -150,9 +148,9 @@ class Player(pygame.sprite.Sprite):
     def set_speed(self):
         if self.is_shoot:
             self.speed = self.slow_speed
-        else:
-            if self.speed == self.slow_speed:
-                self.speed = self.normal_speed
+        elif self.speed == self.slow_speed:
+            self.speed = self.normal_speed
+
     # def rotate(self):
     #     self.image = pygame.transform.rotate(self.origin_image, self.angle)
     #     self.rect = self.image.get_rect(center=self.rect.center)
@@ -161,9 +159,10 @@ class Player(pygame.sprite.Sprite):
     def update(self, dt):
         if self.control:
             self.set_face_direction()
-            self.walk()
+            self.set_target_pos()
             self.shoot()
             # self.keyboard()
+
         self.set_speed()
         self.move(dt)
         self.animation()

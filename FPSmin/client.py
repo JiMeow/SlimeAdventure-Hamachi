@@ -1,11 +1,14 @@
 import pygame
+from circlegroup import CircleGroup
 from settings import *
-from debug import debug
 from layer import Layer
 from network import Network
 from player import Player
-from projectile import Projectile
 from playergroup import PlayerGroup
+from projectile import Projectile
+from tile import Tile
+import random
+
 # done
 # right click to walk
 # connection timeout socket.settimeout
@@ -42,21 +45,6 @@ from playergroup import PlayerGroup
 
 # refactor update_stc, other player slow walk
 # refactor camera follow by mouse
-# refactor circle
-
-
-class Circle(pygame.sprite.Sprite):
-    def __init__(self, group, radius, angle, color):
-        super().__init__(group)
-        self.real_image = pygame.Surface((2, 2)).convert()
-        self.real_image.set_colorkey((0, 0, 0))
-        self.real_image.fill(color)
-        self.real_image_rect = self.real_image.get_rect(topleft=(0, 0))
-        self.image = pygame.Surface((radius*2, 2)).convert()
-        self.image.set_colorkey((0, 0, 0))
-        self.image.blit(self.real_image, self.real_image_rect)
-        self.image = pygame.transform.rotate(self.image, angle)
-        self.rect = self.image.get_rect(center=(width//2, height//2))
 
 
 class Game:
@@ -68,21 +56,30 @@ class Game:
         )
         pygame.display.set_caption("Client")
         # pygame.event.set_grab(True)
+        pygame.mouse.set_visible(False)
         self.clock = pygame.time.Clock()
         self.running = True
-        # setup sprites and layer ------------------------------------------------
+        # setup sprites ----------------------------------------------------------
         self.player_sprites = PlayerGroup()
         self.projectile_sprites = pygame.sprite.Group()
-        self.circle_sprites = pygame.sprite.Group()
-        for i in range(720):
-            Circle(self.circle_sprites, small_cir_rad, i/2, "yellow")
-            Circle(self.circle_sprites, big_cir_rad, i/2, "red")
+        self.tile_sprites = pygame.sprite.Group()
+        for x in range(-2000, 2001, tile_image_size[0]):
+            for y in range(-2000, 2001, tile_image_size[1]):
+                r = random.randint(0, 255)
+                g = random.randint(0, 255)
+                b = random.randint(0, 255)
+                Tile(
+                    self.tile_sprites,
+                    pos=(x, y),
+                    color=(r, g, b),
+                )
+        self.circle_sprites = CircleGroup(pcmc=False)
         self.all_sprites_group = {
-            "player": self.player_sprites,
+            "tile": self.tile_sprites,
+            "circle": self.circle_sprites,
             "projectile": self.projectile_sprites,
-            "circle": self.circle_sprites
+            "player": self.player_sprites,
         }
-        self.layer = Layer(self.all_sprites_group)
         # setup network ---------------------------------------------------------
         self.client_sending_data = {}
         self.client_data = {"player": {}}
@@ -97,8 +94,8 @@ class Game:
             client_sending_data=self.client_sending_data,
             all_sprites_group=self.all_sprites_group
         )
-        self.layer.camera.set_player()
-        self.player.set_pcmc_vec(self.layer.camera.pcmc_vec)
+        # setup layer -----------------------------------------------------------
+        self.layer = Layer(self.all_sprites_group)
 
     # this func need to refactor
     def update_stc(self):

@@ -8,16 +8,19 @@ font = pygame.font.Font(None, 20)
 fps = 60
 width = 800
 height = 800
-# width = 1920
-# height = 1080
+width = 1920
+height = 1080
 small_cir_rad = width//4
 big_cir_rad = width//2
 # make it can load image
 pygame.display.set_mode((width, height))
 background_color = (100, 100, 200)
 gb_colorkey = (1, 1, 1)
+# cursor
+cursor_image_path = "FPSmin/assets/mouse/cursor/cursor.png"
+cursor_image = load_img(cursor_image_path, (0, 0, 0))
 # player settings
-player_image_size = (50, 50)
+player_image_size = (30, 60)
 
 player_image_path_green = "FPSmin/assets/green.png"
 player_image_green = load_img(
@@ -34,6 +37,7 @@ player_cursor_image_path = "FPSmin/assets/mouse/pos"
 player_cursor_images = load_ani(
     player_cursor_image_path, (0, 0, 0), player_cursor_size
 )
+player_cursor_animation_speed = 0.25
 
 player_fast_speed = 8
 player_normal_speed = 5
@@ -47,3 +51,7 @@ projectile_speed = 20
 projectile_rotation_speed = 30
 projectile_life_time = 5
 projectile_max_health = fps * projectile_life_time
+# tile settings
+tile_image_path = ""
+tile_image = ""
+tile_image_size = (50, 50)
