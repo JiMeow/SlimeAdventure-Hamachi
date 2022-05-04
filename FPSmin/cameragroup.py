@@ -11,11 +11,9 @@ class CameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
         self.pcmc_vec = pygame.math.Vector2()
         self.all_sprites_groups = all_sprites_groups
-        # background setup [optional]
-        self.background_image = pygame.Surface((400, 100)).convert()
-        self.background_image.fill("red")
-        self.background_rect = self.background_image.get_rect(topleft=(0, 0))
-        # box setup [nessary]
+        self.player = self.all_sprites_groups["player"].get_player()
+        self.player.set_pcmc_vec(self.pcmc_vec)
+        # region box setup [nessary]
         self.camera_boarders = {
             "left": 200,
             "right": 200,
@@ -29,7 +27,8 @@ class CameraGroup(pygame.sprite.Group):
         h = self.height - \
             self.camera_boarders["bottom"] - self.camera_boarders["top"]
         self.camera_rect = pygame.Rect(l, t, w, h)
-        # zoom setup [optional]
+        # endregion
+        # region zoom setup [optional]
         self.keyboard_speed = 5
         self.mouse_speed = 0.4
         self.zoom_scale = 1
@@ -52,9 +51,7 @@ class CameraGroup(pygame.sprite.Group):
             self.width // 2
         self.internal_offset.y = self.internal_surface_size[1] // 2 - \
             self.height // 2
-
-    def set_player(self):
-        self.player = self.all_sprites_groups["player"].get_player()
+        # endregion
 
     def sprites(self):
         sprites = []
@@ -167,10 +164,8 @@ class CameraGroup(pygame.sprite.Group):
             mouse[0]-self.width//2,
             mouse[1]-self.height//2
         )
-        mouse_mag = mouse_vec.magnitude()
-        r = small_cir_rad
-        R = big_cir_rad
-        percent = min(max(mouse_mag-r, 0)/(R-r), 1)
+        percent = min(max(mouse_vec.magnitude()-small_cir_rad, 0) /
+                      (big_cir_rad-small_cir_rad), 1)
         if mouse_vec.magnitude() != 0:
             mouse_vec.normalize_ip()
         self.pcmc_vec.x = mouse_vec.x * percent * 100
@@ -188,9 +183,6 @@ class CameraGroup(pygame.sprite.Group):
 
         # self.pre_zoom()
 
-        # test object
-        offset_pos = self.background_rect.topleft - self.offset
-        self.surface.blit(self.background_image, offset_pos)
         # all sprites
         sprites = self.sprites()
         for sprite in sprites:
@@ -199,9 +191,7 @@ class CameraGroup(pygame.sprite.Group):
             if sprite in self.all_sprites_groups["circle"]:
                 continue
             offset_pos = sprite.rect.topleft - self.offset
-            if offset_pos.x < -100 or offset_pos.y < -100:
-                continue
-            if offset_pos.x > self.width + 100 or offset_pos.y > self.height + 100:
+            if offset_pos.x < -100 or offset_pos.y < -100 or offset_pos.x > self.width + 100 or offset_pos.y > self.height + 100:
                 continue
             self.surface.blit(sprite.image, offset_pos)
         for sprite in self.all_sprites_groups["circle"]:
@@ -211,5 +201,5 @@ class CameraGroup(pygame.sprite.Group):
         # player
         offset_pos = self.player.rect.topleft - self.offset
         self.surface.blit(self.player.image, offset_pos)
-
         # self.post_zoom()
+        pass
