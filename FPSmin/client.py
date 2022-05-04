@@ -47,20 +47,6 @@ import random
 # refactor circle
 
 
-class Circle(pygame.sprite.Sprite):
-    def __init__(self, group, radius, angle, color):
-        super().__init__(group)
-        self.real_image = pygame.Surface((2, 2)).convert()
-        self.real_image.set_colorkey((0, 0, 0))
-        self.real_image.fill(color)
-        self.real_image_rect = self.real_image.get_rect(topleft=(0, 0))
-        self.image = pygame.Surface((radius*2, 2)).convert()
-        self.image.set_colorkey((0, 0, 0))
-        self.image.blit(self.real_image, self.real_image_rect)
-        self.image = pygame.transform.rotate(self.image, angle)
-        self.rect = self.image.get_rect(center=(width//2, height//2))
-
-
 class Game:
     def __init__(self):
         # setup game ------------------------------------------------------------
@@ -88,15 +74,10 @@ class Game:
                     pos=(x, y),
                     color=(r, g, b),
                 )
-        t1 = pygame.time.get_ticks() - t
-        self.circle_sprites = pygame.sprite.Group()
-        # for i in range(720):
-        #     Circle(self.circle_sprites, small_cir_rad, i/2, "yellow")
-        #     Circle(self.circle_sprites, big_cir_rad, i/2, "red")
-        t2 = pygame.time.get_ticks() - t
+        # self.circle_sprites = pygame.sprite.Group()
         self.all_sprites_group = {
             "tile": self.tile_sprites,
-            "circle": self.circle_sprites,
+            # "circle": self.circle_sprites,
             "projectile": self.projectile_sprites,
             "player": self.player_sprites,
         }
@@ -117,9 +98,8 @@ class Game:
         )
         self.layer.camera.set_player()
         self.player.set_pcmc_vec(self.layer.camera.pcmc_vec)
-        print(t1, t2)
-    # this func need to refactor
 
+    # this func need to refactor
     def update_stc(self):
         # prepare data from server
         self.server_data = self.network.server_data
