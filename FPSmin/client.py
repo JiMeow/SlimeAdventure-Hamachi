@@ -4,8 +4,10 @@ from debug import debug
 from layer import Layer
 from network import Network
 from player import Player
-from projectile import Projectile
 from playergroup import PlayerGroup
+from projectile import Projectile
+from tile import Tile
+import random
 # done
 # right click to walk
 # connection timeout socket.settimeout
@@ -68,19 +70,35 @@ class Game:
         )
         pygame.display.set_caption("Client")
         # pygame.event.set_grab(True)
+        pygame.mouse.set_visible(False)
         self.clock = pygame.time.Clock()
         self.running = True
         # setup sprites and layer ------------------------------------------------
         self.player_sprites = PlayerGroup()
         self.projectile_sprites = pygame.sprite.Group()
+        self.tile_sprites = pygame.sprite.Group()
+        t = pygame.time.get_ticks()
+        for x in range(-2000, 2001, tile_image_size[0]):
+            for y in range(-2000, 2001, tile_image_size[1]):
+                r = random.randint(0, 255)
+                g = random.randint(0, 255)
+                b = random.randint(0, 255)
+                Tile(
+                    self.tile_sprites,
+                    pos=(x, y),
+                    color=(r, g, b),
+                )
+        t1 = pygame.time.get_ticks() - t
         self.circle_sprites = pygame.sprite.Group()
-        for i in range(720):
-            Circle(self.circle_sprites, small_cir_rad, i/2, "yellow")
-            Circle(self.circle_sprites, big_cir_rad, i/2, "red")
+        # for i in range(720):
+        #     Circle(self.circle_sprites, small_cir_rad, i/2, "yellow")
+        #     Circle(self.circle_sprites, big_cir_rad, i/2, "red")
+        t2 = pygame.time.get_ticks() - t
         self.all_sprites_group = {
-            "player": self.player_sprites,
+            "tile": self.tile_sprites,
+            "circle": self.circle_sprites,
             "projectile": self.projectile_sprites,
-            "circle": self.circle_sprites
+            "player": self.player_sprites,
         }
         self.layer = Layer(self.all_sprites_group)
         # setup network ---------------------------------------------------------
@@ -99,8 +117,9 @@ class Game:
         )
         self.layer.camera.set_player()
         self.player.set_pcmc_vec(self.layer.camera.pcmc_vec)
-
+        print(t1, t2)
     # this func need to refactor
+
     def update_stc(self):
         # prepare data from server
         self.server_data = self.network.server_data
