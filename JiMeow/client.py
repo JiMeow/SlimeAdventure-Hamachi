@@ -1,3 +1,4 @@
+from turtle import screensize
 import pygame
 from threading import *
 from setting import *
@@ -124,7 +125,11 @@ def game(username, skinid):
     Args:
         username (str): name of player
     """
-    win = pygame.display.set_mode((width, height))
+    # win = pygame.display.set_mode((width, height))
+
+    win = pygame.Surface((width, height))
+    screen = pygame.display.set_mode((1920, 1080))
+
     pygame.display.set_caption("Client")
     pygame.init()
     clock = pygame.time.Clock()
@@ -133,7 +138,7 @@ def game(username, skinid):
     n = Network()
     p = n.getP()
     p.skinid = skinid
-    spawnpoint = setspawn(p, 0)
+    spawnpoint = setspawn(p, 5)
     p.name = username
     frame = 0
     map = Map(win, "JiMeow/photo/forest.png")
@@ -170,6 +175,11 @@ def game(username, skinid):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == pygame.K_w:
                     isPlayerJump = True
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    n.disconnect()
+                    break
+
         if not run:
             break
         p.move()
@@ -187,6 +197,7 @@ def game(username, skinid):
         redrawWindow(layout, p, allp, dt, collision, map, clock)
         spawnpointAtEveryXstage(collision, 5, p)
         frame += 1
+        screen.blit(pygame.transform.scale(win, (1920, 1080)), (0, 0))
 
 
 def main():
@@ -197,12 +208,12 @@ def main():
     ui = Login(username)
     while(1):
         ui.show()
-        try:
-            name = username[0]
-            skinid = username[1]
-            game(name, skinid)
-        except:
-            break
+        # try:
+        name = username[0]
+        skinid = username[1]
+        game(name, skinid)
+        # except:
+        #     break
     print("Thanks for playing")
 
 

@@ -24,12 +24,12 @@ class Jellyfish():
             time (int): now time.time()*100 for generate position of jellyfish walk
             distance (int): distance of jellyfish will walk then turnback
         """
-        self.distance = distance*17//10
+        self.distance = distance
         self.win = win
         self.x = x + width * stage
         self.y = y
         self.speed = 1
-        self.starttime = int(time.time()*100)
+        self.consty = y
 
     def draw(self, stage):
         """
@@ -50,10 +50,11 @@ class Jellyfish():
         """
         jellyfish walk to up or down depend on time
         """
-        if self.time <= self.distance:
-            self.y += self.speed
-        else:
-            self.y -= self.speed
+        self.y = self.consty + (int(time.time()*100) *
+                                self.speed) % (self.distance*2)
+        if self.y > self.consty + self.distance:
+            self.y = self.consty + self.distance - \
+                (self.y-(self.consty + self.distance))
 
     def update(self):
         """
@@ -82,8 +83,7 @@ class Jellyfish():
         """
         set time for set position of jellyfish
         """
-        self.time = (int(time.time()*100) -
-                     self.starttime) % (self.distance*2) + 1
+        self.time = int(time.time()*100) % (self.distance*2)
 
     def setanimation(self):
         """
