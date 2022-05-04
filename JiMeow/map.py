@@ -125,10 +125,10 @@ class Map():
                 i.draw(stage)
         else:
             if stage in self.stage:
-                eval("self.stage"+str(int(stage))+f"()")
+                eval("self.createstage"+str(int(stage))+f"()")
                 self.nowstage = stage
 
-    def stage0(self):
+    def createstage0(self):
         """
         reset all obstacle then add new obstacle to stage 0 
         then draw this stage
@@ -145,7 +145,7 @@ class Map():
         for i in self.obstacle:
             i.draw(stage)
 
-    def stage1(self):
+    def createstage1(self):
         """
         reset all obstacle then add new obstacle to stage 1
         then draw this stage
@@ -171,7 +171,7 @@ class Map():
         for i in self.obstacle:
             i.draw(stage)
 
-    def stage2(self):
+    def createstage2(self):
         """
         reset all obstacle then add new obstacle to stage 1
         then draw this stage
@@ -191,7 +191,7 @@ class Map():
         for i in self.obstacle:
             i.draw(stage)
 
-    def stage3(self):
+    def createstage3(self):
         """
         reset all obstacle then add new obstacle to stage 1
         then draw this stage
@@ -217,7 +217,7 @@ class Map():
         for i in self.obstacle:
             i.draw(stage)
 
-    def stage4(self):
+    def createstage4(self):
         """
         reset all obstacle then add new obstacle to stage 1
         then draw this stage
@@ -235,7 +235,7 @@ class Map():
         for i in self.obstacle:
             i.draw(stage)
 
-    def stage5(self):
+    def createstage5(self):
         """
         reset all obstacle then add new obstacle to stage 0 
         then draw this stage
@@ -260,7 +260,7 @@ class Map():
         for i in self.obstacle:
             i.draw(stage)
 
-    def stage6(self):
+    def createstage6(self):
         """
         reset all obstacle then add new obstacle to stage 0 
         then draw this stage
