@@ -63,24 +63,28 @@ class Player():
         """
         control player move by keyboard then change speed of player
         if player on slab and press key 'down' or 's' then drop from slab 
+        can not move is player not in frame of screen
         """
         keys = pygame.key.get_pressed()
         cnt = 0
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.speed[0] = -1
+        if self.y >= -self.height:
+            if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                self.speed[0] = -1
+            else:
+                cnt += 1
+            if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                self.speed[0] = 1
+            else:
+                cnt += 1
+            if cnt == 2:
+                self.speed[0] = 0
+            self.speed[0] = self.speed[0] * self.vel
         else:
-            cnt += 1
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.speed[0] = 1
-        else:
-            cnt += 1
+            self.speed[0] = 0
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             if self.on["Slab"]:
                 self.dropTo = self.y+15
                 self.on["Slab"] = False
-        if cnt == 2:
-            self.speed[0] = 0
-        self.speed[0] = self.speed[0] * self.vel
 
     def jump(self, isJump, gravity, dt):
         """
@@ -157,11 +161,26 @@ class Player():
         mask, pos = collision.playerCollideSpike()
         if mask:
             self.x, self.y = pos
-
+            self.jump(True, 6, dt)
+            self.jumpcount = 0
         # hit hedgehog
         mask, pos = collision.playerCollideHedgehog()
         if mask:
             self.x, self.y = pos
+            self.jump(True, 6, dt)
+            self.jumpcount = 0
+
+        # hit jelly fish
+        mask, pos = collision.playerCollideJellyFish()
+        if mask:
+            self.x, self.y = pos
+            self.jump(True, 6, dt)
+            self.jumpcount = 0
+
+        # hit jumpboost
+        mask, pos = collision.playerCollideJumpBoost()
+        if mask:
+            self.jumpcount = 0
 
         # no negative stage
         if self.x < 0:
