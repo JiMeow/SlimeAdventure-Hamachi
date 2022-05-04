@@ -132,7 +132,7 @@ def game(username):
     run = True
     n = Network()
     p = n.getP()
-    spawnpoint = setspawn(p, 6)
+    spawnpoint = setspawn(p, 0)
     p.name = username
     frame = 0
     map = Map(win, "JiMeow/photo/forest.png")

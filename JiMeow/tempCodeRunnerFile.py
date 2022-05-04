@@ -1,2 +1,0 @@
-
-                photo = Image.open(name)

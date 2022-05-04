@@ -1,9 +1,13 @@
-from cProfile import label
 from tkinter import *
 from PIL import Image, ImageTk
 
 
 class Login():
+
+    image_sizes = [(50, 34), (60, 34), (50, 34), (50, 34), (62, 34),
+                   (50, 34), (45, 34), (50, 34), (52, 34), (50, 34),
+                   (55, 34), (45, 34), (45, 34), (45, 34), (45, 34)]
+
     def __init__(self, username):
         """
         set tkinter root, windowsize, and title
@@ -20,19 +24,21 @@ class Login():
         self.root.resizable(0, 0)
         self.skinid = 1
 
-    def draw(self):
-        """
-        draw login window ui and loop while input username
-        """
-
-        size = [(50, 34), (60, 34), (50, 34), (50, 34), (62, 34),
-                (50, 34), (45, 34), (50, 34), (52, 34), (50, 34),
-                (55, 34), (45, 34), (45, 34), (45, 34), (45, 34)]
-
         canvas = Canvas(self.root, height=600, width=1000, bg="pink")
         canvas.place(x=0, y=0)
-        canvas = Canvas(self.root, height=220, width=270, bg="lightblue")
-        canvas.place(x=100, y=30)
+        canvas = Canvas(self.root, height=240, width=300, bg="lightblue")
+        canvas.place(x=90, y=30)
+
+        self.sprites = []
+        for i in range(1, 16):
+            name = f"JiMeow/photo/player{i}.png"
+            photo = Image.open(name).copy()
+            photo = photo.resize(Login.image_sizes[i-1], Image.ANTIALIAS)
+            photo = ImageTk.PhotoImage(photo)
+            self.sprites.append(photo)
+        self.showimg = Label(
+            self.root, image=self.sprites[self.skinid-1], bg="lightblue")
+        self.showimg.place(x=200, y=110)
 
         self.inputusername = Label(self.root, text="Username:", font=(
             "bold", 12), fg='black', bg='lightblue')
@@ -41,43 +47,23 @@ class Login():
         self.entry_name.place(x=150, y=80)
         self.BCheck = Button(self.root, text="GoPlay",
                              command=self.get, width=25, height=3)
-        self.BCheck.place(x=150, y=170)
+        self.BCheck.place(x=150, y=200)
 
-        name = f"JiMeow/photo/player{self.skinid}.png"
-        photo = Image.open(name).copy()
-        photo = photo.resize(size[self.skinid-1], Image.ANTIALIAS)
-        photo = ImageTk.PhotoImage(photo)
-        showimg = Label(self.root, image=photo, bg="lightblue")
-        showimg.place(x=200, y=120)
-        self.photolist = []
         self.buttonlist = []
+
+        def setshowimg(event):
+            self.skinid = event.widget.cget("text")
+            self.showimg.config(image=self.sprites[int(self.skinid)-1])
+
         for i in range(3):
             for j in range(5):
-                name = f"JiMeow/photo/player{i*5+j+1}.png"
-                photo = Image.open(name).copy()
-                photo = photo.resize(size[i*5+j], Image.ANTIALIAS)
-                photo = ImageTk.PhotoImage(photo)
-                self.photolist.append(photo)
-                self.buttonlist.append([Button(self.root, image=self.photolist[i*5+j], bg="pink",
-                                               borderwidth=0, activebackground="pink", command=lambda: self.setshowimg(i*5+j+1, showimg)), i, j])
+                button = Button(self.root, text=i*5+j+1, image=self.sprites[i*5+j], bg="pink",
+                                borderwidth=0, activebackground="pink")
+                button.bind("<Button-1>", setshowimg)
+                self.buttonlist.append([button, i, j])
 
         for button in self.buttonlist:
             button[0].place(x=65+75*button[2], y=300+60*button[1])
-
-        mainloop()
-
-    def setshowimg(self, skinid, showimg):
-        print(skinid)
-        self.skinid = skinid
-        size = [(50, 34), (60, 34), (50, 34), (50, 34), (62, 34),
-                (50, 34), (45, 34), (50, 34), (52, 34), (50, 34),
-                (55, 34), (45, 34), (45, 34), (45, 34), (45, 34)]
-        name = f"JiMeow/photo/player{skinid}.png"
-        photo = Image.open(name).copy()
-        photo = photo.resize(size[skinid-1], Image.ANTIALIAS)
-        photo = ImageTk.PhotoImage(photo)
-        showimg.configure(image=photo)
-        showimg.img = photo
 
     def get(self):
         """
@@ -89,10 +75,10 @@ class Login():
             self.entry_name.delete(0, END)
             self.warning = Label(
                 self.root, text="length of username must less than 8", font=("", 8), fg='red', bg='lightblue')
-            self.warning.place(x=150, y=105)
+            self.warning.place(x=150, y=155)
             self.warning = Label(
                 self.root, text="and not be empty.", font=("", 8), fg='red', bg='lightblue')
-            self.warning.place(x=150, y=120)
+            self.warning.place(x=150, y=170)
             return None
         self.username.append(self.entry_name.get())
         self.entry_name.delete(0, END)
@@ -115,7 +101,4 @@ class Login():
             self.username.pop()
         self.root.update()
         self.root.deiconify()
-        self.draw()
-
-
-Login([]).draw()
+        self.root.mainloop()
