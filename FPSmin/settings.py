@@ -37,6 +37,7 @@ player_cursor_image_path = "FPSmin/assets/mouse/pos"
 player_cursor_images = load_ani(
     player_cursor_image_path, (0, 0, 0), player_cursor_size
 )
+player_cursor_animation_speed = 0.25
 
 player_fast_speed = 8
 player_normal_speed = 5
