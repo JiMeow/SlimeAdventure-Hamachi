@@ -10,17 +10,13 @@ class Layer:
         # sprite groups -------------------------------------------------------
         self.all_sprites_groups = all_sprites_group
         self.camera = CameraGroup(self.all_sprites_groups)
-        # time setup ------------------------------------------------------------
-        self.lt = 0
-        self.t = 0
-        self.dt = 0
+        # init cursor ---------------------------------------------------------
         self.init_cursor()
 
     def init_cursor(self):
         self.cursor_image = cursor_image
 
     def render(self):
-        self.set_dt()
         self.update()
 
         self.screen.fill(background_color)
@@ -34,14 +30,10 @@ class Layer:
         for sprite in self.sprites():
             self.screen.blit(sprite.image, sprite.rect)
 
-    def set_dt(self):
-        self.t = pygame.time.get_ticks()
-        self.dt = (self.t - self.lt) * fps / 1000
-        self.lt = self.t
-
     def draw_cursor(self):
         self.screen.blit(self.cursor_image, pygame.mouse.get_pos())
 
     def update(self):
+        self.dt = get_dt(fps)
         for sprites_group in self.all_sprites_groups.values():
             sprites_group.update(self.dt)
