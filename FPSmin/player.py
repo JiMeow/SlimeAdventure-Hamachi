@@ -34,10 +34,6 @@ class Player(pygame.sprite.Sprite):
             self.origin_image = player_image_red
         elif color == "green":
             self.origin_image = player_image_green
-        self.origin_image = pygame.transform.scale(
-            self.origin_image,
-            player_image_size
-        )
         # setup text
         draw_text_to_surface(
             surface=self.origin_image,
@@ -57,8 +53,10 @@ class Player(pygame.sprite.Sprite):
         self.angle = 0
 
     def init_cursor_image(self):
-        self.cursor_image = pygame.surface.Surface(cursor_size).convert()
-        self.cursor_image.fill(cursor_color)
+        self.cursor_images = player_cursor_images
+        self.cursor_image_len = len(self.cursor_images)
+        self.cursor_image_frame = 0
+        self.cursor_image = self.cursor_images[self.cursor_image_frame]
         self.cursor_rect = self.cursor_image.get_rect()
 
     def draw_cursor(self, screen, offset=pygame.math.Vector2(0, 0)):
@@ -71,21 +69,27 @@ class Player(pygame.sprite.Sprite):
             offset_pos = self.cursor_rect.topleft - offset
             screen.blit(self.cursor_image, offset_pos)
 
-    # def keyboard(self):
-    #     keys = pygame.key.get_pressed()
-    #     if keys[pygame.K_w]:
-    #         self.move_direction.y = -1
-    #     elif keys[pygame.K_s]:
-    #         self.move_direction.y = 1
-    #     else:
-    #         self.move_direction.y = 0
+    def animation(self):
+        # cursor
+        self.cursor_image_frame = (
+            self.cursor_image_frame + 1) % self.cursor_image_len
+        self.cursor_image = self.cursor_images[self.cursor_image_frame]
 
-    #     if keys[pygame.K_a]:
-    #         self.move_direction.x = -1
-    #     elif keys[pygame.K_d]:
-    #         self.move_direction.x = 1
-    #     else:
-    #         self.move_direction.x = 0
+        # def keyboard(self):
+        #     keys = pygame.key.get_pressed()
+        #     if keys[pygame.K_w]:
+        #         self.move_direction.y = -1
+        #     elif keys[pygame.K_s]:
+        #         self.move_direction.y = 1
+        #     else:
+        #         self.move_direction.y = 0
+
+        #     if keys[pygame.K_a]:
+        #         self.move_direction.x = -1
+        #     elif keys[pygame.K_d]:
+        #         self.move_direction.x = 1
+        #     else:
+        #         self.move_direction.x = 0
 
     def set_face_direction(self):
         mouse = pygame.mouse.get_pos()
@@ -162,4 +166,5 @@ class Player(pygame.sprite.Sprite):
             # self.keyboard()
         self.set_speed()
         self.move(dt)
+        self.animation()
         # self.rotate()
