@@ -1,7 +1,5 @@
 # server and client makefiles for MinZung project
-sm:
-	python FPSmin\server.py
-cm:
+m:
 	python FPSmin\client.py
 
 
