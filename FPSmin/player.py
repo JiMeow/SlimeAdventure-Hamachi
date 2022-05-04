@@ -72,8 +72,8 @@ class Player(pygame.sprite.Sprite):
     def animation(self):
         # cursor
         self.cursor_image_frame = (
-            self.cursor_image_frame + 1) % self.cursor_image_len
-        self.cursor_image = self.cursor_images[self.cursor_image_frame]
+            self.cursor_image_frame + 0.25) % self.cursor_image_len
+        self.cursor_image = self.cursor_images[int(self.cursor_image_frame)]
 
         # def keyboard(self):
         #     keys = pygame.key.get_pressed()
