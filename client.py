@@ -1,11 +1,11 @@
 import pygame
 from threading import *
-from setting import *
-from collision import Collision
-from layout import Layout
-from network import Network
+from src.setting import *
+from src.collision import Collision
+from src.ui import Login
+from src.layout import Layout
+from src.network import Network
 from map import Map
-from ui import Login
 import time
 from utils.utils import *
 

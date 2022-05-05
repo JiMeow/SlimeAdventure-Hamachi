@@ -2,8 +2,8 @@ import socket
 import time
 from threading import *
 import pickle
-from player import Player
-from setting import *
+from src.player import Player
+from src.setting import *
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
