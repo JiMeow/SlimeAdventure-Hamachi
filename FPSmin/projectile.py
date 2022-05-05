@@ -49,7 +49,7 @@ class Projectile(pygame.sprite.Sprite):
     #     self.rect = self.image.get_rect(center=self.rect.center)
     #     self.angle += self.max_health - self.health
 
-    def update(self, dt):
+    def update(self, dt, *args, **kwargs):
         self.move(dt)
         # self.bounce()
         # self.rotate()
