@@ -201,3 +201,12 @@ UI_fire_image_3 = pygame.transform.scale(
 )
 # endregion UI element settings
 # region UISkill settings
+UI_skill_image_path = "assets/UI/skill/"
+UI_skill_image_size = (150, 150)
+
+# 1.running
+UI_running_image_path = "assets/UI/skill/running/"
+UI_running_images = load_ani(UI_running_image_path)
+# 2.revive
+# 3.reaper
+# 4.meteor
