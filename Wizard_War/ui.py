@@ -53,9 +53,9 @@ class UIElement(pygame.sprite.Sprite):
             self.img1 = UI_fire_image_1
             self.img2 = UI_fire_image_2
             self.img3 = UI_fire_image_3
-        self.img1.blit(self.key_img, (-2, -2))
-        self.img2.blit(self.key_img, (-2, -2))
-        self.img3.blit(self.key_img, (-2, -2))
+        self.img1.blit(self.key_img, UI_element_key_image_offset)
+        self.img2.blit(self.key_img, UI_element_key_image_offset)
+        self.img3.blit(self.key_img, UI_element_key_image_offset)
         self.image = self.img1
         self.rect = self.image.get_rect(topleft=pos)
 
@@ -99,25 +99,12 @@ class UIElement(pygame.sprite.Sprite):
 class UISkill(pygame.sprite.Sprite):
     def __init__(self, group, pos, skill, key):
         super().__init__(group)
-        self.radius = UI_element_image_radius
         self.img1 = create_surface(
             UI_element_image_size, (0, 0, 0), (0, 0, 0)
         )
-        pygame.draw.circle(
-            self.img1, (1, 1, 1),
-            (self.radius, self.radius),
-            self.radius
-        )
-
         self.img2 = create_surface(
             UI_element_image_size, (0, 0, 0), (0, 0, 0)
         )
-        pygame.draw.circle(
-            self.img2, (255, 255, 255),
-            (self.radius, self.radius),
-            self.radius
-        )
-
         self.image = self.img1
         self.rect = self.image.get_rect(topleft=pos)
         self.key = key

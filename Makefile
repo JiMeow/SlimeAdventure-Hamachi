@@ -1,6 +1,6 @@
 # server and client makefiles for MinZung project
 m:
-	python FPSmin\client.py
+	python Wizard_War\client.py
 
 
 #client makefiles for JiMeow project
