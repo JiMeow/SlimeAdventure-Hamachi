@@ -1,6 +1,6 @@
 import pygame
 from settings import *
-from tile import Tile
+from tile.tile import Tile
 import random
 
 
