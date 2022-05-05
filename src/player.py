@@ -72,6 +72,20 @@ class Player():
         # pygame.draw.rect(win, self.color, pygame.Rect(
         #     self.rect.x-width*stage, self.rect.y, self.rect.width, self.rect.height))
 
+        # check hit box
+        hitboxleft = pygame.Rect(
+            self.x-width*stage, self.y+10, 1, self.height-20)
+        hitboxright = pygame.Rect(
+            self.x-width*stage+self.width-1, self.y+10, 1, self.height-20)
+        hitboxup = pygame.Rect(
+            self.x+10-width*stage, self.y, self.width-20, 1)
+        hitboxdown = pygame.Rect(
+            self.x+10-width*stage, self.y+self.height-1, self.width-20, 1)
+        pygame.draw.rect(win, (0, 0, 0), hitboxleft)
+        pygame.draw.rect(win, (0, 0, 0), hitboxright)
+        pygame.draw.rect(win, (0, 0, 0), hitboxup)
+        pygame.draw.rect(win, (0, 0, 0), hitboxdown)
+
     def drawname(self, win, stage=0):
         """
         draw player name at stage by rect
@@ -218,6 +232,24 @@ class Player():
             self.jumpcount = 0
             # draw wing
             self.wing = True
+
+        # hit wall
+        mask, direction = collision.playerCollideWall()
+        if mask:
+            if "left" == direction[0]:
+                self.x += 2
+                self.speed[0] = 0
+            if "right" == direction[0]:
+                self.x -= 2
+                self.speed[0] = 0
+            if "up" == direction[0]:
+                self.y += 2
+                self.speed[1] = 0
+            if "down" == direction[0]:
+                self.y -= self.speed[1] * 60 * dt
+                self.speed[1] = 0
+                self.on["Ground"] = True
+                self.jumpcount = 0
 
         # del wing
         if self.jumpcount == 2 or self.on["Ground"] or self.on["Slab"]:

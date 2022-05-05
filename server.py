@@ -14,9 +14,16 @@ except socket.error as e:
 
 s.listen(20)
 print("Waiting for a connection, Server Started")
+maxPlayers = 10
 
-players = [Player(1, 30, -100, 50, 34, (255, 0, 0), "Player1"), Player(2, 30, -100, 50, 34, (0, 255, 0), "Player2"),
-           Player(3, 30, -100, 50, 34, (0, 0, 255), "Player3"), Player(4, 30, -100, 50, 34, (255, 0, 255), "Player4")]
+# players = [
+#     Player(1, 30, -100, 50, 34, (255, 0, 0), "Player1"), Player(2, 30, -100, 50, 34, (0, 255, 0), "Player2"),
+#     Player(3, 30, -100, 50, 34, (0, 0, 255), "Player3"), Player(4, 30, -100, 50, 34, (255, 0, 255), "Player4"),
+# ]
+
+players = []
+for i in range(maxPlayers):
+    players.append(Player(i+1, 30, -100, 50, 34, (0, 0, 0), f"Player{i+1}"))
 
 currentPlayer = {}
 
@@ -60,7 +67,6 @@ def main():
     and check number of player and decide 
     which client will be which id
     """
-    maxPlayers = 4
     for i in range(maxPlayers):
         currentPlayer[i] = 0
     idx = 0

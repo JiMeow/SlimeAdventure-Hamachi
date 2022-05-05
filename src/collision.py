@@ -160,3 +160,42 @@ class Collision():
                 i.used()
                 return True, None
         return False, None
+
+    def playerCollideWall(self):
+        """
+        check if player collide with wall or not and return the result
+
+        Returns:
+            bool: True if player collide with wall, False if not
+            tuple: position of player after collision
+        """
+        playerhitboxleft = [pygame.Rect(
+            self.player.x, self.player.y+7+4*(i+1), 1, 1) for i in range(5)]
+        playerhitboxright = [pygame.Rect(
+            self.player.x+self.player.width-1, self.player.y+7+4*(i+1), 1, 1) for i in range(5)]
+        playerhitboxup = [pygame.Rect(
+            self.player.x+10+6*(i+1), self.player.y, 1, 1) for i in range(5)]
+        playerhitboxdown = [pygame.Rect(
+            self.player.x+10+6*(i+1), self.player.y+self.player.height-1, 1, 1) for i in range(5)]
+        direction = {
+            "up": 0, "down": 0, "left": 0, "right": 0
+        }
+        mask = False
+        for i in self.map.wall:
+            for j in playerhitboxup:
+                if j.colliderect(i.rect):
+                    direction["up"] += 1
+                    mask = True
+            for j in playerhitboxleft:
+                if j.colliderect(i.rect):
+                    direction["left"] += 1
+                    mask = True
+            for j in playerhitboxright:
+                if j.colliderect(i.rect):
+                    direction["right"] += 1
+                    mask = True
+            for j in playerhitboxdown:
+                if j.colliderect(i.rect):
+                    direction["down"] += 1
+                    mask = True
+        return mask, sorted(list(direction.items()), key=lambda x: x[1], reverse=True)[0]

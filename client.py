@@ -36,7 +36,7 @@ def game(username, skinid):
     map.timeoffset = time.time()-setdefaulttime
 
     p.skinid = skinid
-    spawnpoint = setspawn(p, 0)
+    spawnpoint = setspawn(p, 14)
     p.name = username
     frame = 0
 
@@ -105,12 +105,12 @@ def main():
     ui = Login(username)
     while(1):
         ui.show()
-        try:
-            name = username[0]
-            skinid = username[1]
-            game(name, skinid)
-        except:
-            break
+        # try:
+        name = username[0]
+        skinid = username[1]
+        game(name, skinid)
+        # except:
+        #     break
     print("Thanks for playing")
 
 

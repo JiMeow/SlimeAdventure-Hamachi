@@ -1,5 +1,6 @@
 import pygame
 from src.setting import *
+from src.obstacle.wall import Wall
 from src.powerup.jumpboost import Jumpboost
 from src.obstacle.spike import Spike
 from src.obstacle.flyfloor import FlyingFloor
@@ -28,8 +29,9 @@ class Map():
         self.hedgehog = []
         self.jellyfish = []
         self.jumpboost = []
+        self.wall = []
         self.text = []
-        self.stage = list(range(14))
+        self.stage = list(range(16))
 
     def reset(self):
         """
@@ -42,13 +44,14 @@ class Map():
         self.jellyfish = []
         self.jumpboost = []
         self.text = []
+        self.wall = []
 
     def setobstacle(self):
         """
         set all obstacle by combine all obstacle
         """
         self.obstacle = self.spike + self.flyfloor + \
-            self.hedgehog + self.jellyfish + self.jumpboost
+            self.hedgehog + self.jellyfish + self.jumpboost + self.wall
 
     def addflyfloor(self, x, y, stage):
         """
@@ -113,6 +116,18 @@ class Map():
         """
         self.jumpboost.append(Jumpboost(
             self.win, x, y, stage))
+
+    def addwall(self, x, y, stage, rotate=False):
+        """
+        add wall to stage
+
+        Args:
+            x (int): x position of wall
+            y (int): y position of wall
+            stage (int): stage of game
+            rotate (bool): if rotate wall
+        """
+        self.wall.append(Wall(self.win, x, y, stage, rotate))
 
     def addtext(self, text, x, y, size, color="black"):
         """
@@ -399,6 +414,42 @@ class Map():
         then draw this stage
         """
         stage = 13
+        self.reset()
+        self.addhedgehog(200, floor-50, stage, 300)
+        self.addhedgehog(500, floor-50, stage, 300)
+        self.addhedgehog(800, floor-50, stage, 300)
+        self.addjellyfish(350, floor-50-300, stage, 300)
+        self.addjellyfish(650, floor-50-300, stage, 200)
+        self.addjellyfish(950, floor-50-200, stage, 150)
+        self.setobstacle()
+
+    def createstage14(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 14
+        self.reset()
+        self.addwall(200, floor-50-100, stage)
+        self.addwall(200, floor-50-300, stage)
+        self.setobstacle()
+
+    def createstage15(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 15
+        self.reset()
+
+        self.setobstacle()
+
+    def createstage16(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 16
         self.reset()
 
         self.setobstacle()
