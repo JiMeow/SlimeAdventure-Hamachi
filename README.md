@@ -50,7 +50,8 @@ togethers.
 
 <img src="https://i.imgur.com/OKduA9x.png" width="123"><img src="https://i.imgur.com/OKduA9x.png" width="123"><img src="https://i.imgur.com/OKduA9x.png" width="123">
 
-- [reddit.com/user/Chompo-Bompo](reddit.com/user/Chompo-Bompo)
-- [it.freepik.com](it.freepik.com)
-- [toppng.com](toppng.com)
+- slime image from [Chompo-Bompo](https://www.reddit.com/r/slimerancher/comments/haklxi/i_made_all_the_slime_in_pixel_art/)
+  
+- map image from [it.freepik.com](https://it.freepik.com/vettori-premium/pixel-art-natura-montagne-pini-albero-sfondo-per-il-gioco-8-bit_7501977.htm)
+- cloud image from [toppng.com](https://toppng.com/cloud-fixed-06-blueberry-sans-pixel-art-PNG-free-PNG-Images_179684)
 - other player in background of this project
