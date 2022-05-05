@@ -87,4 +87,10 @@ def getAllSkin():
     imgright = pygame.transform.flip(imgleft, True, False)
     playerimg.append((imgright, imgleft))
 
+    # set player15 img
+    imgleft = pygame.transform.scale(
+        pygame.image.load("JiMeow/photo/player15.png"), (45, 34))
+    imgright = pygame.transform.flip(imgleft, True, False)
+    playerimg.append((imgright, imgleft))
+
     return playerimg
