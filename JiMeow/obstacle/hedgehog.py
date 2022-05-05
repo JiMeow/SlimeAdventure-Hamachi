@@ -6,11 +6,12 @@ import time
 class Hedgehog():
 
     img = pygame.transform.scale(
-        pygame.image.load("JiMeow/photo/hedgehog.png"), (70, 50))
+        pygame.image.load("JiMeow/photo/hedgehog2.png"), (70, 50))
+    img.set_colorkey("white")
     imgflip = pygame.transform.flip(img, True, False)
-    img = [img, imgflip]
+    img = [imgflip, img]
 
-    def __init__(self, win, x, y, stage, distance):
+    def __init__(self, win, x, y, stage, distance, timeoffset):
         """
         set default value of flying floor depend on stage
 
@@ -26,10 +27,11 @@ class Hedgehog():
         self.width = 70
         self.height = 50
         self.x = x + width * stage
+        self.constx = self.x
         self.y = y
-        self.distance = distance
-        self.starttime = int(time.time()*100)
+        self.distance = distance*2//3
         self.speed = 1
+        self.timeoffset = timeoffset
 
     def draw(self, stage):
         """
@@ -47,15 +49,16 @@ class Hedgehog():
         hedgehog walk to left or right depend on time
 
         Returns:
-            int: 1 for walk to left, -1 for walk to right
+            int: 1 for walk to left, 0 for walk to right
         """
         self.settime()
-        if self.time <= self.distance:
-            self.x += self.speed
-            return 0  # 0 means hedgehog walk to left
-        else:
-            self.x -= self.speed
-            return 1  # 1 means hedgehog walk to right
+        self.x = self.constx + (int((time.time()-self.timeoffset)*100) *
+                                self.speed) % (self.distance*2)
+        if self.x > self.constx + self.distance:
+            self.x = self.constx + self.distance - \
+                (self.x-(self.constx + self.distance))
+            return 1
+        return 0
 
     def update(self):
         """
@@ -68,5 +71,4 @@ class Hedgehog():
         """
         set time for set position of hedgehog
         """
-        self.time = (int(time.time()*100) -
-                     self.starttime) % (self.distance*2) + 1
+        self.time = int(time.time()*100) % (self.distance*2) + 1

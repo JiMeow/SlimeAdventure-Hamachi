@@ -20,6 +20,7 @@ class Map():
         self.win = win
         self.img = pygame.transform.scale(
             pygame.image.load(img), (width, height))
+        self.timeoffset = 0
         self.nowstage = -1
         self.gravity = 0.3
         self.obstacle = []
@@ -29,7 +30,7 @@ class Map():
         self.jellyfish = []
         self.jumpboost = []
         self.text = []
-        self.stage = list(range(10))
+        self.stage = list(range(14))
 
     def reset(self):
         """
@@ -62,7 +63,7 @@ class Map():
         self.flyfloor.append(FlyingFloor(
             self.win, x, y, stage))
 
-    def addspike(self, x, y, stage):
+    def addspike(self, x, y, stage, flip=False):
         """
         add spike at (x,y) position to stage
 
@@ -72,7 +73,7 @@ class Map():
             stage (int): stage of game
         """
         self.spike.append(Spike(
-            self.win, x, y, stage))
+            self.win, x, y, stage, flip))
 
     def addhedgehog(self, x, y, stage, distance):
         """
@@ -86,7 +87,7 @@ class Map():
             distance (int): maximum distance of hedgehog can walk
         """
         self.hedgehog.append(Hedgehog(
-            self.win, x, y, stage, distance))
+            self.win, x, y, stage, distance, self.timeoffset))
 
     def addjellyfish(self, x, y, stage, distance):
         """
@@ -100,7 +101,7 @@ class Map():
             distance (int): maximum distance of jellyfish can flying
         """
         self.jellyfish.append(Jellyfish(
-            self.win, x, y, stage, distance))
+            self.win, x, y, stage, distance, self.timeoffset))
 
     def addjumpboost(self, x, y, stage):
         """
@@ -314,3 +315,91 @@ class Map():
         """
         stage = 9
         self.reset()
+
+        for i in range(13):
+            self.addspike(200+71.25*i, floor-50, stage)
+        for i in range(20):
+            self.addflyfloor(200+45*i, floor-200, stage)
+        self.addhedgehog(400, floor-50-200, stage, 200)
+        self.addhedgehog(700, floor-50-200, stage, 200)
+
+        for i in range(20):
+            self.addflyfloor(200+45*i, floor-400, stage)
+        self.addhedgehog(250, floor-50-400, stage, 200)
+        self.addhedgehog(550, floor-50-400, stage, 200)
+        self.addhedgehog(850, floor-50-400, stage, 200)
+
+        for i in range(20):
+            self.addflyfloor(200+45*i, floor-600, stage)
+        for i in range(13):
+            self.addspike(200+71.25*i, floor-600+15, stage, True)
+        self.setobstacle()
+
+    def createstage10(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 10
+        self.reset()
+
+        self.addjumpboost(200, floor-50-200, stage)
+        for i in range(13):
+            self.addspike(200+71.25*i, floor-50, stage)
+        for i in range(4):
+            self.addflyfloor(500+45*i, floor-50-150, stage)
+        self.addhedgehog(500, floor-50-200, stage, 180)
+        for i in range(4):
+            self.addflyfloor(800+45*i, floor-50-150, stage)
+        self.addhedgehog(800, floor-50-200, stage, 180)
+        self.addtext("Checkpoint", 10, floor-50-40, 25)
+        self.setobstacle()
+
+    def createstage11(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 11
+        self.reset()
+
+        for i in range(13):
+            self.addspike(200+71.25*i, floor-50, stage)
+        self.addjumpboost(200, floor-50-200, stage)
+        self.addjellyfish(350, floor-50-350, stage, 200)
+        self.addjumpboost(500, floor-50-200, stage)
+        self.addjellyfish(650, floor-50-350, stage, 200)
+        self.addjumpboost(800, floor-50-200, stage)
+        self.addjellyfish(950, floor-50-350, stage, 200)
+        self.setobstacle()
+
+    def createstage12(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 12
+        self.reset()
+
+        for i in range(3):
+            self.addspike(200+60*i, floor-50, stage)
+
+        for i in range(3):
+            self.addspike(450+60*i, floor-50, stage)
+
+        for i in range(3):
+            self.addspike(700+60*i, floor-50, stage)
+
+        for i in range(3):
+            self.addspike(950+60*i, floor-50, stage)
+        self.setobstacle()
+
+    def createstage13(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 13
+        self.reset()
+
+        self.setobstacle()

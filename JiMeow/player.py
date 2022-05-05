@@ -8,6 +8,8 @@ class Player():
     wingimg = pygame.transform.scale(
         pygame.image.load("JiMeow/photo/playerwings.png"), (128, 80))
     playerimg = getAllSkin()
+    cloudimg = pygame.transform.scale(
+        pygame.image.load("JiMeow/photo/cloud.png"), (50, 28))
 
     def __init__(self, id, x, y, width, height, color, name):
         """
@@ -35,6 +37,7 @@ class Player():
         self.jumpcount = 0
         self.wing = False
         self.skinid = 1
+
         self.on = {"Ground": False, "Slab": False}
 
         # use for drop to floor fromm slab
@@ -58,8 +61,13 @@ class Player():
             self.turn = 0
         elif self.speed[0] < 0:
             self.turn = 1
+
         win.blit(Player.playerimg[self.skinid][self.turn],
                  (self.x-width*stage, self.y))
+
+        if self.speed[1] < 0:
+            win.blit(Player.cloudimg,
+                     (self.cloudpos[0]-width*stage, self.cloudpos[1]))
 
         # pygame.draw.rect(win, self.color, pygame.Rect(
         #     self.rect.x-width*stage, self.rect.y, self.rect.width, self.rect.height))
@@ -99,7 +107,7 @@ class Player():
                 self.speed[0] = 1
             else:
                 cnt += 1
-            if cnt == 2:
+            if cnt == 2 or cnt == 0:
                 self.speed[0] = 0
             self.speed[0] = self.speed[0] * self.vel
         else:
@@ -124,6 +132,10 @@ class Player():
             if self.jumpcount < 2:
                 self.jumpcount += 1
                 self.speed[1] = -6
+                if not self.on["Ground"] and not self.on["Slab"]:
+                    self.cloudpos = (self.x, self.y+15)
+                else:
+                    self.cloudpos = (-100, -100)
                 self.on["Ground"] = False
                 self.on["Slab"] = False
         self.fall(gravity, dt)

@@ -116,8 +116,9 @@ class Collision():
             tuple: position of player after collision
         """
         for i in self.map.spike:
-            if self.player.rect.colliderect(i.rect):
-                return True, (30+width*self.spawnstage, -100)
+            for j in i.hitbox:
+                if self.player.rect.colliderect(j):
+                    return True, (30+width*self.spawnstage, -100)
         return False, None
 
     def playerCollideHedgehog(self):

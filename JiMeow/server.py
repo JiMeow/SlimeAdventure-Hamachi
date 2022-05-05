@@ -1,4 +1,5 @@
 import socket
+import time
 from threading import *
 import pickle
 from player import Player
@@ -29,7 +30,7 @@ def threaded_client(conn, player):
         player (int): id of player
     """
     global currentPlayer
-    conn.send(pickle.dumps(players[player]))
+    conn.send(pickle.dumps((players[player], time.time())))
     reply = ""
     while True:
         try:
