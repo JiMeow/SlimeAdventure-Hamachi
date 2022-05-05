@@ -1,7 +1,6 @@
 import pygame
 from setting import *
 from skin import getAllSkin
-import os
 
 
 class Player():
