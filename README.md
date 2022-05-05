@@ -39,7 +39,7 @@ togethers.
 
 ![forest](https://i.imgur.com/jPGvu6I.jpg)
 
-- Game have only 15 stage.
+- Game only have 15 stages.
 - Game will auto set spawn point at every 5 stages.
 - Player(slime) can go to next stage by walking to edge of stage.
 - Player(slime) can jump twice and reset when he touch the ground.
