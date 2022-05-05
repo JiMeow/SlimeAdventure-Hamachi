@@ -1,11 +1,11 @@
 import pygame
-from setting import *
+from src.setting import *
 
 
 class FlyingFloor():
 
     img = pygame.transform.scale(
-        pygame.image.load("photo/flyfloor2.png"), (45, 15))
+        pygame.image.load("src/photo/flyfloor2.png"), (45, 15))
 
     def __init__(self, win, x, y, stage):
         """

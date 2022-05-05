@@ -1,15 +1,15 @@
 import pygame
-from setting import *
-from skin import getAllSkin
+from src.setting import *
+from src.skin import getAllSkin
 
 
 class Player():
 
     wingimg = pygame.transform.scale(
-        pygame.image.load("photo/playerwings.png"), (128, 80))
+        pygame.image.load("src/photo/playerwings.png"), (128, 80))
     playerimg = getAllSkin()
     cloudimg = pygame.transform.scale(
-        pygame.image.load("photo/cloud.png"), (50, 28))
+        pygame.image.load("src/photo/cloud.png"), (50, 28))
 
     def __init__(self, id, x, y, width, height, color, name):
         """

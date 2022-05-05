@@ -28,7 +28,7 @@ def game(username, skinid):
     pygame.init()
     clock = pygame.time.Clock()
 
-    map = Map(win, "photo/forest.png")
+    map = Map(win, "src/photo/forest.png")
     run = True
     n = Network()
 

@@ -1,4 +1,4 @@
-from setting import *
+from src.setting import *
 
 
 def redrawWindow(layout, p, allp, dt, collision, map, clock):

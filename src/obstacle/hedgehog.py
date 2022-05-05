@@ -1,12 +1,12 @@
 import pygame
-from setting import *
+from src.setting import *
 import time
 
 
 class Hedgehog():
 
     img = pygame.transform.scale(
-        pygame.image.load("photo/hedgehog.png"), (70, 50))
+        pygame.image.load("src/photo/hedgehog.png"), (70, 50))
     img.set_colorkey("white")
     imgflip = pygame.transform.flip(img, True, False)
     img = [imgflip, img]

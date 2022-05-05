@@ -1,5 +1,5 @@
 from tkinter import *
-from PIL import Image, ImageTk
+from PIL import ImageTk, Image
 
 
 class Login():
@@ -31,7 +31,7 @@ class Login():
 
         self.sprites = []
         for i in range(1, 16):
-            name = f"photo/player{i}.png"
+            name = f"src/photo/player{i}.png"
             photo = Image.open(name).copy()
             photo = photo.resize(Login.image_sizes[i-1], Image.ANTIALIAS)
             photo = ImageTk.PhotoImage(photo)

@@ -1,11 +1,11 @@
 import pygame
-from setting import *
+from src.setting import *
 
 
 class Jumpboost():
 
     img = pygame.transform.scale(
-        pygame.image.load("photo/uni.png"), (45, 30))
+        pygame.image.load("src/photo/uni.png"), (45, 30))
 
     def __init__(self, win, x, y, stage):
         """

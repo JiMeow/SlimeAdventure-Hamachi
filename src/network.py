@@ -1,7 +1,7 @@
 import socket
 import pickle
-from player import Player
-from setting import *
+from src.player import Player
+from src.setting import *
 
 
 class Network:

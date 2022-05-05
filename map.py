@@ -1,10 +1,10 @@
 import pygame
 from src.setting import *
-from powerup.jumpboost import Jumpboost
-from obstacle.spike import Spike
-from obstacle.flyfloor import FlyingFloor
-from obstacle.hedgehog import Hedgehog
-from obstacle.jellyfish import Jellyfish
+from src.powerup.jumpboost import Jumpboost
+from src.obstacle.spike import Spike
+from src.obstacle.flyfloor import FlyingFloor
+from src.obstacle.hedgehog import Hedgehog
+from src.obstacle.jellyfish import Jellyfish
 
 
 class Map():

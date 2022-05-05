@@ -1,5 +1,5 @@
 import pygame
-from setting import *
+from src.setting import *
 
 
 class Collision():
