@@ -1,1 +1,2 @@
 # SlimeAdventure
+Still in beta
