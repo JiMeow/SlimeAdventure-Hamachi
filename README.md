@@ -27,11 +27,12 @@ For play this game(beta) you need hamachi to connect with
 you host then you run client.py then you can play the game.
 
 ![hamachi-removebg-preview](https://i.imgur.com/DL4iZX8.png)
-<br>
-P.S. for host you need to run server.py and don't forget to
+
+>P.S. for host you need to run server.py and don't forget to
 connect you hamachi with you friends for play the game
 togethers.
-<br>
+
+
 
 ## Game and Stage detail
 
