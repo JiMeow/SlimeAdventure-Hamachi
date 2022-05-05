@@ -1,6 +1,6 @@
 import pygame
 from settings import *
-from circle import Circle
+from circle.circle import Circle
 
 
 class CircleGroup(pygame.sprite.Group):
