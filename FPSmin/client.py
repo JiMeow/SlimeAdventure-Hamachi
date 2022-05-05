@@ -1,7 +1,7 @@
 import pygame
 from settings import *
-from circlegroup import CircleGroup
-from tilegroup import TileGroup
+from circle.circlegroup import CircleGroup
+from tile.tilegroup import TileGroup
 from layer import Layer
 from network import Network
 from playergroup import PlayerGroup
@@ -16,7 +16,7 @@ from ui import UIGroup
 # slow speed when cast
 # offset mouse target point
 # walk point image
-# slow other player
+# set speed other player from server data
 
 # done?
 # interpolation
@@ -24,7 +24,7 @@ from ui import UIGroup
 
 # to do
 # map
-# projectile author
+# projectile author [pass author in bullets and pass in projectiles]
 # select server
 
 # select elements qwer asdf 8 elements
@@ -33,7 +33,7 @@ from ui import UIGroup
 # skill : fast walk, revive, reaper, metor shower
 
 # left click shoot
-# middle click use to yourself
+# middle click or space bar use to yourself or in your area
 # right click walk
 
 # element iteration like fire + water
