@@ -36,7 +36,7 @@ def game(username, skinid):
     map.timeoffset = time.time()-setdefaulttime
 
     p.skinid = skinid
-    spawnpoint = setspawn(p, 5)
+    spawnpoint = setspawn(p, 0)
     p.name = username
     frame = 0
 
