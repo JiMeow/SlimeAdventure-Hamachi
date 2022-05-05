@@ -29,7 +29,7 @@ class Layer:
 
     def default_render(self, player):
         self.screen.blit(self.background_image, self.background_rect)
-        player.draw_cursor(self.screen)
+        player.draw_move_target(self.screen)
         for sprite in self.sprites():
             self.screen.blit(sprite.image, sprite.rect)
 

@@ -200,8 +200,8 @@ class CameraGroup(pygame.sprite.Group):
 
         for sprite in self.all_sprites_groups["circle"]:
             self.surface.blit(sprite.image, sprite.rect)
-        # cursor
-        self.player.draw_cursor(self.surface, self.offset)
+        # move target point
+        self.player.draw_move_target(self.surface, self.offset)
         # player
         offset_pos = self.player.rect.topleft - self.offset
         self.surface.blit(self.player.image, offset_pos)

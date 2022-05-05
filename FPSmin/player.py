@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         self.all_sprites_group = kwargs["all_sprites_group"]
         super().__init__(self.all_sprites_group["player"])
         self.init_player_image(pos, color, name)
-        self.init_cursor_image()
+        self.init_move_target_image()
 
         self.name = name
         self.control = control
@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         # setup text
         draw_text_to_surface(
             surface=self.origin_image,
-            font=pygame.font.Font(None, 10),
+            font=create_font(10),
             text=name,
             text_color="white",
             bg_color="black",
@@ -52,26 +52,27 @@ class Player(pygame.sprite.Sprite):
 
         self.angle = 0
 
-    def init_cursor_image(self):
-        self.cursor_images = player_cursor_images
-        self.cursor_image_len = len(self.cursor_images)
-        self.cursor_image_frame = 0
-        self.cursor_image = self.cursor_images[self.cursor_image_frame]
-        self.cursor_rect = self.cursor_image.get_rect()
+    def init_move_target_image(self):
+        self.move_target_images = player_move_target_images
+        self.move_target_image_len = len(self.move_target_images)
+        self.move_target_image_frame = 0
+        self.move_target_image = self.move_target_images[self.move_target_image_frame]
+        self.move_target_rect = self.move_target_image.get_rect()
 
-    def draw_cursor(self, screen, offset=pygame.math.Vector2(0, 0)):
+    def draw_move_target(self, screen, offset=pygame.math.Vector2(0, 0)):
         if self.move_direction.magnitude() != 0:
-            self.cursor_rect = self.cursor_image.get_rect(
+            self.move_target_rect = self.move_target_image.get_rect(
                 center=self.target_pos
             )
-            offset_pos = self.cursor_rect.topleft - offset
-            screen.blit(self.cursor_image, offset_pos)
+            offset_pos = self.move_target_rect.topleft - offset
+            screen.blit(self.move_target_image, offset_pos)
 
     def animation(self):
-        # cursor
-        self.cursor_image_frame = (
-            self.cursor_image_frame + player_cursor_animation_speed) % self.cursor_image_len
-        self.cursor_image = self.cursor_images[int(self.cursor_image_frame)]
+        # move_target
+        self.move_target_image_frame = (
+            self.move_target_image_frame + player_move_target_animation_speed) % self.move_target_image_len
+        self.move_target_image = self.move_target_images[int(
+            self.move_target_image_frame)]
 
     # def keyboard(self):
     #     keys = pygame.key.get_pressed()
@@ -152,7 +153,7 @@ class Player(pygame.sprite.Sprite):
     #     self.rect = self.image.get_rect(center=self.rect.center)
     #     self.angle += self.rotate_speed
 
-    def update(self, dt):
+    def update(self, dt, *args, **kwargs):
         if self.control:
             self.set_face_direction()
             self.set_target_pos()
