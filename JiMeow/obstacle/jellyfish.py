@@ -6,11 +6,11 @@ import time
 class Jellyfish():
 
     img1 = pygame.transform.scale(
-        pygame.image.load("JiMeow/photo/jellyfish1.png"), (40, 45))
+        pygame.image.load("photo/jellyfish1.png"), (40, 45))
     img2 = pygame.transform.scale(
-        pygame.image.load("JiMeow/photo/jellyfish2.png"), (53, 45))
+        pygame.image.load("photo/jellyfish2.png"), (53, 45))
     img3 = pygame.transform.scale(
-        pygame.image.load("JiMeow/photo/jellyfish3.png"), (60, 40))
+        pygame.image.load("photo/jellyfish3.png"), (60, 40))
 
     def __init__(self, win, x, y, stage, distance, timeoffset):
         """

@@ -31,7 +31,7 @@ class Login():
 
         self.sprites = []
         for i in range(1, 16):
-            name = f"JiMeow/photo/player{i}.png"
+            name = f"photo/player{i}.png"
             photo = Image.open(name).copy()
             photo = photo.resize(Login.image_sizes[i-1], Image.ANTIALIAS)
             photo = ImageTk.PhotoImage(photo)
