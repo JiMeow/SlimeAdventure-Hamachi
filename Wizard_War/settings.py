@@ -1,7 +1,7 @@
 import pygame
 from utils.utils import *
 
-# screen settings
+# region screen settings
 fps = 60
 width = 800
 height = 800
@@ -9,27 +9,30 @@ width = 1920
 height = 1080
 # make it can load image
 pygame.display.set_mode((width, height))
-# other settings
+# endregion screen settings
+# region other settings
 small_cir_rad = width//4
 big_cir_rad = width//2
 background_color = (100, 100, 200)
 gb_colorkey = (1, 1, 1)
-# cursor
-cursor_image_path = "FPSmin/assets/mouse/cursor/cursor.png"
+# endregion other settings
+# region cursor settings
+cursor_image_path = "Wizard_War/assets/mouse/cursor/cursor.png"
 cursor_image = load_img(cursor_image_path)
-# player settings
+# endregion cursor settings
+# region player settings
 player_image_size = (50, 50)
-player_image_path_green = "FPSmin/assets/green.png"
+player_image_path_green = "Wizard_War/assets/green.png"
 player_image_green = load_img(
     player_image_path_green, gb_colorkey, player_image_size
 )
-player_image_path_red = "FPSmin/assets/red.png"
+player_image_path_red = "Wizard_War/assets/red.png"
 player_image_red = load_img(
     player_image_path_red, gb_colorkey, player_image_size
 )
 
 player_move_target_size = (25, 15)
-player_move_target_image_path = "FPSmin/assets/mouse/pos"
+player_move_target_image_path = "Wizard_War/assets/mouse/pos"
 player_move_target_images = load_ani(
     player_move_target_image_path, (0, 0, 0), player_move_target_size
 )
@@ -41,8 +44,8 @@ player_slow_speed = 3
 player_rotation_speed = 5
 player_max_hp = 100
 player_max_mp = 100
-
-# projectile settings
+# endregion player settings
+# region projectile settings
 """
 projectile types have 8 types
 1.water(q)
@@ -54,21 +57,21 @@ projectile types have 8 types
 7.stone(d)
 8.fire(f)
 """
-projectile_image_path = "FPSmin/assets/black.png"
+projectile_image_path = "Wizard_War/assets/black.png"
 projectile_image = load_img(projectile_image_path, gb_colorkey)
 projectile_image_size = (5, 5)
 projectile_speed = 20
 projectile_rotation_speed = 30
 projectile_life_time = 5
 projectile_max_health = fps * projectile_life_time
-
-
-# tile settings
+# endregion projectile settings
+# region tile settings
 tile_image_path = ""
 tile_image = ""
 tile_image_size = (50, 50)
-
+# endregion tile settings
 # UI settings
+# region UI element settings
 UI_element_order = [
     "water", "heal", "shield", "ice",
     "thunder", "death", "stone", "fire"
@@ -98,6 +101,7 @@ UI_element_key_image_center = (
     UI_element_key_image_size[0]//2,
     UI_element_key_image_size[1]//2
 )
+UI_element_key_image_offset = (-2, -2)
 UI_element_key_image_r = 8
 UI_element_key_image_R = 10
 UI_element_key_image_font_size = 20
@@ -116,7 +120,7 @@ UI_element_key_images = create_key_img(
     text_color=UI_element_key_image_text_color
 )
 # 1.water(q)
-UI_water_image_path = "FPSmin/assets/UI/element/water/"
+UI_water_image_path = "Wizard_War/assets/UI/element/water/"
 UI_water_images = load_ani(
     UI_water_image_path, (0, 0, 0), UI_element_image_size
 )
@@ -126,7 +130,7 @@ UI_water_image_3 = pygame.transform.scale(
     UI_water_image_2, UI_element_image_scaled_size
 )
 # 2.heal(w)
-UI_heal_image_path = "FPSmin/assets/UI/element/heal/"
+UI_heal_image_path = "Wizard_War/assets/UI/element/heal/"
 UI_heal_images = load_ani(
     UI_heal_image_path, (0, 0, 0), UI_element_image_size
 )
@@ -136,7 +140,7 @@ UI_heal_image_3 = pygame.transform.scale(
     UI_heal_image_2, UI_element_image_scaled_size
 )
 # 3.shield(e)
-UI_shield_image_path = "FPSmin/assets/UI/element/shield/"
+UI_shield_image_path = "Wizard_War/assets/UI/element/shield/"
 UI_shield_images = load_ani(
     UI_shield_image_path, (0, 0, 0), UI_element_image_size
 )
@@ -146,7 +150,7 @@ UI_shield_image_3 = pygame.transform.scale(
     UI_shield_image_2, UI_element_image_scaled_size
 )
 # 4.ice(r)
-UI_ice_image_path = "FPSmin/assets/UI/element/ice/"
+UI_ice_image_path = "Wizard_War/assets/UI/element/ice/"
 UI_ice_images = load_ani(
     UI_ice_image_path, (0, 0, 0), UI_element_image_size
 )
@@ -156,7 +160,7 @@ UI_ice_image_3 = pygame.transform.scale(
     UI_ice_image_2, UI_element_image_scaled_size
 )
 # 5.thunder(a)
-UI_thunder_image_path = "FPSmin/assets/UI/element/thunder/"
+UI_thunder_image_path = "Wizard_War/assets/UI/element/thunder/"
 UI_thunder_images = load_ani(
     UI_thunder_image_path, (0, 0, 0), UI_element_image_size
 )
@@ -166,7 +170,7 @@ UI_thunder_image_3 = pygame.transform.scale(
     UI_thunder_image_2, UI_element_image_scaled_size
 )
 # 6.death(s)
-UI_death_image_path = "FPSmin/assets/UI/element/death/"
+UI_death_image_path = "Wizard_War/assets/UI/element/death/"
 UI_death_images = load_ani(
     UI_death_image_path, (0, 0, 0), UI_element_image_size
 )
@@ -176,7 +180,7 @@ UI_death_image_3 = pygame.transform.scale(
     UI_death_image_2, UI_element_image_scaled_size
 )
 # 7.stone(d)
-UI_stone_image_path = "FPSmin/assets/UI/element/stone/"
+UI_stone_image_path = "Wizard_War/assets/UI/element/stone/"
 UI_stone_images = load_ani(
     UI_stone_image_path, (0, 0, 0), UI_element_image_size
 )
@@ -186,7 +190,7 @@ UI_stone_image_3 = pygame.transform.scale(
     UI_stone_image_2, UI_element_image_scaled_size
 )
 # 8.fire(f)
-UI_fire_image_path = "FPSmin/assets/UI/element/fire/"
+UI_fire_image_path = "Wizard_War/assets/UI/element/fire/"
 UI_fire_images = load_ani(
     UI_fire_image_path, (0, 0, 0), UI_element_image_size
 )
@@ -195,3 +199,5 @@ UI_fire_image_2 = UI_fire_images[1]
 UI_fire_image_3 = pygame.transform.scale(
     UI_fire_image_2, UI_element_image_scaled_size
 )
+# endregion UI element settings
+# region UISkill settings
