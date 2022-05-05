@@ -2,7 +2,8 @@
 
 - [SlimeAdventure (Beta)](#slimeadventure-beta)
   - [Connect with friends](#connect-with-friends)
-  - [SlimeAdventure (Beta)](#slimeadventure-beta-1)
+  - [Game and Stage detail](#game-and-stage-detail)
+  - [Thank you](#thank-you)
 
 <br>
 
@@ -37,6 +38,18 @@ togethers.
 ![forest](https://i.imgur.com/jPGvu6I.jpg)
 
 - Game have only 15 stage.
-- Game will auto set spawn point at every five stages.
+- Game will auto set spawn point at every 5 stages.
 - Player(slime) can go to next stage by walking to edge of stage.
 - Player(slime) can jump twice and reset when he touch the ground.
+- Player(slime) should avoid the enemy(e.g. hedgehog)
+- Some stage have power up item which can help you to go to next stage.
+<br>
+## Thank you
+<img src="https://i.imgur.com/OKduA9x.png" width="123">
+<img src="https://i.imgur.com/OKduA9x.png" width="123">
+<img src="https://i.imgur.com/OKduA9x.png" width="123">
+
+- reddit.com/user/Chompo-Bompo
+- it.freepik.com
+- toppng.com
+- other player in background of this project
