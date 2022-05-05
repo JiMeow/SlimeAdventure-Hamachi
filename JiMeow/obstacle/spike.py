@@ -25,6 +25,13 @@ class Spike():
         self.y = y
         self.flip = flip
         self.rect = pygame.Rect(self.x, y, 40, 50)
+        self.hitbox = [
+            pygame.Rect(self.x+3, y+40, 35, 10),
+            pygame.Rect(self.x+6, y+35, 28, 5),
+            pygame.Rect(self.x+9, y+30, 22, 5),
+            pygame.Rect(self.x+12, y+25, 16, 5),
+            pygame.Rect(self.x+15, y+10, 10, 15),
+        ]
 
     def draw(self, stage):
         """
@@ -33,6 +40,7 @@ class Spike():
         Args:
             stage (int): stage of game #can change to self.stage
         """
+        # draw hitbox of spike
         if not self.flip:
             self.win.blit(Spike.img, (self.x-width*stage, self.y))
         else:
