@@ -18,6 +18,7 @@ and backward yourself.
 <br><br>
 
 ![hedgehog](https://i.imgur.com/UCcNZDe.png) ![hedgehog](https://i.imgur.com/UCcNZDe.png)
+
 &nbsp;![cloud](https://i.imgur.com/3H1jXq3.png) &nbsp;&nbsp;![cloud](https://i.imgur.com/3H1jXq3.png)
 <br>
 
@@ -49,7 +50,7 @@ togethers.
 
 <img src="https://i.imgur.com/OKduA9x.png" width="123"><img src="https://i.imgur.com/OKduA9x.png" width="123"><img src="https://i.imgur.com/OKduA9x.png" width="123">
 
-- reddit.com/user/Chompo-Bompo
-- it.freepik.com
-- toppng.com
+- [reddit.com/user/Chompo-Bompo](reddit.com/user/Chompo-Bompo)
+- [it.freepik.com](it.freepik.com)
+- [toppng.com](toppng.com)
 - other player in background of this project
