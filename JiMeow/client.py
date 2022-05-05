@@ -28,7 +28,7 @@ def game(username, skinid):
     pygame.init()
     clock = pygame.time.Clock()
 
-    map = Map(win, "JiMeow/photo/forest.png")
+    map = Map(win, "photo/forest.png")
     run = True
     n = Network()
 
@@ -105,12 +105,12 @@ def main():
     ui = Login(username)
     while(1):
         ui.show()
-        # try:
-        name = username[0]
-        skinid = username[1]
-        game(name, skinid)
-        # except:
-        #     break
+        try:
+            name = username[0]
+            skinid = username[1]
+            game(name, skinid)
+        except:
+            break
     print("Thanks for playing")
 
 

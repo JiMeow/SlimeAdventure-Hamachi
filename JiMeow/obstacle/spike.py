@@ -5,7 +5,7 @@ from setting import *
 class Spike():
 
     img = pygame.transform.scale(
-        pygame.image.load("JiMeow/photo/spike.png"), (40, 50))
+        pygame.image.load("photo/spike.png"), (40, 50))
     imgflip = pygame.transform.flip(img, False, True)
 
     def __init__(self, win, x, y, stage, flip=False):

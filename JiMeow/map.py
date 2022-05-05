@@ -1,5 +1,4 @@
 import pygame
-import time
 from setting import *
 from obstacle.spike import Spike
 from obstacle.flyfloor import FlyingFloor
