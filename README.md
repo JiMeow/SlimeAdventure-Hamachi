@@ -43,11 +43,10 @@ togethers.
 - Player(slime) can jump twice and reset when he touch the ground.
 - Player(slime) should avoid the enemy(e.g. hedgehog)
 - Some stage have power up item which can help you to go to next stage.
-<br>
+
 ## Thank you
-<img src="https://i.imgur.com/OKduA9x.png" width="123">
-<img src="https://i.imgur.com/OKduA9x.png" width="123">
-<img src="https://i.imgur.com/OKduA9x.png" width="123">
+
+<img src="https://i.imgur.com/OKduA9x.png" width="123"><img src="https://i.imgur.com/OKduA9x.png" width="123"><img src="https://i.imgur.com/OKduA9x.png" width="123">
 
 - reddit.com/user/Chompo-Bompo
 - it.freepik.com
