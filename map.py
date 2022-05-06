@@ -34,7 +34,7 @@ class Map():
         self.invisible = []
         self.wall = []
         self.text = []
-        self.stage = list(range(22))
+        self.stage = list(range(23))
 
     def reset(self):
         """
@@ -184,3 +184,23 @@ class Map():
             i.draw(stage)
         for i in self.text:
             self.win.blit(i[0], i[1])
+
+    def createstage22(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 22
+        self.reset()
+        for i in range(13):
+            self.addspike(225+75*i, floor-50, stage)
+        self.addflyfloor(300, floor-200, stage)
+        self.addflyfloor(500, floor-200, stage)
+        self.addflyfloor(545, floor-200, stage)
+        self.addflyfloor(700, floor-200, stage)
+        self.addflyfloor(745, floor-200, stage)
+        self.addhedgehog(500, floor-200-50, stage, 45)
+        self.addhedgehog(700, floor-200-50, stage, 45)
+        self.addinvisible(400, floor-200-50, stage)
+        self.addinvisible(850, floor-200-50, stage)
+        self.setobstacle()

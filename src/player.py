@@ -10,8 +10,14 @@ class Player():
     playerimg = getAllSkin()
     cloudimg = pygame.transform.scale(
         pygame.image.load("src/photo/cloud.png"), (50, 28))
-    starimg = pygame.transform.scale(
-        pygame.image.load("src/photo/star.png"), (100, 31))
+    starimg = [
+        pygame.transform.scale(
+            pygame.image.load("src/photo/star1.png"), (100, 31)),
+        pygame.transform.scale(
+            pygame.image.load("src/photo/star2.png"), (100, 31)),
+        pygame.transform.scale(
+            pygame.image.load("src/photo/star3.png"), (100, 31))
+    ]
     invisibletime = 180
 
     def __init__(self, id, x, y, width, height, color, name):
@@ -70,7 +76,7 @@ class Player():
                  (self.x-width*stage, self.y))
 
         if self.invisibletimeleft > 0:
-            win.blit(Player.starimg,
+            win.blit(Player.starimg[self.invisibletimeleft//60],
                      (self.x-width*stage-25, self.y-(self.height-5)))
 
         if self.speed[1] < 0:
@@ -203,22 +209,23 @@ class Player():
                 self.on["Ground"] = True
                 self.jumpcount = 0
 
-        if self.invisibletimeleft == 0:
-            # object make ded
-            # drop to floor from slab
-            if self.y > self.dropTo:
-                self.dropTo = 0
-                mask, pos = collision.playerCollideFlyingFloor()
-                if mask:
-                    if self.speed[1] >= 0:
-                        self.speed[1] = 0
-                        self.jumpcount = 0
-                        self.y = pos[1]
-                        self.on["Slab"] = True
-                    else:
-                        self.on["Slab"] = False
+        # drop to floor from slab
+        if self.y > self.dropTo:
+            self.dropTo = 0
+            mask, pos = collision.playerCollideFlyingFloor()
+            if mask:
+                if self.speed[1] >= 0:
+                    self.speed[1] = 0
+                    self.jumpcount = 0
+                    self.y = pos[1]
+                    self.on["Slab"] = True
                 else:
                     self.on["Slab"] = False
+            else:
+                self.on["Slab"] = False
+
+        if self.invisibletimeleft == 0:
+            # object make ded
 
             # hit spike
             mask, pos = collision.playerCollideSpike()
@@ -261,6 +268,6 @@ class Player():
         # no negative stage
         if self.x < 0:
             self.x = 0
-        if self.x > 28590:
-            self.x = 28590
+        # if self.x > 28590:
+        #     self.x = 28590
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
