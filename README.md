@@ -33,8 +33,6 @@ you host then you run client.py then you can play the game.
 connect you hamachi with you friends for play the game
 togethers.
 
-
-
 ## Game and Stage detail
 
 ![forest](https://i.imgur.com/jPGvu6I.jpg)
