@@ -109,7 +109,8 @@ def main():
             name = username[0]
             skinid = username[1]
             game(name, skinid)
-        except:
+        except Exception as e:
+            print(e)
             break
     print("Thanks for playing")
 
