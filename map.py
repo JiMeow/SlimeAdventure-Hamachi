@@ -158,7 +158,9 @@ class Map():
             if stage in self.stage:
                 eval("self.createstage"+str(int(stage))+f"()")
                 self.nowstage = stage
-
+                self.addtext(f"Stage: {int(stage)}", 1230, 10, 20)
+                if stage % 5 == 0:
+                    self.addtext("Checkpoint", 10, floor-50-40, 25)
         for i in self.obstacle:
             i.draw(stage)
         for i in self.text:
@@ -275,7 +277,6 @@ class Map():
         self.addjellyfish(600, floor-50-500, stage, 400)
         self.addjellyfish(800, floor-50-300, stage, 200)
         self.addjellyfish(1000, floor-50-500, stage, 200)
-        self.addtext("Checkpoint", 10, floor-50-40, 25)
         self.setobstacle()
 
     def createstage6(self):
@@ -287,7 +288,7 @@ class Map():
         self.reset()
 
         self.addjumpboost(600, floor-50-200, stage)
-        self.addtext("Jump?", 600, floor-50-225, 24)
+        self.addtext("Reset Jump?", 570, floor-50-230, 24)
         self.setobstacle()
 
     def createstage7(self):
@@ -526,7 +527,14 @@ class Map():
         """
         stage = 17
         self.reset()
+        self.addhedgehog(300, floor-50, stage, 1000)
+        self.addhedgehog(400, floor-50, stage, 900)
 
+        self.addhedgehog(300, floor-50, stage, 450)
+        self.addhedgehog(350, floor-50, stage, 400)
+
+        self.addhedgehog(700, floor-50, stage, 450)
+        self.addhedgehog(750, floor-50, stage, 400)
         self.setobstacle()
 
     def createstage18(self):
@@ -536,7 +544,13 @@ class Map():
         """
         stage = 18
         self.reset()
-
+        self.addwall(200, floor-90, stage)
+        for i in range(3):
+            self.addwall(535, floor-90-85*i, stage)
+        for i in range(5):
+            self.addwall(870, floor-90-85*i, stage)
+        self.addspike(365, floor-50, stage)
+        self.addspike(695, floor-50, stage)
         self.setobstacle()
 
     def createstage19(self):
