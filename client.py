@@ -24,7 +24,7 @@ def game(username, skinid):
     # win = pygame.Surface((width, height))
     # screen = pygame.display.set_mode((1920, 1080))
 
-    pygame.display.set_caption("Client")
+    pygame.display.set_caption("SlimeAdventure 2.0")
     pygame.init()
     clock = pygame.time.Clock()
 

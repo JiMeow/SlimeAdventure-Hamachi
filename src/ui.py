@@ -20,7 +20,7 @@ class Login():
         self.username = username
         self.root = Tk()
         self.root.geometry('480x570+720+255')
-        self.root.title("Dota3 test")
+        self.root.title("SlimeAdventure 2.0")
         self.root.resizable(0, 0)
         self.skinid = 1
 
