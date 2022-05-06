@@ -181,6 +181,7 @@ class Collision():
             "up": 0, "down": 0, "left": 0, "right": 0
         }
         mask = False
+        posdown = None
         for i in self.map.wall:
             for j in playerhitboxup:
                 if j.colliderect(i.rect):
@@ -196,6 +197,7 @@ class Collision():
                     mask = True
             for j in playerhitboxdown:
                 if j.colliderect(i.rect):
+                    posdown = i.rect.y
                     direction["down"] += 1
                     mask = True
-        return mask, sorted(list(direction.items()), key=lambda x: x[1], reverse=True)[0]
+        return mask, sorted(list(direction.items()), key=lambda x: x[1], reverse=True)[0], posdown

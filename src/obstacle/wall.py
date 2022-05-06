@@ -25,7 +25,10 @@ class Wall():
         self.x = x + width * stage
         self.y = y
         self.rotate = rotate
-        self.rect = pygame.Rect(self.x, y, 55, 90)
+        if not rotate:
+            self.rect = pygame.Rect(self.x, y, 55, 90)
+        else:
+            self.rect = pygame.Rect(self.x, y, 90, 55)
 
     def draw(self, stage):
         """

@@ -31,7 +31,7 @@ class Map():
         self.jumpboost = []
         self.wall = []
         self.text = []
-        self.stage = list(range(16))
+        self.stage = list(range(21))
 
     def reset(self):
         """
@@ -65,7 +65,7 @@ class Map():
         self.flyfloor.append(FlyingFloor(
             self.win, x, y, stage))
 
-    def addspike(self, x, y, stage, flip=False):
+    def addspike(self, x, y, stage, rotate=0):
         """
         add spike at (x,y) position to stage
 
@@ -75,7 +75,7 @@ class Map():
             stage (int): stage of game
         """
         self.spike.append(Spike(
-            self.win, x, y, stage, flip))
+            self.win, x, y, stage, rotate))
 
     def addhedgehog(self, x, y, stage, distance):
         """
@@ -346,7 +346,7 @@ class Map():
         for i in range(20):
             self.addflyfloor(200+45*i, floor-600, stage)
         for i in range(13):
-            self.addspike(200+71.25*i, floor-600+15, stage, True)
+            self.addspike(200+71.25*i, floor-600+15, stage, 180)
         self.setobstacle()
 
     def createstage10(self):
@@ -430,8 +430,22 @@ class Map():
         """
         stage = 14
         self.reset()
-        self.addwall(200, floor-50-100, stage)
-        self.addwall(200, floor-50-300, stage)
+        for i in range(4):
+            self.addwall(200, floor-90-85*i, stage)
+        self.addwall(200, floor-390, stage, rotate=True)
+        for i in range(9):
+            self.addwall(400+85*i, floor-390, stage, rotate=True)
+        self.addflyfloor(155, floor-195, stage)
+        self.addflyfloor(155, floor-390, stage)
+        for i in range(3):
+            self.addhedgehog(500+200*i, floor-50-390, stage, 200)
+        for i in range(12):
+            self.addspike(300+75*i, floor-50, stage)
+        for i in range(10):
+            self.addspike(410+75*i, floor-340, stage, 180)
+        self.addjumpboost(600, floor-200, stage)
+        self.addjellyfish(750, floor-300, stage, 200)
+        self.addjumpboost(900, floor-200, stage)
         self.setobstacle()
 
     def createstage15(self):
@@ -442,6 +456,35 @@ class Map():
         stage = 15
         self.reset()
 
+        for i in range(6):
+            self.addwall(100, floor-200-85*i, stage)
+        for i in range(7):
+            self.addwall(100+85*i, floor-600-75, stage, rotate=True)
+        for i in range(6):
+            self.addspike(100+85*i, floor-600-25, stage, 180)
+        for i in range(6):
+            self.addwall(300, floor-90-85*i, stage)
+        self.addwall(350, floor-515, stage, rotate=True)
+        for i in range(6):
+            self.addwall(435, floor-90-85*i, stage)
+        self.addflyfloor(150, floor-125, stage)
+        self.addflyfloor(255, floor-280, stage)
+        self.addflyfloor(150, floor-435, stage)
+        for i in range(6):
+            self.addwall(645, floor-200-85*i, stage)
+        self.addspike(645-48, floor-475-25, stage, 270)
+        self.addspike(645-48, floor-400-25, stage, 270)
+        self.addspike(645-48, floor-325-25, stage, 270)
+        self.addspike(490, floor-225-25, stage, 90)
+        self.addspike(490, floor-150-25, stage, 90)
+        self.addspike(490, floor-75-25, stage, 90)
+        for i in range(7):
+            self.addwall(697+85*i, 527, stage, True)
+        self.addjellyfish(750, floor-120, stage, 100)
+        self.addspike(900, floor-50, stage, 0)
+        self.addspike(975, floor-110, stage, 180)
+        self.addspike(1050, floor-50, stage, 0)
+        self.addspike(1125, floor-110, stage, 180)
         self.setobstacle()
 
     def createstage16(self):
@@ -450,6 +493,68 @@ class Map():
         then draw this stage
         """
         stage = 16
+        self.reset()
+        for i in range(5):
+            self.addwall(200, floor-90-85*i, stage)
+        self.addwall(200, floor-480, stage, rotate=True)
+        for i in range(3):
+            self.addflyfloor(155, floor-160*(i+1), stage)
+        for i in range(8):
+            self.addhedgehog(250+100*i, floor-50, stage, 100)
+        self.addjumpboost(370, floor-400, stage)
+        self.addjumpboost(670, floor-400, stage)
+        self.addjumpboost(950, floor-400, stage)
+        self.addjumpboost(370, floor-250, stage)
+        self.addjumpboost(670, floor-250, stage)
+        self.addjumpboost(950, floor-250, stage)
+        for i in range(5):
+            self.addwall(1090, floor-90-85*i, stage)
+        self.addwall(1055, floor-480, stage, rotate=True)
+        for i in range(3):
+            self.addflyfloor(1145, floor-160*(i+1), stage)
+        self.addjellyfish(520, floor-500, stage, 200)
+        self.addjellyfish(520, floor-500, stage, 350)
+        self.addjellyfish(820, floor-500, stage, 250)
+        self.addjellyfish(820, floor-500, stage, 300)
+        # self.addjellyfish(20, floor-600, stage, 500)
+        self.setobstacle()
+
+    def createstage17(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 17
+        self.reset()
+
+        self.setobstacle()
+
+    def createstage18(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 18
+        self.reset()
+
+        self.setobstacle()
+
+    def createstage19(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 19
+        self.reset()
+
+        self.setobstacle()
+
+    def createstage20(self):
+        """
+        reset all obstacle then add new obstacle to stage 0 
+        then draw this stage
+        """
+        stage = 20
         self.reset()
 
         self.setobstacle()

@@ -24,7 +24,7 @@ def redrawWindow(layout, p, allp, dt, collision, map, clock):
     layout.drawPlayerFrame()
 
 
-def getDataP(network, p, tempallp=[], tempstatus={0: False, 1: False, 2: False, 3: False}):
+def getDataP(network, p, tempallp=[], tempstatus={}):
     """
     get all data information from server and update them
 
@@ -42,7 +42,7 @@ def getDataP(network, p, tempallp=[], tempstatus={0: False, 1: False, 2: False, 
         tempallp.pop(0)
     data = network.send(p)
     tempallp += data["players"]
-    for i in range(4):
+    for i in range(10):
         tempstatus[i] = data["status"][i]
     return tempallp, tempstatus
 
