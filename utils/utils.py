@@ -105,3 +105,13 @@ def spawnpointAtEveryXstage(collision, stage, player):
         player (Player): player information
     """
     collision.setSpawnStage(player.x//width//stage*stage)
+
+def setdatafromserver(allp, status, tempallp, tempstatus):
+    """
+    set data from server
+
+    Args:
+        p (Player): _description_
+    """    
+    allp = list(tempallp)
+    status = dict(tempstatus)

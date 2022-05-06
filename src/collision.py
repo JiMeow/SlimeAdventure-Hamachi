@@ -167,7 +167,7 @@ class Collision():
 
         Returns:
             bool: True if player collide with wall, False if not
-            str: position of player after collision
+            str: direction of player after collision
             int: y position of wall that player collided
         """
         playerhitboxleft = [pygame.Rect(
