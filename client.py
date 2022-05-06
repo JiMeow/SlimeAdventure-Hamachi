@@ -105,13 +105,9 @@ def main():
     ui = Login(username)
     while(1):
         ui.show()
-        try:
-            name = username[0]
-            skinid = username[1]
-            game(name, skinid)
-        except Exception as e:
-            print(e)
-            break
+        name = username[0]
+        skinid = username[1]
+        game(name, skinid)
     print("Thanks for playing")
 
 

@@ -16,6 +16,8 @@ class Player():
         pygame.transform.scale(
             pygame.image.load("src/photo/star2.png"), (100, 31)),
         pygame.transform.scale(
+            pygame.image.load("src/photo/star3.png"), (100, 31)),
+        pygame.transform.scale(
             pygame.image.load("src/photo/star3.png"), (100, 31))
     ]
     invisibletime = 180
@@ -47,7 +49,6 @@ class Player():
         self.wing = False
         self.skinid = 1
         self.invisibletimeleft = 0
-
         self.on = {"Ground": False, "Slab": False}
 
         # use for drop to floor fromm slab
