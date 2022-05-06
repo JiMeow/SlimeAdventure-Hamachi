@@ -167,7 +167,8 @@ class Collision():
 
         Returns:
             bool: True if player collide with wall, False if not
-            tuple: position of player after collision
+            str: position of player after collision
+            int: y position of wall that player collided
         """
         playerhitboxleft = [pygame.Rect(
             self.player.x, self.player.y+7+4*(i+1), 1, 1) for i in range(5)]
@@ -201,3 +202,17 @@ class Collision():
                     direction["down"] += 1
                     mask = True
         return mask, sorted(list(direction.items()), key=lambda x: x[1], reverse=True)[0], posdown
+
+    def playerCollideInvisible(self):
+        """
+        check if player collide with invisible or not and return the result
+
+        Returns:
+            bool: True if player collide with invisible, False if not
+            tuple: position of player after collision
+        """
+        for i in self.map.invisible:
+            if self.player.rect.colliderect(i.rect):
+                i.used()
+                return True, None
+        return False, None

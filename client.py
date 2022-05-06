@@ -36,7 +36,7 @@ def game(username, skinid):
     map.timeoffset = time.time()-setdefaulttime
 
     p.skinid = skinid
-    spawnpoint = setspawn(p, 18)
+    spawnpoint = setspawn(p, 0)
     p.name = username
     frame = 0
 
@@ -91,7 +91,7 @@ def game(username, skinid):
 
         setNewCollision(p, allp, collision, map)
         redrawWindow(layout, p, allp, dt, collision, map, clock)
-        spawnpointAtEveryXstage(collision, 1, p)
+        spawnpointAtEveryXstage(collision, 5, p)
         frame += 1
         # screen.blit(pygame.transform.scale(win, (1920, 1080)), (0, 0))
 
@@ -100,16 +100,17 @@ def main():
     """
     show login window and run game when login successfully
     """
-    username = ["q", 1]
-    # ui = Login(username)
+    # username = ["q", 1]
+    username = []
+    ui = Login(username)
     while(1):
-        # ui.show()
-        # try:
-        name = username[0]
-        skinid = username[1]
-        game(name, skinid)
-        # except:
-        #     break
+        ui.show()
+        try:
+            name = username[0]
+            skinid = username[1]
+            game(name, skinid)
+        except:
+            break
     print("Thanks for playing")
 
 
