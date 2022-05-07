@@ -84,6 +84,10 @@ class Login():
         '''
         canvas = Canvas(self.root, height=600, width=1000, bg="lightblue")
         canvas.place(x=0, y=0)
+        
+        Bback = Button(self.root, text=" <- back ", bg='lightblue', font=(
+            "bold", 10), fg='black' ,command=self.menu, borderwidth=0)
+        Bback.place(x=10, y=10)
         self.difficulttext = Label(self.root, text="Difficultity", font=(
             "bold", 45), fg='black', bg='lightblue')
         self.difficulttext.place(x=110, y=50)
@@ -156,6 +160,9 @@ class Login():
         canvas.place(x=0, y=0)
         canvas = Canvas(self.root, height=290, width=300, bg="lightblue")
         canvas.place(x=90, y=30)
+        Bback = Button(self.root, text=" <- back ", bg='pink', font=(
+            "bold", 10), fg='black' ,command=self.menu, borderwidth=0)
+        Bback.place(x=10, y=10)
         self.showimg = Label(
             self.root, image=self.sprites[self.skinid-1], bg="lightblue")
         self.showimg.place(x=200, y=165)

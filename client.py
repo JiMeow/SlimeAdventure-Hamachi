@@ -1,4 +1,3 @@
-from turtle import Screen
 import pygame
 from threading import *
 from src.setting import *
