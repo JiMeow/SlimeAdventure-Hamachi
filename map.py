@@ -11,7 +11,7 @@ from src.stage.stage import *
 
 
 class Map():
-    def __init__(self, win, img) -> None:
+    def __init__(self, win, img, spawn) -> None:
         """
         set win and img to map
 
@@ -20,6 +20,7 @@ class Map():
             img (pygame.surface): map image
         """
         self.win = win
+        self.spawneveryXstage = spawn
         self.img = pygame.transform.scale(
             pygame.image.load(img), (width, height))
         self.timeoffset = 0
@@ -178,7 +179,7 @@ class Map():
                     eval("self.createstage"+str(int(stage))+f"()")
                 self.nowstage = stage
                 self.addtext(f"Stage: {int(stage)}", 1230, 10, 20)
-                if stage % 5 == 0:
+                if stage % self.spawneveryXstage == 0:
                     self.addtext("Checkpoint", 10, floor-50-40, 25)
         for i in self.obstacle:
             i.draw(stage)

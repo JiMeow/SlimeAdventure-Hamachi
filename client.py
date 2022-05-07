@@ -1,3 +1,4 @@
+from turtle import Screen
 import pygame
 from threading import *
 from src.setting import *
@@ -9,7 +10,7 @@ from map import Map
 import time
 from utils.utils import *
 
-def game(username, password, skinid):
+def game(username, password, skinid, spawneveryXstage):
     """
     run game with username by connecting to server
     and receive data from server then generate map
@@ -17,12 +18,15 @@ def game(username, password, skinid):
 
     Args:
         username (str): name of player
+        password (str): password of player
+        skinid (int): id of skin of player
+        sceensize (int): 0 for fullscreen, 1 for window
     """
-    # win = pygame.Surface((width, height))
-    # screen = pygame.display.set_mode((1920, 1080))
     n = Network()
     p, setdefaulttime = n.getP()
     log, stagespawn = n.getLogin(username,password)
+    programIcon = pygame.image.load('src/photo/player9.png')
+    pygame.display.set_icon(programIcon)
     if log != "success login" and log!= "account created":
         print(log)
         n.disconnect()
@@ -32,7 +36,7 @@ def game(username, password, skinid):
     pygame.init()
     clock = pygame.time.Clock()
 
-    map = Map(win, "src/photo/forest.png")
+    map = Map(win, "src/photo/forest.png", spawneveryXstage)
     map.timeoffset = time.time()-setdefaulttime
 
     run = True
@@ -75,6 +79,7 @@ def game(username, password, skinid):
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == pygame.K_w:
                     isPlayerJump = True
                 if event.key == pygame.K_ESCAPE:
+                    run = False
                     pygame.quit()
                     n.disconnect()
                     break
@@ -94,9 +99,8 @@ def game(username, password, skinid):
 
         setNewCollision(p, allp, collision, map)
         redrawWindow(layout, p, allp, dt, collision, map, clock)
-        spawnpointAtEveryXstage(collision, 5, p)
+        spawnpointAtEveryXstage(collision, spawneveryXstage, p)
         frame += 1
-
 
 def main():
     """
@@ -111,7 +115,8 @@ def main():
         username = data[0]
         password = data[1]
         skinid = data[2]
-        log = game(username, password, skinid)
+        difficult = data[3]
+        log = game(username, password, skinid, difficult)
     print("Thanks for playing")
 
 
