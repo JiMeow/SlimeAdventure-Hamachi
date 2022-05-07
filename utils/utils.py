@@ -116,6 +116,10 @@ def setdatafromserver(allp, status, tempallp, tempstatus):
 
     Args:
         p (Player): _description_
-    """    
-    allp = list(tempallp)
-    status = dict(tempstatus)
+    """
+    while(len(allp) != 0):
+        allp.pop(0)
+    for i in tempallp:
+        allp.append(i)
+    for i in tempstatus:
+        status[i] = tempstatus[i]

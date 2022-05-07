@@ -43,13 +43,12 @@ def game(username, password, skinid, spawneveryXstage):
     p.name = username
     spawnpoint = setspawn(p, stagespawn)
     allp, status = getDataP(n, p)
-
     frame = 0
     tempallp = list(allp)
     tempstatus = dict(status)
     layout = Layout(win)
     collision = Collision(p, allp, map, spawnpoint)
-    thread = Thread(target=getDataP, args=(n, p, tempallp))
+    thread = Thread(target=getDataP, args=(n, p, tempallp, tempstatus))
 
     beforetime = time.time()
     

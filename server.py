@@ -67,9 +67,9 @@ def threaded_client(conn, player):
             else:
                 reply = {"players": players,
                          "status": currentPlayer}
-
             conn.sendall(pickle.dumps(reply))
-        except:
+        except Exception as e:
+            print(e)
             break
         
     print(f"{username} Lost connection")
@@ -102,5 +102,4 @@ def main():
                 break
         thread = Thread(target=threaded_client, args=(conn, idx))
         thread.start()
-    
 main()
