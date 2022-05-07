@@ -3,6 +3,8 @@ import json
 import time
 from threading import *
 import pickle
+
+import pygame
 from src.player import Player
 from src.setting import *
 import hashlib
@@ -37,7 +39,7 @@ def threaded_client(conn, player):
     conn.send(pickle.dumps((players[player], time.time())))
     username, password = pickle.loads(conn.recv(65536))
     hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    print(username,"connected")
+    print(player,":",username,"connected")
     
     login = False
     with open("data.json", "r") as f:
@@ -78,6 +80,7 @@ def threaded_client(conn, player):
     currentPlayer[player] = 0
     players[player].x = 30
     players[player].y = -100
+    players[player].rect = pygame.Rect(30, -100, 54, 30)
     conn.close()
 
 

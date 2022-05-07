@@ -235,7 +235,10 @@ class Login():
         while(self.data != []):
             self.data.pop()
         self.root.deiconify()
-        self.menu()
+        if log is not None:
+            self.play(log)
+        else:
+            self.menu()
         # self.setting()
         self.root.mainloop()
 

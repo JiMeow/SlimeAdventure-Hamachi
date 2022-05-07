@@ -92,6 +92,10 @@ def setspawn(p, stage):
         stage (int): _description_
     """
     p.x = 30+width*stage
+    p.rect.x = p.x
+    p.rect.y = p.y
+    p.rect.width = p.width
+    p.rect.height = p.height
     return stage
 
 
