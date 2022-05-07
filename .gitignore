@@ -3,7 +3,6 @@ Wizard_War/__pycache__/
 __pycache__/
 *.py[cod]
 *$py.class
-Data.json
 tempCodeRunnerFile.py
 # C extensions
 *.so
