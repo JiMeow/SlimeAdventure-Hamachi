@@ -24,7 +24,7 @@ def game(username, password, skinid, spawneveryXstage):
     n = Network()
     p, setdefaulttime = n.getP()
     log, stagespawn = n.getLogin(username,password)
-    programIcon = pygame.image.load('src/photo/player9.png')
+    programIcon = pygame.image.load('src/photo/player14.png')
     pygame.display.set_icon(programIcon)
     if log != "success login" and log!= "account created":
         print(log)

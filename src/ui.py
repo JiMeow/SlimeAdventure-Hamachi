@@ -40,7 +40,7 @@ class Login():
         self.checkimg = ImageTk.PhotoImage(check.resize((30,30), Image.ANTIALIAS))
         
         
-        self.root.iconphoto(False, self.sprites[8])
+        self.root.iconphoto(False, self.sprites[13])
         self.root.bind("<Key>",self.key_pressed)
         
     def menu(self):
