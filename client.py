@@ -9,8 +9,7 @@ from map import Map
 import time
 from utils.utils import *
 
-
-def game(username, skinid):
+def game(username, password, skinid):
     """
     run game with username by connecting to server
     and receive data from server then generate map
@@ -21,23 +20,25 @@ def game(username, skinid):
     """
     # win = pygame.Surface((width, height))
     # screen = pygame.display.set_mode((1920, 1080))
-
+    n = Network()
+    p, setdefaulttime = n.getP()
+    log, stagespawn = n.getLogin(username,password)
+    if log != "success login" and log!= "account created":
+        print(log)
+        n.disconnect()
+        return log
     win = pygame.display.set_mode((width, height))
-
     pygame.display.set_caption("SlimeAdventure 2.0")
     pygame.init()
     clock = pygame.time.Clock()
 
     map = Map(win, "src/photo/forest.png")
-    n = Network()
-    run = True
-
-    p, setdefaulttime = n.getP()
     map.timeoffset = time.time()-setdefaulttime
 
+    run = True
     p.skinid = skinid
     p.name = username
-    spawnpoint = setspawn(p, 0)
+    spawnpoint = setspawn(p, stagespawn)
     allp, status = getDataP(n, p)
 
     frame = 0
@@ -102,13 +103,15 @@ def main():
     show login window and run game when login successfully
     """
     # username = ["q", 1]
-    username = []
-    ui = Login(username)
+    data = []
+    log = None
+    ui = Login(data)
     while(1):
-        ui.show()
-        name = username[0]
-        skinid = username[1]
-        game(name, skinid)
+        ui.show(log)
+        username = data[0]
+        password = data[1]
+        skinid = data[2]
+        log = game(username, password, skinid)
     print("Thanks for playing")
 
 

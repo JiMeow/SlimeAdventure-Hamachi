@@ -3,7 +3,7 @@ Wizard_War/__pycache__/
 __pycache__/
 *.py[cod]
 *$py.class
-
+Data.json
 # C extensions
 *.so
 

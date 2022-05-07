@@ -66,3 +66,9 @@ class Network:
             if not wait:
                 break
         return obj
+
+    def getLogin(self, username, password):
+        """
+        send login information to server
+        """
+        return self.send((username, password))
