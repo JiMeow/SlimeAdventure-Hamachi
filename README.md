@@ -53,3 +53,11 @@ play the game togethers.
 - map image from [it.freepik.com](https://it.freepik.com/vettori-premium/pixel-art-natura-montagne-pini-albero-sfondo-per-il-gioco-8-bit_7501977.htm)
 - cloud image from [toppng.com](https://toppng.com/cloud-fixed-06-blueberry-sans-pixel-art-PNG-free-PNG-Images_179684)
 - other player in background of this project
+
+
+## Sound
+
+Warm Memories - Emotional Inspiring Piano by Keys of Moon | https://soundcloud.com/keysofmoon
+Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+Music promoted by https://www.chosic.com/free-music/all/
