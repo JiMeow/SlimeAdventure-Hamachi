@@ -1,5 +1,6 @@
 from tkinter import *
 from PIL import ImageTk, Image
+import webbrowser
 
 
 class Login():
@@ -69,9 +70,9 @@ class Login():
         self.BSetting = Button(self.root, text="setting", width=25, height=3, bg='pink', font=(
             "", 10), command=self.setting)
         self.BSetting.place(x=135, y=320)
-        self.BCredit = Button(self.root, text="credit", width=25, height=3, bg='pink', font=(
-            "", 10))
-        self.BCredit.place(x=135, y=400)
+        self.BBeta = Button(self.root, text="credit", width=25, height=3, bg='pink', font=(
+            "", 10), command=self.open_browser)
+        self.BBeta.place(x=135, y=400)
         self.BQuit = Button(self.root, text="quit", width=25, height=3, bg='pink', font=(
             "", 10), command=self.root.quit)
         self.BQuit.place(x=135, y=480)
@@ -278,3 +279,6 @@ class Login():
             self.check.place_configure(x=110, y=450)
             self.explain.configure(text="Check point on every 30 stages")
             self.difficult = 30
+
+    def open_browser(self):
+        webbrowser.open("https://github.com/jiratQ")  # Go to example.com

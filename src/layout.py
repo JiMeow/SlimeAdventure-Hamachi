@@ -1,4 +1,3 @@
-from platform import platform
 import pygame
 from src.setting import *
 

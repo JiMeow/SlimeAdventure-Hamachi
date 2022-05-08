@@ -1,6 +1,5 @@
-server = "25.34.159.172"  # JiMeow
-# server = "25.35.236.244" # GolfGrab
-# server = "25.31.231.0" # Minzung
+# server = "25.34.159.172"  # Input server IP of you hamachi host here
+server = "127.0.0.1"  # Localhost
 port = 5555
 width = 1300
 height = 900
