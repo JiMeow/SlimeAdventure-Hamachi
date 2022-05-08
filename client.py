@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 from threading import *
 from src.setting import *
 from src.collision import Collision
@@ -10,7 +11,7 @@ import time
 from utils.utils import *
 
 
-def game(username, password, skinid, spawneveryXstage):
+def game(username, password, skinid, spawneveryXstage, soundstatus):
     """
     run game with username by connecting to server
     and receive data from server then generate map
@@ -36,6 +37,12 @@ def game(username, password, skinid, spawneveryXstage):
     pygame.display.set_caption("SlimeAdventure 2.0")
     pygame.init()
     clock = pygame.time.Clock()
+
+    if soundstatus == 1:
+        pygame.mixer.init()
+        pygame.mixer.music.load('sound.mp3')
+        pygame.mixer.music.play()
+        pygame.mixer.music.set_volume(0.2)
 
     map = Map(win, "src/photo/forest.png", spawneveryXstage)
     map.timeoffset = time.time()-setdefaulttime
@@ -121,7 +128,8 @@ def main():
         password = data[1]
         skinid = data[2]
         difficult = data[3]
-        log = game(username, password, skinid, difficult)
+        soundstatus = data[4]
+        log = game(username, password, skinid, difficult, soundstatus)
     print("Thanks for playing")
 
 
