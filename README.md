@@ -29,9 +29,9 @@ you host then you run client.py then you can play the game.
 
 ![hamachi-removebg-preview](https://i.imgur.com/DL4iZX8.png)
 
->P.S. for host you need to run server.py and don't forget to
-connect you hamachi with you friends for play the game
-togethers.
+>P.S. for host you need to edit setting ip then run server.py 
+and don't forget to connect you hamachi with you friends for 
+play the game togethers.
 
 ## Game and Stage detail
 
