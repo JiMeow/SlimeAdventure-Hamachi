@@ -25,7 +25,7 @@ class Map():
             pygame.image.load(img), (width, height))
         self.timeoffset = 0
         self.nowstage = -1
-        self.gravity = 0.3
+        self.gravity = 0.6
         self.obstacle = []
         self.spike = []
         self.flyfloor = []
@@ -178,7 +178,7 @@ class Map():
                 except:
                     eval("self.createstage"+str(int(stage))+f"()")
                 self.nowstage = stage
-                self.addtext(f"Stage: {int(stage)}", 1230, 10, 20)
+                self.addtext(f"Stage: {int(stage)}", 10, 30, 20)
                 if stage % self.spawneveryXstage == 0:
                     self.addtext("Checkpoint", 10, floor-50-40, 25)
         for i in self.obstacle:

@@ -1,7 +1,7 @@
 from src.setting import *
 
 
-def redrawWindow(layout, p, allp, dt, collision, map, clock):
+def redrawWindow(layout, p, allp, dt, collision, map, clock, status):
     """
     add all the elements to the layout
     for each element, draw it on the screen
@@ -19,6 +19,7 @@ def redrawWindow(layout, p, allp, dt, collision, map, clock):
     layout.setPlayer(p)
     layout.setAllPlayer(allp)
     layout.setDt(dt)
+    layout.setPlayerStatus(status)
     # Debug Fps
     layout.setDebug(f"{clock.get_fps():.2f}", 10, 10)
     layout.drawPlayerFrame()

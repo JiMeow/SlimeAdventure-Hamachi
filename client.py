@@ -24,7 +24,8 @@ def game(username, password, skinid, spawneveryXstage):
     """
     n = Network()
     p, setdefaulttime = n.getP()
-    log, stagespawn = n.getLogin(username, password, spawneveryXstage)
+    log, stagespawn, deathcount = n.getLogin(
+        username, password, spawneveryXstage)
     programIcon = pygame.image.load('src/photo/player14.png')
     pygame.display.set_icon(programIcon)
     if log != "success login" and log != "account created":
@@ -40,7 +41,9 @@ def game(username, password, skinid, spawneveryXstage):
     map.timeoffset = time.time()-setdefaulttime
 
     run = True
+    p.difficulty = spawneveryXstage
     p.skinid = skinid
+    p.deathcount = deathcount
     p.name = username
     spawnpoint = setspawn(p, stagespawn)
     allp, status = getDataP(n, p)
@@ -97,7 +100,7 @@ def game(username, password, skinid, spawneveryXstage):
             exterpolation(p, allp, dt, collision, status, map)
 
         setNewCollision(p, allp, collision, map)
-        redrawWindow(layout, p, allp, dt, collision, map, clock)
+        redrawWindow(layout, p, allp, dt, collision, map, clock, status)
         spawnpointAtEveryXstage(collision, spawneveryXstage, p)
         frame += 1
 

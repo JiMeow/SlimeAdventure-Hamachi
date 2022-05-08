@@ -20,7 +20,7 @@ class Player():
         pygame.transform.scale(
             pygame.image.load("src/photo/star3.png"), (100, 31))
     ]
-    invisibletime = 180
+    invisibletime = 90
 
     def __init__(self, id, x, y, width, height, color, name):
         """
@@ -42,15 +42,18 @@ class Player():
         self.height = height
         self.color = color
         self.rect = pygame.Rect(x, y, width, height)
-        self.vel = 2
+        self.vel = 4
         self.speed = [0, 0]
-        self.name = name
         self.jumpcount = 0
         self.wing = False
-        self.skinid = 1
         self.invisibletimeleft = 0
         self.on = {"Ground": False, "Slab": False}
+
+        self.name = name
+        self.skinid = 1
         self.deathcount = 0
+        self.difficulty = 5
+        self.completegame = False
 
         # use for drop to floor fromm slab
         self.dropTo = 0
@@ -78,7 +81,7 @@ class Player():
                  (self.x-width*stage, self.y))
 
         if self.invisibletimeleft > 0:
-            win.blit(Player.starimg[self.invisibletimeleft//60],
+            win.blit(Player.starimg[self.invisibletimeleft//30],
                      (self.x-width*stage-25, self.y-(self.height-5)))
 
         if self.speed[1] < 0:
@@ -147,7 +150,7 @@ class Player():
         if isJump:
             if self.jumpcount < 2:
                 self.jumpcount += 1
-                self.speed[1] = -6
+                self.speed[1] = -12
                 if not self.on["Ground"] and not self.on["Slab"]:
                     self.cloudpos = (self.x, self.y+15)
                 else:
@@ -197,13 +200,13 @@ class Player():
         mask, direction, posy = collision.playerCollideWall()
         if mask:
             if "left" == direction[0]:
-                self.x += 2
+                self.x += 4
                 self.speed[0] = 0
             if "right" == direction[0]:
-                self.x -= 2
+                self.x -= 4
                 self.speed[0] = 0
             if "up" == direction[0]:
-                self.y += 2
+                self.y += 4
                 self.speed[1] = 0
             if "down" == direction[0]:
                 self.y = posy-self.height+1
@@ -272,6 +275,8 @@ class Player():
         # no negative stage
         if self.x < 0:
             self.x = 0
-        # if self.x > 28590:
-        #     self.x = 28590
+        if self.x > 29896:
+            self.x = 29800
+            self.completegame = True
+            pygame.quit()
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

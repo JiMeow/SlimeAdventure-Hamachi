@@ -50,16 +50,22 @@ def threaded_client(conn, player):
             if r[username]["password"] == hashed_password:
                 login = True
                 conn.send(pickle.dumps(
-                    ("success login", r[username]["stage"][difficult])))
+                    ("success login", r[username]["stage"][difficult], r[username]["deathcount"][difficult])))
             else:
                 conn.send(pickle.dumps(
-                    ("username already in use or incorrect password", 0)))
+                    ("username already in use or incorrect password", 0, 0)))
         if username not in r:
             login = True
-            conn.send(pickle.dumps(("account created", 0)))
-            r[username] = {"password": hashed_password, "stage": {
-                "1": 0, "5": 0, "10": 0, "30": 0
-            }}
+            conn.send(pickle.dumps(("account created", 0, 0)))
+            r[username] = {
+                "password": hashed_password,
+                "stage": {
+                    "1": 0, "5": 0, "10": 0, "30": 0
+                },
+                "deathcount": {
+                    "1": 0, "5": 0, "10": 0, "30": 0
+                }
+            }
 
     reply = ""
     while True:
@@ -82,6 +88,8 @@ def threaded_client(conn, player):
     if login:
         with open("data.json", "w") as f:
             r[username]["stage"][difficult] = int(players[player].x)//width
+            r[username]["deathcount"][difficult] = int(
+                players[player].deathcount)
             json.dump(r, f, indent=4)
     currentPlayer[player] = 0
     players[player].x = 30

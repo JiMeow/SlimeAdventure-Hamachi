@@ -445,19 +445,6 @@ def createstage21(map):
     """
     stage = 21
     map.reset()
-    map.addtext("Congratulation, You win!", 300, floor-525, 80)
-    map.addtext("SlimeAdventure 2.0", 375, floor-425, 80)
-    map.addtext("Thank you for playing!", 350, floor-275, 80)
-    map.addtext("See you next time!", 400, floor-200, 80)
-    map.setobstacle()
-
-def createstage22(map):
-    """
-    reset all obstacle then add new obstacle to stage 0 
-    then draw this stage
-    """
-    stage = 22
-    map.reset()
     for i in range(13):
         map.addspike(225+75*i, floor-50, stage)
     map.addflyfloor(300, floor-200, stage)
@@ -469,4 +456,21 @@ def createstage22(map):
     map.addhedgehog(700, floor-200-50, stage, 45)
     map.addinvisible(400, floor-200-50, stage)
     map.addinvisible(850, floor-200-50, stage)
+    map.setobstacle()
+
+
+def createstage22(map):
+    """
+    reset all obstacle then add new obstacle to stage 0 
+    then draw this stage
+    """
+    stage = 22
+    map.reset()
+    map.addtext("Congratulation, You win!", 300, floor-525, 80)
+    map.addtext("SlimeAdventure 2.0", 375, floor-425, 80)
+    map.addtext("Thank you for playing!", 350, floor-275, 80)
+    map.addtext("See you next time!", 400, floor-200, 80)
+
+    map.addtext(
+        "Go next stage to save you death count to scoreboard, reset this difficulty and quit game.", 380, floor-20, 30)
     map.setobstacle()
