@@ -67,8 +67,8 @@ class Network:
                 break
         return obj
 
-    def getLogin(self, username, password):
+    def getLogin(self, username, password, spawneveryXstage):
         """
         send login information to server
         """
-        return self.send((username, password))
+        return self.send((username, password, spawneveryXstage))

@@ -71,6 +71,16 @@ class Layout():
         self.text = font.render(str(info), True, "White")
         self.textrect = self.text.get_rect(topleft=(x, y))
 
+    def drawDeathcount(self):
+        deathcount = []
+        for player in self.allp:
+            deathcount.append((player.deathcount, player.name))
+        deathcount.sort(reverse=True)
+        font = pygame.font.Font(None, 20)
+        for death, name in deathcount:
+            self.text = font.render(str(name)+" "*(10-len(str(name))) + ": " + (
+                " "*5-len(str(death))) + str(death), True,          "White")
+
     def drawPlayerFrame(self):
         """
         calculate stage by position of player and draw stage that player in 

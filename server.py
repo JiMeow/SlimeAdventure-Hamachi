@@ -3,7 +3,7 @@ import json
 import time
 from threading import *
 import pickle
-
+import os
 import pygame
 from src.player import Player
 from src.setting import *
@@ -16,7 +16,7 @@ try:
     s.bind((server, port))
 except socket.error as e:
     str(e)
-    
+
 s.listen(20)
 print("Waiting for a connection, Server Started")
 maxPlayers = 10
@@ -26,6 +26,7 @@ for i in range(maxPlayers):
     players.append(Player(i+1, 30, -100, 50, 34, (0, 0, 0), f"Player{i+1}"))
 
 currentPlayer = {}
+
 
 def threaded_client(conn, player):
     """
@@ -37,24 +38,29 @@ def threaded_client(conn, player):
     """
     global currentPlayer
     conn.send(pickle.dumps((players[player], time.time())))
-    username, password = pickle.loads(conn.recv(65536))
+    username, password, difficult = pickle.loads(conn.recv(65536))
+    difficult = str(difficult)
     hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    print(player,":",username,"connected")
-    
+    print(player, ":", username, "connected")
+
     login = False
     with open("data.json", "r") as f:
         r = json.load(f)
         if username in r:
-            if r[username]["password"] == hashed_password:     
+            if r[username]["password"] == hashed_password:
                 login = True
-                conn.send(pickle.dumps(("success login",r[username]["stage"])))
-            else:    
-                conn.send(pickle.dumps(("username already in use or incorrect password",0)))
+                conn.send(pickle.dumps(
+                    ("success login", r[username]["stage"][difficult])))
+            else:
+                conn.send(pickle.dumps(
+                    ("username already in use or incorrect password", 0)))
         if username not in r:
             login = True
-            conn.send(pickle.dumps(("account created",0)))
-            r[username] = {"password":hashed_password, "stage":0}
-    
+            conn.send(pickle.dumps(("account created", 0)))
+            r[username] = {"password": hashed_password, "stage": {
+                "1": 0, "5": 0, "10": 0, "30": 0
+            }}
+
     reply = ""
     while True:
         try:
@@ -71,12 +77,12 @@ def threaded_client(conn, player):
         except Exception as e:
             print(e)
             break
-        
+
     print(f"{username} Lost connection")
     if login:
         with open("data.json", "w") as f:
-            r[username]["stage"] =  int(players[player].x)//width
-            json.dump(r, f)
+            r[username]["stage"][difficult] = int(players[player].x)//width
+            json.dump(r, f, indent=4)
     currentPlayer[player] = 0
     players[player].x = 30
     players[player].y = -100
@@ -102,4 +108,6 @@ def main():
                 break
         thread = Thread(target=threaded_client, args=(conn, idx))
         thread.start()
+
+
 main()

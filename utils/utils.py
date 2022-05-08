@@ -110,6 +110,7 @@ def spawnpointAtEveryXstage(collision, stage, player):
     """
     collision.setSpawnStage(player.x//width//stage*stage)
 
+
 def setdatafromserver(allp, status, tempallp, tempstatus):
     """
     set data from server

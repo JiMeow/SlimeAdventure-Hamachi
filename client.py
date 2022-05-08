@@ -9,6 +9,7 @@ from map import Map
 import time
 from utils.utils import *
 
+
 def game(username, password, skinid, spawneveryXstage):
     """
     run game with username by connecting to server
@@ -23,10 +24,10 @@ def game(username, password, skinid, spawneveryXstage):
     """
     n = Network()
     p, setdefaulttime = n.getP()
-    log, stagespawn = n.getLogin(username,password)
+    log, stagespawn = n.getLogin(username, password, spawneveryXstage)
     programIcon = pygame.image.load('src/photo/player14.png')
     pygame.display.set_icon(programIcon)
-    if log != "success login" and log!= "account created":
+    if log != "success login" and log != "account created":
         print(log)
         n.disconnect()
         return log
@@ -51,7 +52,7 @@ def game(username, password, skinid, spawneveryXstage):
     thread = Thread(target=getDataP, args=(n, p, tempallp, tempstatus))
 
     beforetime = time.time()
-    
+
     # for bug player not fall
     p.jump(True, map.gravity, 1/60)
     p.jumpcount = 0
@@ -61,12 +62,12 @@ def game(username, password, skinid, spawneveryXstage):
         isPlayerJump = False
         dt = time.time() - beforetime
         beforetime = time.time()
-        
+
         if not thread.is_alive():
             setdatafromserver(allp, status, tempallp, tempstatus)
             thread = Thread(target=getDataP, args=(n, p, tempallp, tempstatus))
             thread.start()
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -84,7 +85,7 @@ def game(username, password, skinid, spawneveryXstage):
 
         if not run:
             break
-        
+
         p.move()
         p.jump(isPlayerJump, map.gravity, dt)
         setNewCollision(p, allp, collision, map)
@@ -99,6 +100,7 @@ def game(username, password, skinid, spawneveryXstage):
         redrawWindow(layout, p, allp, dt, collision, map, clock)
         spawnpointAtEveryXstage(collision, spawneveryXstage, p)
         frame += 1
+
 
 def main():
     """

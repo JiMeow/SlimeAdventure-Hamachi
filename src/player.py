@@ -50,6 +50,7 @@ class Player():
         self.skinid = 1
         self.invisibletimeleft = 0
         self.on = {"Ground": False, "Slab": False}
+        self.deathcount = 0
 
         # use for drop to floor fromm slab
         self.dropTo = 0
@@ -234,19 +235,21 @@ class Player():
                 self.x, self.y = pos
                 self.jump(True, 6, dt)
                 self.jumpcount = 0
+                self.deathcount += 1
             # hit hedgehog
             mask, pos = collision.playerCollideHedgehog()
             if mask:
                 self.x, self.y = pos
                 self.jump(True, 6, dt)
                 self.jumpcount = 0
-
+                self.deathcount += 1
             # hit jelly fish
             mask, pos = collision.playerCollideJellyFish()
             if mask:
                 self.x, self.y = pos
                 self.jump(True, 6, dt)
                 self.jumpcount = 0
+                self.deathcount += 1
         else:
             self.invisibletimeleft -= 1
 
