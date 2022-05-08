@@ -115,6 +115,8 @@ def main():
     ui = Login(data)
     while(1):
         ui.show(log)
+        if len(data) == 0:
+            break
         username = data[0]
         password = data[1]
         skinid = data[2]
