@@ -4,7 +4,7 @@
   - [Connect with friends](#connect-with-friends)
   - [Game and Stage detail](#game-and-stage-detail)
   - [Thank you](#thank-you)
-
+   - [Sound](#sound)
 <br>
 
 Coop Multiplayer 2D Game  <br>
@@ -55,7 +55,7 @@ play the game togethers.
 - other player in background of this project
 
 
-## Sound
+### Sound
 
 Warm Memories - Emotional Inspiring Piano by Keys of Moon | https://soundcloud.com/keysofmoon
 Attribution 4.0 International (CC BY 4.0)
