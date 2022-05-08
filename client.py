@@ -10,7 +10,7 @@ import time
 from utils.utils import *
 
 
-def game(username, skinid):
+def game(username, password, skinid, spawneveryXstage):
     """
     run game with username by connecting to server
     and receive data from server then generate map
@@ -18,36 +18,43 @@ def game(username, skinid):
 
     Args:
         username (str): name of player
+        password (str): password of player
+        skinid (int): id of skin of player
+        sceensize (int): 0 for fullscreen, 1 for window
     """
+    n = Network()
+    p, setdefaulttime = n.getP()
+    log, stagespawn, deathcount = n.getLogin(
+        username, password, spawneveryXstage)
+    programIcon = pygame.image.load('src/photo/player14.png')
+    pygame.display.set_icon(programIcon)
+    if log != "success login" and log != "account created":
+        print(log)
+        n.disconnect()
+        return log
     win = pygame.display.set_mode((width, height))
-
-    # win = pygame.Surface((width, height))
-    # screen = pygame.display.set_mode((1920, 1080))
-
-    pygame.display.set_caption("Client")
+    pygame.display.set_caption("SlimeAdventure 2.0")
     pygame.init()
     clock = pygame.time.Clock()
 
-    map = Map(win, "src/photo/forest.png")
-    run = True
-    n = Network()
-
-    p, setdefaulttime = n.getP()
+    map = Map(win, "src/photo/forest.png", spawneveryXstage)
     map.timeoffset = time.time()-setdefaulttime
 
+    run = True
+    p.difficulty = spawneveryXstage
     p.skinid = skinid
-    spawnpoint = setspawn(p, 0)
+    p.deathcount = deathcount
     p.name = username
-    frame = 0
-
+    spawnpoint = setspawn(p, stagespawn)
     allp, status = getDataP(n, p)
+    frame = 0
     tempallp = list(allp)
     tempstatus = dict(status)
-
-    thread = Thread(target=getDataP, args=(n, p, tempallp))
-    beforetime = time.time()
     layout = Layout(win)
     collision = Collision(p, allp, map, spawnpoint)
+    thread = Thread(target=getDataP, args=(n, p, tempallp, tempstatus))
+
+    beforetime = time.time()
 
     # for bug player not fall
     p.jump(True, map.gravity, 1/60)
@@ -58,11 +65,12 @@ def game(username, skinid):
         isPlayerJump = False
         dt = time.time() - beforetime
         beforetime = time.time()
+
         if not thread.is_alive():
-            allp = list(tempallp)
-            status = dict(tempstatus)
+            setdatafromserver(allp, status, tempallp, tempstatus)
             thread = Thread(target=getDataP, args=(n, p, tempallp, tempstatus))
             thread.start()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -73,44 +81,47 @@ def game(username, skinid):
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == pygame.K_w:
                     isPlayerJump = True
                 if event.key == pygame.K_ESCAPE:
+                    run = False
                     pygame.quit()
                     n.disconnect()
                     break
 
         if not run:
             break
+
         p.move()
         p.jump(isPlayerJump, map.gravity, dt)
         setNewCollision(p, allp, collision, map)
         p.update(dt, collision)
 
         if not thread.is_alive():
-            allp = list(tempallp)
-            status = dict(tempstatus)
+            setdatafromserver(allp, status, tempallp, tempstatus)
         else:
             exterpolation(p, allp, dt, collision, status, map)
 
         setNewCollision(p, allp, collision, map)
-        redrawWindow(layout, p, allp, dt, collision, map, clock)
-        spawnpointAtEveryXstage(collision, 5, p)
+        redrawWindow(layout, p, allp, dt, collision, map, clock, status)
+        spawnpointAtEveryXstage(collision, spawneveryXstage, p)
         frame += 1
-        # screen.blit(pygame.transform.scale(win, (1920, 1080)), (0, 0))
 
 
 def main():
     """
     show login window and run game when login successfully
     """
-    username = []
-    ui = Login(username)
+    # username = ["q", 1]
+    data = []
+    log = None
+    ui = Login(data)
     while(1):
-        ui.show()
-        try:
-            name = username[0]
-            skinid = username[1]
-            game(name, skinid)
-        except:
+        ui.show(log)
+        if len(data) == 0:
             break
+        username = data[0]
+        password = data[1]
+        skinid = data[2]
+        difficult = data[3]
+        log = game(username, password, skinid, difficult)
     print("Thanks for playing")
 
 

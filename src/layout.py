@@ -22,6 +22,17 @@ class Layout():
         """
         self.player = player
 
+    def setPlayerStatus(self, status):
+        '''This function sets the status of the player to the status passed in as a parameter
+
+        Parameters
+        ----------
+        status
+            The status of the player.
+
+        '''
+        self.status = status
+
     def setAllPlayer(self, player):
         """
         set all player information to layout
@@ -58,7 +69,7 @@ class Layout():
         """
         self.collision = collision
 
-    def setDebug(self, info, x, y):
+    def setDebug(self, info, x, y, color="White"):
         """
         debug for show information on screen
 
@@ -68,8 +79,56 @@ class Layout():
             y (int): y position of text
         """
         font = pygame.font.Font(None, 20)
-        self.text = font.render(str(info), True, "White")
+        self.text = font.render(str(info), True, color)
         self.textrect = self.text.get_rect(topleft=(x, y))
+
+    def drawDeathcount(self):
+        deathcount = []
+        for player in self.allp:
+            if self.status[player.id-1] == 1:
+                deathcount.append(
+                    (-int(player.x//width), -player.difficulty, player.deathcount, player.name))
+        deathcount.sort()
+        font = pygame.font.Font(None, 20)
+        number = 0
+        # print(deathcount)
+        for stage, difficulty, death, name in deathcount:
+            stage = -stage
+            difficulty = -difficulty
+            self.stagetext = font.render("["+str(stage)+"]", True, "Black")
+            self.stagetextrect = self.stagetext.get_rect(
+                topleft=(1150, 10+number*30))
+            self.win.blit(self.stagetext, self.stagetextrect)
+            if difficulty == 1:
+                self.nametext = font.render(str(name), True, "Green")
+                self.nametextrect = self.nametext.get_rect(
+                    topleft=(1180, 10+number*30))
+                self.win.blit(self.nametext, self.nametextrect)
+            if difficulty == 5:
+                self.nametext = font.render(str(name), True, "Blue")
+                self.nametextrect = self.nametext.get_rect(
+                    topleft=(1180, 10+number*30))
+                self.win.blit(self.nametext, self.nametextrect)
+            if difficulty == 10:
+                self.nametext = font.render(str(name), True, "Black")
+                self.nametextrect = self.nametext.get_rect(
+                    topleft=(1180, 10+number*30))
+                self.win.blit(self.nametext, self.nametextrect)
+            if difficulty == 30:
+                self.nametext = font.render(str(name), True, "Red")
+                self.nametextrect = self.nametext.get_rect(
+                    topleft=(1180, 10+number*30))
+                self.win.blit(self.nametext, self.nametextrect)
+            self.colontext = font.render(':', True, "White")
+            self.colontextrect = self.colontext.get_rect(
+                topleft=(1260, 10+number*30))
+            self.win.blit(self.colontext, self.colontextrect)
+            self.deadtext = font.render(
+                (4-len(str(death)))*" " + str(death), True, "White")
+            self.deadtextrect = self.deadtext.get_rect(
+                topleft=(1270, 10+number*30))
+            self.win.blit(self.deadtext, self.deadtextrect)
+            number += 1
 
     def drawPlayerFrame(self):
         """
@@ -83,13 +142,11 @@ class Layout():
             if i.id != self.player.id:
                 i.draw(self.win, stage)
                 i.drawname(self.win, stage)
-        for i in self.allp:
-            if i.id == self.player.id:
-                self.collision.setPlayer(i)
-                self.player.update(self.dt, self.collision)
-                self.player.draw(self.win, stage)
-                self.player.drawname(self.win, stage)
+
+        self.player.draw(self.win, stage)
+        self.player.drawname(self.win, stage)
 
         # debug
         self.win.blit(self.text, self.textrect)
+        self.drawDeathcount()
         pygame.display.update()

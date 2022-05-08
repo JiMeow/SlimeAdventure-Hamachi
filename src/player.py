@@ -10,6 +10,17 @@ class Player():
     playerimg = getAllSkin()
     cloudimg = pygame.transform.scale(
         pygame.image.load("src/photo/cloud.png"), (50, 28))
+    starimg = [
+        pygame.transform.scale(
+            pygame.image.load("src/photo/star1.png"), (100, 31)),
+        pygame.transform.scale(
+            pygame.image.load("src/photo/star2.png"), (100, 31)),
+        pygame.transform.scale(
+            pygame.image.load("src/photo/star3.png"), (100, 31)),
+        pygame.transform.scale(
+            pygame.image.load("src/photo/star3.png"), (100, 31))
+    ]
+    invisibletime = 90
 
     def __init__(self, id, x, y, width, height, color, name):
         """
@@ -31,14 +42,18 @@ class Player():
         self.height = height
         self.color = color
         self.rect = pygame.Rect(x, y, width, height)
-        self.vel = 2
+        self.vel = 4
         self.speed = [0, 0]
-        self.name = name
         self.jumpcount = 0
         self.wing = False
-        self.skinid = 1
-
+        self.invisibletimeleft = 0
         self.on = {"Ground": False, "Slab": False}
+
+        self.name = name
+        self.skinid = 1
+        self.deathcount = 0
+        self.difficulty = 5
+        self.completegame = False
 
         # use for drop to floor fromm slab
         self.dropTo = 0
@@ -64,6 +79,10 @@ class Player():
 
         win.blit(Player.playerimg[self.skinid][self.turn],
                  (self.x-width*stage, self.y))
+
+        if self.invisibletimeleft > 0:
+            win.blit(Player.starimg[self.invisibletimeleft//30],
+                     (self.x-width*stage-25, self.y-(self.height-5)))
 
         if self.speed[1] < 0:
             win.blit(Player.cloudimg,
@@ -131,7 +150,7 @@ class Player():
         if isJump:
             if self.jumpcount < 2:
                 self.jumpcount += 1
-                self.speed[1] = -6
+                self.speed[1] = -12
                 if not self.on["Ground"] and not self.on["Slab"]:
                     self.cloudpos = (self.x, self.y+15)
                 else:
@@ -167,7 +186,7 @@ class Player():
         self.y += self.speed[1] * 60 * dt
         collision.setPlayerXY(self.x, self.y)
 
-        # on slab
+        # on floor
         mask, pos = collision.playerCollideFloor()
         if mask:
             self.speed[1] = 0
@@ -176,6 +195,24 @@ class Player():
             self.on["Ground"] = True
         else:
             self.on["Ground"] = False
+
+        # hit wall
+        mask, direction, posy = collision.playerCollideWall()
+        if mask:
+            if "left" == direction[0]:
+                self.x += 4
+                self.speed[0] = 0
+            if "right" == direction[0]:
+                self.x -= 4
+                self.speed[0] = 0
+            if "up" == direction[0]:
+                self.y += 4
+                self.speed[1] = 0
+            if "down" == direction[0]:
+                self.y = posy-self.height+1
+                self.speed[1] = 0
+                self.on["Ground"] = True
+                self.jumpcount = 0
 
         # drop to floor from slab
         if self.y > self.dropTo:
@@ -192,25 +229,32 @@ class Player():
             else:
                 self.on["Slab"] = False
 
-        # hit spike
-        mask, pos = collision.playerCollideSpike()
-        if mask:
-            self.x, self.y = pos
-            self.jump(True, 6, dt)
-            self.jumpcount = 0
-        # hit hedgehog
-        mask, pos = collision.playerCollideHedgehog()
-        if mask:
-            self.x, self.y = pos
-            self.jump(True, 6, dt)
-            self.jumpcount = 0
+        if self.invisibletimeleft == 0:
+            # object make ded
 
-        # hit jelly fish
-        mask, pos = collision.playerCollideJellyFish()
-        if mask:
-            self.x, self.y = pos
-            self.jump(True, 6, dt)
-            self.jumpcount = 0
+            # hit spike
+            mask, pos = collision.playerCollideSpike()
+            if mask:
+                self.x, self.y = pos
+                self.jump(True, 6, dt)
+                self.jumpcount = 0
+                self.deathcount += 1
+            # hit hedgehog
+            mask, pos = collision.playerCollideHedgehog()
+            if mask:
+                self.x, self.y = pos
+                self.jump(True, 6, dt)
+                self.jumpcount = 0
+                self.deathcount += 1
+            # hit jelly fish
+            mask, pos = collision.playerCollideJellyFish()
+            if mask:
+                self.x, self.y = pos
+                self.jump(True, 6, dt)
+                self.jumpcount = 0
+                self.deathcount += 1
+        else:
+            self.invisibletimeleft -= 1
 
         # hit jumpboost
         mask, pos = collision.playerCollideJumpBoost()
@@ -219,6 +263,11 @@ class Player():
             # draw wing
             self.wing = True
 
+        # hit invisible
+        mask, pos = collision.playerCollideInvisible()
+        if mask:
+            self.invisibletimeleft = self.invisibletime
+
         # del wing
         if self.jumpcount == 2 or self.on["Ground"] or self.on["Slab"]:
             self.wing = False
@@ -226,5 +275,8 @@ class Player():
         # no negative stage
         if self.x < 0:
             self.x = 0
-        # print(self.rect)
+        if self.x > 29896:
+            self.x = 29800
+            self.completegame = True
+            pygame.quit()
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)

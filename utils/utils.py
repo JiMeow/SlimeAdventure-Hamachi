@@ -1,7 +1,7 @@
 from src.setting import *
 
 
-def redrawWindow(layout, p, allp, dt, collision, map, clock):
+def redrawWindow(layout, p, allp, dt, collision, map, clock, status):
     """
     add all the elements to the layout
     for each element, draw it on the screen
@@ -19,12 +19,13 @@ def redrawWindow(layout, p, allp, dt, collision, map, clock):
     layout.setPlayer(p)
     layout.setAllPlayer(allp)
     layout.setDt(dt)
+    layout.setPlayerStatus(status)
     # Debug Fps
     layout.setDebug(f"{clock.get_fps():.2f}", 10, 10)
     layout.drawPlayerFrame()
 
 
-def getDataP(network, p, tempallp=[], tempstatus={0: False, 1: False, 2: False, 3: False}):
+def getDataP(network, p, tempallp=[], tempstatus={}):
     """
     get all data information from server and update them
 
@@ -42,7 +43,7 @@ def getDataP(network, p, tempallp=[], tempstatus={0: False, 1: False, 2: False, 
         tempallp.pop(0)
     data = network.send(p)
     tempallp += data["players"]
-    for i in range(4):
+    for i in range(10):
         tempstatus[i] = data["status"][i]
     return tempallp, tempstatus
 
@@ -92,6 +93,10 @@ def setspawn(p, stage):
         stage (int): _description_
     """
     p.x = 30+width*stage
+    p.rect.x = p.x
+    p.rect.y = p.y
+    p.rect.width = p.width
+    p.rect.height = p.height
     return stage
 
 
@@ -105,3 +110,18 @@ def spawnpointAtEveryXstage(collision, stage, player):
         player (Player): player information
     """
     collision.setSpawnStage(player.x//width//stage*stage)
+
+
+def setdatafromserver(allp, status, tempallp, tempstatus):
+    """
+    set data from server
+
+    Args:
+        p (Player): _description_
+    """
+    while(len(allp) != 0):
+        allp.pop(0)
+    for i in tempallp:
+        allp.append(i)
+    for i in tempstatus:
+        status[i] = tempstatus[i]

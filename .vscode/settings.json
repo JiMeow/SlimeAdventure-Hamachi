@@ -8,5 +8,6 @@
         "pyngrok",
         "tempallp",
         "Xstage"
-    ]
+    ],
+    "docwriter.style": "NumPy"
 }

@@ -1,9 +1,14 @@
 import socket
+import json
 import time
 from threading import *
 import pickle
+import os
+import pygame
 from src.player import Player
 from src.setting import *
+import hashlib
+
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -14,9 +19,11 @@ except socket.error as e:
 
 s.listen(20)
 print("Waiting for a connection, Server Started")
+maxPlayers = 10
 
-players = [Player(1, 30, -100, 50, 34, (255, 0, 0), "Player1"), Player(2, 30, -100, 50, 34, (0, 255, 0), "Player2"),
-           Player(3, 30, -100, 50, 34, (0, 0, 255), "Player3"), Player(4, 30, -100, 50, 34, (255, 0, 255), "Player4")]
+players = []
+for i in range(maxPlayers):
+    players.append(Player(i+1, 30, -100, 50, 34, (0, 0, 0), f"Player{i+1}"))
 
 currentPlayer = {}
 
@@ -31,6 +38,35 @@ def threaded_client(conn, player):
     """
     global currentPlayer
     conn.send(pickle.dumps((players[player], time.time())))
+    username, password, difficult = pickle.loads(conn.recv(65536))
+    difficult = str(difficult)
+    hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    print(player, ":", username, "connected")
+
+    login = False
+    with open("data.json", "r") as f:
+        r = json.load(f)
+        if username in r:
+            if r[username]["password"] == hashed_password:
+                login = True
+                conn.send(pickle.dumps(
+                    ("success login", r[username]["stage"][difficult], r[username]["deathcount"][difficult])))
+            else:
+                conn.send(pickle.dumps(
+                    ("username already in use or incorrect password", 0, 0)))
+        if username not in r:
+            login = True
+            conn.send(pickle.dumps(("account created", 0, 0)))
+            r[username] = {
+                "password": hashed_password,
+                "stage": {
+                    "1": 0, "5": 0, "10": 0, "30": 0
+                },
+                "deathcount": {
+                    "1": 0, "5": 0, "10": 0, "30": 0
+                }
+            }
+
     reply = ""
     while True:
         try:
@@ -43,14 +79,29 @@ def threaded_client(conn, player):
             else:
                 reply = {"players": players,
                          "status": currentPlayer}
-
             conn.sendall(pickle.dumps(reply))
-        except:
+        except Exception as e:
+            print(e)
             break
-    print(f"{player} Lost connection")
+
+    print(f"{username} Lost connection")
+    if login:
+        if players[player].completegame:
+            with open("data.json", "w") as f:
+                r[username]["stage"][difficult] = 0
+                r[username]["deathcount"][difficult] = 0
+                json.dump(r, f, indent=4)
+        else:
+            with open("data.json", "w") as f:
+                r[username]["stage"][difficult] = int(players[player].x)//width
+                r[username]["deathcount"][difficult] = int(
+                    players[player].deathcount)
+                json.dump(r, f, indent=4)
+
     currentPlayer[player] = 0
     players[player].x = 30
     players[player].y = -100
+    players[player].rect = pygame.Rect(30, -100, 54, 30)
     conn.close()
 
 
@@ -60,7 +111,6 @@ def main():
     and check number of player and decide 
     which client will be which id
     """
-    maxPlayers = 4
     for i in range(maxPlayers):
         currentPlayer[i] = 0
     idx = 0
@@ -72,7 +122,6 @@ def main():
                 idx = i
                 break
         thread = Thread(target=threaded_client, args=(conn, idx))
-        print(idx, "Connected to:", addr)
         thread.start()
 
 

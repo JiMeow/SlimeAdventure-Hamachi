@@ -53,8 +53,22 @@ class Network:
         Returns:
             dict: information of all data from server
         """
-        try:
-            self.client.send(pickle.dumps(data))
-            return pickle.loads(self.client.recv(65536))
-        except socket.error as e:
-            print(e)
+        packet = []
+        self.client.send(pickle.dumps(data))
+        while True:
+            try:
+                packet.append(self.client.recv(65536))
+                obj = pickle.loads(b"".join(packet))
+                wait = False
+            except pickle.UnpicklingError:
+                wait = True
+
+            if not wait:
+                break
+        return obj
+
+    def getLogin(self, username, password, spawneveryXstage):
+        """
+        send login information to server
+        """
+        return self.send((username, password, spawneveryXstage))

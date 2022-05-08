@@ -29,18 +29,16 @@ you host then you run client.py then you can play the game.
 
 ![hamachi-removebg-preview](https://i.imgur.com/DL4iZX8.png)
 
->P.S. for host you need to edit setting ip then run server.py and don't forget to
-connect you hamachi with you friends for play the game
-togethers.
-
-
+>P.S. for host you need to edit setting ip then run server.py 
+and don't forget to connect you hamachi with you friends for 
+play the game togethers.
 
 ## Game and Stage detail
 
 ![forest](https://i.imgur.com/jPGvu6I.jpg)
 
-- Game have only 15 stage.
-- Game will auto set spawn point at every 5 stages.
+- Game have about 20 stages.
+- Game will set spawn point depend on difficulty.
 - Player(slime) can go to next stage by walking to edge of stage.
 - Player(slime) can jump twice and reset when he touch the ground.
 - Player(slime) should avoid the enemy(e.g. hedgehog)
