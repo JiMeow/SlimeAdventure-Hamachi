@@ -86,11 +86,18 @@ def threaded_client(conn, player):
 
     print(f"{username} Lost connection")
     if login:
-        with open("data.json", "w") as f:
-            r[username]["stage"][difficult] = int(players[player].x)//width
-            r[username]["deathcount"][difficult] = int(
-                players[player].deathcount)
-            json.dump(r, f, indent=4)
+        if players[player].completegame:
+            with open("data.json", "w") as f:
+                r[username]["stage"][difficult] = 0
+                r[username]["deathcount"][difficult] = 0
+                json.dump(r, f, indent=4)
+        else:
+            with open("data.json", "w") as f:
+                r[username]["stage"][difficult] = int(players[player].x)//width
+                r[username]["deathcount"][difficult] = int(
+                    players[player].deathcount)
+                json.dump(r, f, indent=4)
+
     currentPlayer[player] = 0
     players[player].x = 30
     players[player].y = -100
