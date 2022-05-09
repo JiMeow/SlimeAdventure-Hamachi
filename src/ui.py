@@ -1,6 +1,8 @@
 from tkinter import *
 from PIL import ImageTk, Image
 import webbrowser
+import pygame
+from pygame.locals import *
 
 
 class Login():
@@ -28,6 +30,7 @@ class Login():
         self.skinid = 1
         self.difficult = 5  # 0 for easy, 1 for normal, 2 for hard, 3 for very hard
         self.sprites = []
+        self.soundstatus = 1
         for i in range(1, 16):
             name = f"src/photo/player{i}.png"
             photo = Image.open(name).copy()
@@ -41,6 +44,13 @@ class Login():
         check = Image.open("src/photo/check.png").copy()
         self.checkimg = ImageTk.PhotoImage(
             check.resize((30, 30), Image.ANTIALIAS))
+        self.sound = []
+        soundoff = Image.open("src/photo/soundoff.png").copy()
+        self.sound.append(ImageTk.PhotoImage(
+            soundoff.resize((30, 30), Image.ANTIALIAS)))
+        soundon = Image.open("src/photo/soundon.png").copy()
+        self.sound.append(ImageTk.PhotoImage(
+            soundon.resize((30, 30), Image.ANTIALIAS)))
 
         self.root.iconphoto(False, self.sprites[13])
         self.root.bind("<Key>", self.key_pressed)
@@ -52,6 +62,9 @@ class Login():
         canvas = Canvas(self.root, height=600, width=1000, bg="lightblue")
         canvas.place(x=0, y=0)
 
+        self.BSound = Button(self.root, image=self.sound[self.soundstatus], bg='lightblue', font=(
+            "bold", 10), fg='black', command=self.changeSoundStatus, borderwidth=0, activebackground="lightblue")
+        self.BSound.place(x=430, y=515)
         self.gamename = Label(self.root, text="SlimeAdventure", font=(
             "bold", 40), fg='black', bg='lightblue')
         self.gamename.place(x=55, y=20)
@@ -223,6 +236,7 @@ class Login():
         self.data.append(self.entry_password.get())
         self.data.append(self.skinid)
         self.data.append(self.difficult)
+        self.data.append(self.soundstatus)
         self.entry_username.delete(0, END)
         self.entry_password.delete(0, END)
         self.root.withdraw()
@@ -232,6 +246,12 @@ class Login():
         """
         reset username and show window by draw() function
         """
+
+        pygame.mixer.init()
+        pygame.mixer.music.load('sound.mp3')
+        pygame.mixer.music.play()
+        pygame.mixer.music.set_volume(0.2)
+
         while(self.data != []):
             self.data.pop()
         self.root.deiconify()
@@ -282,3 +302,11 @@ class Login():
 
     def open_browser(self):
         webbrowser.open("https://github.com/jiratQ")  # Go to example.com
+
+    def changeSoundStatus(self):
+        self.soundstatus = 1 - self.soundstatus
+        self.BSound.configure(image=self.sound[self.soundstatus])
+        if self.soundstatus == 0:
+            pygame.mixer.music.set_volume(0)
+        else:
+            pygame.mixer.music.set_volume(0.2)
