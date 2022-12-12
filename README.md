@@ -25,8 +25,8 @@ and backward yourself.
 
 ## Connect with friends
 
-For play this game(beta) you need hamachi to connect with
-you host then you run client.py then you can play the game.
+For play this game(beta) you need hamachi to connect with and change ip 
+in setting.py in src to your host ip then you run client.py then you can play the game.
 
 ![hamachi-removebg-preview](https://i.imgur.com/DL4iZX8.png)
 
