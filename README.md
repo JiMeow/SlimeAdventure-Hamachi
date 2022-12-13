@@ -26,11 +26,11 @@ and backward yourself.
 ## Connect with friends
 
 For play this game(beta) you need hamachi to connect with host and change ip 
-in setting.py in src to your host ip then you run client.py then you can play the game.
+in hostIP.txt in to your host ip then you run client.exe then you can play the game.
 
 ![hamachi-removebg-preview](https://i.imgur.com/DL4iZX8.png)
 
->P.S. for host you need to edit setting ip then run server.py 
+>P.S. for host you also just edit hostIp.txt to your hamachi IP then run server.exe 
 and don't forget to connect you hamachi with you friends for 
 play the game togethers.
 
